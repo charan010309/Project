@@ -58,8 +58,10 @@ role needs table creation/alteration privileges for this setup.
    directory overrides unset; do not enter an HTML output directory.
 5. Add the environment variables below before deploying.
 
-The root requirements file installs the Python dependencies. Do not upload
-your virtual environment. Vercel supplies the `VERCEL` environment indicator;
+Vercel installs dependencies from the `[project]` section of `pyproject.toml`.
+Keep that list synchronized with `Backend/requirements.txt`, which the root
+requirements file includes for local installations. Do not upload your
+virtual environment. Vercel supplies the `VERCEL` environment indicator;
 you do not need to add it manually.
 
 ## 3. Configure environment variables

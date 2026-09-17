@@ -1,2 +1,30 @@
+[project]
+name = "maximus"
+version = "0.1.0"
+requires-python = ">=3.13,<3.14"
+# Vercel prioritizes this file over requirements.txt. Keep these dependencies
+# synchronized with Backend/requirements.txt for local installations.
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "google-genai",
+    "python-dotenv",
+    "edge-tts",
+    "authlib",
+    "itsdangerous",
+    "fastapi-mail",
+    "PyJWT",
+    "cryptography",
+    "pwdlib[argon2]",
+    "qrcode[pil]",
+    "email-validator",
+    "httpx",
+    "psycopg[binary]",
+]
+
+[tool.uv]
+package = false
+
 [tool.vercel]
 entrypoint = "api.index:app"
