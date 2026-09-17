@@ -13,3 +13,4 @@ pwdlib[argon2]
 qrcode[pil]
 email-validator
 httpx
+psycopg[binary]
