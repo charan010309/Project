@@ -1,0 +1,11 @@
+/* Public pages retain their existing light palette. */
+@media (max-width: 767px) {
+  html, body { max-width: 100%; overflow-x: hidden; }
+  body { min-height: 100dvh; }
+  main, main > div { min-width: 0; box-sizing: border-box; }
+  html:is([data-page="login"],[data-page="signup"]) main { padding: 20px 16px; }
+  html:is([data-page="login"],[data-page="signup"]) main > div { padding: 24px 20px; max-width: 100%; }
+  input, select, textarea { font-size: 16px !important; max-width: 100%; }
+  button, input, select { min-height: 44px; }
+  header { padding-left: 16px !important; padding-right: 16px !important; gap: 12px; }
+}

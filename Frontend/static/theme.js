@@ -37,6 +37,20 @@
   });
 
   function ready() {
+    // Keep navigation in the mobile route family, including desktop-site
+    // mode on a phone. Server redirects also cover JavaScript login redirects.
+    const pagePaths = new Set(['/', '/home', '/overview', '/speakwithai', '/history', '/api-pro', '/settings', '/profile-settings', '/login', '/signup', '/forgot-password', '/reset-password', '/qr-login', '/qr-confirm']);
+    if (location.pathname.startsWith('/m/')) {
+      document.addEventListener('click', event => {
+        const anchor = event.target.closest('a[href]');
+        if (!anchor) return;
+        const url = new URL(anchor.href, location.href);
+        if (url.origin === location.origin && pagePaths.has(url.pathname)) {
+          url.pathname = url.pathname === '/' ? '/m/' : '/m' + url.pathname;
+          anchor.href = url.href;
+        }
+      });
+    }
     apply(mode);
     document.querySelectorAll('[data-theme-choice]').forEach(button => button.addEventListener('click', () => set(button.dataset.themeChoice)));
     document.querySelectorAll('[data-theme-toggle]').forEach(button => button.addEventListener('click', () => set(mode === 'dark' ? 'light' : 'dark')));

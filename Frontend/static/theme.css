@@ -169,6 +169,20 @@ html:is([data-page="settings"],[data-page="profile-settings"]) header nav a {whi
  html[data-page="history"] .maximus-mobile-nav {width:100%;margin:0;}
 }
 @media(max-width:767px) {
+ html {scrollbar-gutter:auto;}
+ body {max-width:100%;overflow-x:hidden;}
+ main,section,article {min-width:0;}
+ input:not([type="checkbox"]):not([type="range"]),select,textarea {font-size:16px !important;}
+ html[data-page="home"] body {height:100dvh;min-height:0;}
+ html[data-page="home"] main {min-width:0;}
+ html[data-page="home"] #chatContainer {overscroll-behavior:contain;overflow-wrap:anywhere;}
+ html[data-page="home"] #chatContainer pre {max-width:100%;overflow-x:auto;}
+ html[data-page="home"] .chat-composer {padding-bottom:max(18px,env(safe-area-inset-bottom));}
+ html[data-page="home"] .chat-composer button {min-width:44px;min-height:44px;}
+ html[data-page="home"] main > header button {min-width:44px;min-height:44px;}
+ html[data-page="history"] main {flex-direction:column;}
+ html:is([data-page="settings"],[data-page="profile-settings"]) main > .grid {grid-template-columns:minmax(0,1fr);}
+ html:is([data-page="settings"],[data-page="profile-settings"]) main > .grid > * {grid-column:auto;min-width:0;}
  html:is([data-page="settings"],[data-page="profile-settings"]) body > main {padding:24px 16px 40px;}
  html:is([data-page="settings"],[data-page="profile-settings"]) main section {padding:20px;border-radius:14px;}
  .appearance-top {gap:12px;}.appearance-foot {align-items:flex-start;}.appearance-badge {display:none;}

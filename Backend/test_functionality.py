@@ -170,6 +170,38 @@ class FunctionalityTests(unittest.TestCase):
         for asset in ['theme.css', 'theme.js', 'logo.jpg']:
             self.assertEqual(self.client.get('/static/' + asset).status_code, 200, asset)
 
+    def test_mobile_routing_preserves_queries_and_real_chat(self):
+        for user_agent in ['Mozilla/5.0 (iPhone; CPU iPhone OS 18_0)', 'Mozilla/5.0 (Linux; Android 15) Mobile']:
+            headers = {'user-agent': user_agent}
+            for path in app.MOBILE_PAGE_PATHS:
+                response = self.client.get(path + '?test=keep', headers=headers, follow_redirects=False)
+                expected = '/m/' if path == '/' else '/m' + path
+                self.assertEqual(response.status_code, 307, path)
+                self.assertEqual(response.headers['location'], expected + '?test=keep')
+            response = self.client.get('/m/home', headers=headers)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('id="mobileSidebarToggle"', response.text)
+            self.assertIn("fetch('/ask'", response.text)
+            self.assertNotIn('ops@maximus.ai', response.text)
+            self.assertEqual(self.client.get('/api/settings', headers=headers, follow_redirects=False).status_code, 200)
+        self.assertEqual(self.client.get('/home', follow_redirects=False).status_code, 200)
+
+    def test_oauth_state_error_is_not_internal_server_error(self):
+        from unittest.mock import AsyncMock
+        from authlib.integrations.base_client.errors import MismatchingStateError
+        with patch.object(app.oauth.google, 'authorize_access_token', new=AsyncMock(side_effect=MismatchingStateError())):
+            response = self.client.get('/auth/google/callback')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('start sign-in again', response.json()['detail'])
+
+    def test_google_success_returns_mobile_home(self):
+        from unittest.mock import AsyncMock
+        info = {'sub': 'test-google', 'email': 'test@example.com', 'name': 'Test'}
+        with patch.object(app.oauth.google, 'authorize_access_token', new=AsyncMock(return_value={'userinfo': info})):
+            response = self.client.get('/auth/google/callback', headers={'user-agent': 'iPhone'}, follow_redirects=False)
+        self.assertEqual(response.status_code, 303)
+        self.assertEqual(response.headers['location'], '/m/home')
+
     def test_shared_otp_is_one_time_and_expires(self):
         app.store_otp('test', '123456', {'name': 'Test'})
         self.assertIsNone(app.verify_otp('test', '000000'))

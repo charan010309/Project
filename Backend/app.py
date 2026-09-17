@@ -597,6 +597,10 @@ STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 
 
 def _frontend_page(directory: str, filename: str) -> FileResponse:
+    # Share the API-wired responsive pages. The legacy mobile HTML files are
+    # design mockups with placeholder forms and must not replace real features.
+    if directory == MOBILE_DIR:
+        directory = PC_DIR
     path = os.path.join(directory, filename)
     if directory == MOBILE_DIR and not os.path.isfile(path):
         path = os.path.join(PC_DIR, filename)
@@ -950,6 +954,31 @@ def _is_mobile_client(request: Request) -> bool:
         "windows phone",
     )
     return any(marker in ua for marker in mobile_markers)
+
+
+MOBILE_PAGE_PATHS = frozenset({
+    "/", "/home", "/login", "/signup", "/settings", "/history",
+    "/speakwithai", "/overview", "/profile-settings", "/api-pro",
+    "/qr-login", "/qr-confirm", "/forgot-password", "/reset-password",
+})
+
+
+@app.middleware("http")
+async def mobile_page_routing(request: Request, call_next):
+    # Only page GETs: never redirect API requests, form POSTs, or OAuth callbacks.
+    if request.method in {"GET", "HEAD"} and request.url.path in MOBILE_PAGE_PATHS:
+        if _is_mobile_client(request):
+            path = "/m/" if request.url.path == "/" else "/m" + request.url.path
+            if request.url.query:
+                path += "?" + request.url.query
+            return RedirectResponse(path, status_code=307, headers={
+                "Vary": "User-Agent", "Cache-Control": "private, no-store",
+            })
+        response = await call_next(request)
+        response.headers["Vary"] = ", ".join(filter(None, [response.headers.get("Vary"), "User-Agent"]))
+        response.headers["Cache-Control"] = "private, no-store"
+        return response
+    return await call_next(request)
 
 
 def _get_current_user_id(request: Request) -> int:
@@ -1370,9 +1399,13 @@ async def google_callback(
     db: Session = Depends(get_db)
 ):
 
-    token = await oauth.google.authorize_access_token(
-        request
-    )
+    from authlib.integrations.base_client.errors import OAuthError
+    try:
+        token = await oauth.google.authorize_access_token(request)
+    except OAuthError:
+        # Expired state, cancelled consent, and cross-domain session loss must
+        # not become an unhandled 500. Never bypass OAuth state verification.
+        raise HTTPException(status_code=400, detail="Google sign-in expired or could not be verified. Open the main MAXIMUS website and start sign-in again.")
 
     # Authlib may not place userinfo in the token response when we use
     # explicit endpoints, so fetch it from Google's OIDC userinfo endpoint.
@@ -1446,7 +1479,7 @@ async def google_callback(
     _create_device_session(request, db, user.id)
     _start_authenticated_conversation_session(request, db, user.id)
 
-    return RedirectResponse(url="/home")
+    return RedirectResponse(url="/m/home" if _is_mobile_client(request) else "/home", status_code=303)
 
 
 # =====================================================
