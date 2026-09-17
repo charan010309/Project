@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" data-page="intro">
+
+<head>
+    <!-- Public/auth pages are intentionally always light, regardless of the saved app theme. -->
+    <meta name="color-scheme" content="light">
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const forceLight = () => {
+          root.classList.remove('dark');
+          root.setAttribute('data-theme', 'light');
+          if (root.style.colorScheme !== 'light') root.style.colorScheme = 'light';
+        };
+        forceLight();
+        new MutationObserver(forceLight).observe(root, {
+          attributes: true,
+          attributeFilter: ['class', 'data-theme', 'style']
+        });
+      })();
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAXIMUS — Your Personal AI Assistant</title>
+
+
+    <!-- =====================================================
+         FONTS & ICONS
+    ====================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         TAILWIND CSS
+    ====================================================== -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    fontFamily: {
+
+                        sans: [
+                            '"Plus Jakarta Sans"',
+                            'sans-serif'
+                        ],
+
+                        mono: [
+                            '"JetBrains Mono"',
+                            'monospace'
+                        ]
+
+                    },
+
+                    colors: {
+
+                        surface: '#FAFAFA',
+
+                        subtleBorder: '#E4E4E7',
+
+                        brandDark: '#09090B',
+
+                        brandMuted: '#71717A',
+
+                        emeraldLive: '#059669'
+
+                    },
+
+                    backgroundImage: {
+
+                        'grid-pattern':
+                            'radial-gradient(circle, #D4D4D8 1px, transparent 1px)'
+
+                    }
+
+                }
+
+            }
+
+        };
+
+    </script>
+
+
+    <!-- =====================================================
+         CUSTOM CSS
+    ====================================================== -->
+
+    <style>
+
+        body {
+
+            font-family: 'Plus Jakarta Sans', sans-serif;
+
+            background-color: #FAFAFA;
+
+            color: #09090B;
+
+            overflow-x: hidden;
+
+        }
+
+
+        /* Background Grid */
+
+        .bg-fine-grid {
+
+            background-size: 40px 40px;
+
+            background-image:
+
+                linear-gradient(
+                    to right,
+                    rgba(0, 0, 0, 0.03) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 0.03) 1px,
+                    transparent 1px
+                );
+
+        }
+
+
+        /* Floating Animation */
+
+        @keyframes floatSlow {
+
+            0%,
+            100% {
+
+                transform: translateY(0px);
+
+            }
+
+            50% {
+
+                transform: translateY(-8px);
+
+            }
+
+        }
+
+
+        @keyframes floatReverse {
+
+            0%,
+            100% {
+
+                transform: translateY(0px);
+
+            }
+
+            50% {
+
+                transform: translateY(6px);
+
+            }
+
+        }
+
+
+        .animate-float-1 {
+
+            animation: floatSlow 5s ease-in-out infinite;
+
+        }
+
+
+        .animate-float-2 {
+
+            animation: floatReverse 6s ease-in-out infinite 1s;
+
+        }
+
+
+        /* Glass Navigation */
+
+        .glass-nav {
+
+            background: rgba(250, 250, 250, 0.85);
+
+            backdrop-filter: blur(14px);
+
+        }
+
+
+        /* Mobile navigation */
+        #mobileMenu {
+            display: none;
+        }
+
+        @media (max-width: 767px) {
+            #mobileMenu {
+                position: fixed;
+                top: 5rem;
+                left: 1rem;
+                right: 1rem;
+                z-index: 49;
+                background: rgba(250, 250, 250, 0.97);
+                backdrop-filter: blur(14px);
+                border: 1px solid #E4E4E7;
+                border-radius: 1rem;
+                box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+                padding: 0.75rem;
+            }
+
+            #mobileMenu.open {
+                display: block;
+            }
+
+            #mobileMenu a {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.8rem 0.9rem;
+                border-radius: 0.7rem;
+                color: #3f3f46;
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+
+            #mobileMenu a:hover {
+                background: #f4f4f5;
+                color: #09090B;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body
+    class="bg-surface text-brandDark antialiased relative bg-fine-grid selection:bg-neutral-200"
+>
+
+
+    <!-- =====================================================
+         NAVIGATION BAR
+    ====================================================== -->
+
+    <header
+        id="navbar"
+        class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-nav border-b border-subtleBorder/70"
+    >
+
+        <div
+            class="max-w-7xl mx-auto px-6 sm:px-8 h-20 flex items-center justify-between"
+        >
+
+
+            <!-- LOGO -->
+
+            <a
+                href="#"
+                class="flex items-center gap-3 group"
+            >
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-black overflow-hidden flex items-center justify-center shadow-sm group-hover:scale-95 transition-transform"
+                >
+                    <img
+                        src="/static/logo.jpg"
+                        alt="MAXIMUS"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                    <span
+                        class="font-extrabold text-base tracking-tight text-brandDark"
+                    >
+                        MAXIMUS
+                    </span>
+
+                    
+
+                </div>
+
+            </a>
+
+
+            <!-- CENTER NAVIGATION -->
+
+            <nav class="hidden md:flex items-center gap-8">
+
+                <a
+                    href="#features"
+                    class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors"
+                >
+                    Features
+                </a>
+
+                <a
+                    href="#workflow"
+                    class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors"
+                >
+                    Architecture
+                </a>
+
+                <a
+                    href="#workflow"
+                    class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors"
+                >
+                    Workflow
+                </a>
+
+                <a
+                    href="#privacy"
+                    class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors"
+                >
+                    Privacy
+                </a>
+
+            </nav>
+
+
+            <!-- RIGHT BUTTONS -->
+
+            <div class="flex items-center gap-4">
+
+               
+
+
+                <button
+                    id="mobileMenuButton"
+                    type="button"
+                    aria-label="Open navigation"
+                    aria-expanded="false"
+                    class="md:hidden w-9 h-9 rounded-xl border border-subtleBorder
+                           bg-white flex items-center justify-center text-neutral-700
+                           hover:bg-neutral-100 transition"
+                >
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
+
+                <a
+                    href="/signup"
+                    class="inline-flex items-center gap-2 bg-brandDark hover:bg-neutral-800 text-white text-xs font-semibold px-4 py-2.5 rounded-full transition-all hover:shadow-md hover:-translate-y-0.5"
+                >
+                    <span>Sign Up/Log In</span>
+
+                    <i class="fa-solid fa-arrow-right text-[11px]"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- Mobile Navigation -->
+    <div id="mobileMenu" aria-hidden="true">
+        <a href="#features" data-mobile-link>
+            Features
+            <i class="fa-solid fa-arrow-down text-[10px]"></i>
+        </a>
+        <a href="#workflow" data-mobile-link>
+            Workflow
+            <i class="fa-solid fa-arrow-down text-[10px]"></i>
+        </a>
+        <a href="#privacy" data-mobile-link>
+            Privacy
+            <i class="fa-solid fa-arrow-down text-[10px]"></i>
+        </a>
+        <a href="/login">
+            Sign In
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+        <a href="/home" class="!bg-brandDark !text-white">
+            Launch Chat
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+    </div>
+
+    <!-- =====================================================
+         HERO SECTION
+    ====================================================== -->
+
+    <section
+        class="relative pt-36 pb-24 lg:pt-48 lg:pb-32 overflow-hidden"
+    >
+
+        <div class="max-w-7xl mx-auto px-6 sm:px-8">
+
+            <div
+                class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center"
+            >
+
+
+                <!-- LEFT SIDE -->
+
+                <div class="lg:col-span-6 space-y-8">
+
+
+                    <!-- STATUS -->
+
+                    <div
+                        class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-subtleBorder shadow-sm text-xs font-mono text-neutral-600"
+                    >
+
+                        <span
+                            class="w-2 h-2 rounded-full bg-emeraldLive animate-pulse"
+                        ></span>
+
+                        <span class="font-medium text-neutral-800">
+                            Multimodal AI Core
+                        </span>
+
+                        <span class="text-neutral-300">
+                            |
+                        </span>
+
+                        <span class="text-[11px] text-neutral-500">
+                            Real-Time Streaming
+                        </span>
+
+                    </div>
+
+
+                    <!-- HEADING -->
+
+                    <div class="space-y-4">
+
+                        <h1
+                            class="text-5xl sm:text-6xl xl:text-7xl font-extrabold tracking-tight text-brandDark leading-[1.06]"
+                        >
+
+                            Thoughtful AI.
+
+                            <br>
+
+                            <span
+                                class="text-neutral-400 font-light"
+                            >
+                                Effortless execution.
+                            </span>
+
+                        </h1>
+
+
+                        <p
+                            class="text-base sm:text-lg text-brandMuted leading-relaxed max-w-lg font-normal"
+                        >
+                            MAXIMUS coordinates conversational reasoning,
+                            low-latency voice synthesis, and vision intelligence
+                            in one serene, distraction-free environment.
+                        </p>
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <div
+                        class="flex flex-wrap items-center gap-4 pt-2"
+                    >
+
+                        <a
+                            href="/signup"
+                            class="inline-flex items-center gap-2.5 bg-brandDark hover:bg-neutral-800 text-white font-semibold text-sm px-6 py-3.5 rounded-full shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                        >
+
+                            <span>
+                                Start Free Conversation
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+
+                        </a>
+
+
+                        <a
+                            href="#features"
+                            class="inline-flex items-center gap-2 bg-white hover:bg-neutral-50 text-neutral-700 font-semibold text-sm px-5 py-3.5 rounded-full border border-subtleBorder transition-all hover:border-neutral-400"
+                        >
+
+                            <i
+                                class="fa-solid fa-layer-group text-xs text-neutral-400"
+                            ></i>
+
+                            <span>
+                                Explore Capabilities
+                            </span>
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- METRICS -->
+
+                    <div
+                        class="grid grid-cols-3 gap-6 pt-8 border-t border-subtleBorder/80 max-w-md"
+                    >
+
+                        <div>
+
+                            <div
+                                class="text-xl font-bold font-mono text-neutral-900"
+                            >
+                                0.4s
+                            </div>
+
+                            <div
+                                class="text-[11px] text-neutral-500 font-medium mt-0.5"
+                            >
+                                Median latency
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <div
+                                class="text-xl font-bold font-mono text-neutral-900"
+                            >
+                                100%
+                            </div>
+
+                            <div
+                                class="text-[11px] text-neutral-500 font-medium mt-0.5"
+                            >
+                                Session isolation
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <div
+                                class="text-xl font-bold text-neutral-900"
+                            >
+                                Vision
+                            </div>
+
+                            <div
+                                class="text-[11px] text-neutral-500 font-medium mt-0.5"
+                            >
+                                Zero-shot analysis
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT SIDE — CHAT PREVIEW -->
+
+                <div class="lg:col-span-6 relative">
+
+
+                    <!-- Glow -->
+
+                    <div
+                        class="absolute -inset-4 bg-gradient-to-tr from-neutral-200/50 via-neutral-100 to-transparent rounded-3xl filter blur-2xl -z-10"
+                    ></div>
+
+
+                    <!-- Mockup -->
+
+                    <div
+                        class="bg-white rounded-2xl border border-subtleBorder shadow-lg overflow-hidden"
+                    >
+
+
+                        <!-- Window Bar -->
+
+                        <div
+                            class="h-11 px-5 border-b border-subtleBorder flex items-center justify-between bg-neutral-50/70"
+                        >
+
+                            <div class="flex items-center gap-2">
+
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full bg-neutral-200"
+                                ></span>
+
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full bg-neutral-200"
+                                ></span>
+
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full bg-neutral-200"
+                                ></span>
+
+                                <span
+                                    class="font-mono text-[11px] text-neutral-400 ml-2"
+                                >
+                                    maximus-agent.local
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="flex items-center gap-2 text-[11px] font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/50"
+                            >
+
+                                <span
+                                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"
+                                ></span>
+
+                                Active
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- MOCK CHAT -->
+
+                        <div
+                            class="p-6 space-y-4 font-sans text-xs"
+                        >
+
+                            <!-- JARVIS -->
+
+                            <div class="flex items-start gap-3">
+
+                                <div
+                                    class="w-6 h-6 rounded-md bg-black overflow-hidden flex items-center justify-center shrink-0"
+                                >
+                                    <img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover"/>
+                                </div>
+
+                                <div
+                                    class="bg-neutral-50 border border-neutral-200/70 rounded-xl rounded-tl-sm px-3.5 py-2.5 text-neutral-700 leading-relaxed max-w-sm"
+                                >
+                                    I can assist with real-time code synthesis,
+                                    document evaluation, and direct voice
+                                    discussions. What shall we tackle?
+                                </div>
+
+                            </div>
+
+
+                            <!-- USER -->
+
+                            <div class="flex justify-end">
+
+                                <div
+                                    class="bg-neutral-100 rounded-xl rounded-tr-sm px-3.5 py-2.5 text-neutral-900 leading-relaxed max-w-xs font-medium"
+                                >
+                                    Inspect this architectural schematic and
+                                    point out scaling risks.
+                                </div>
+
+                            </div>
+
+
+                            <!-- JARVIS RESPONSE -->
+
+                            <div class="flex items-start gap-3">
+
+                                <div
+                                    class="w-6 h-6 rounded-md bg-black overflow-hidden flex items-center justify-center shrink-0"
+                                >
+                                    <img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover"/>
+                                </div>
+
+                                <div
+                                    class="bg-neutral-50 border border-neutral-200/70 rounded-xl rounded-tl-sm px-4 py-3 text-neutral-700 leading-relaxed flex-1 space-y-2"
+                                >
+
+                                    <div
+                                        class="flex items-center gap-2 text-[11px] font-semibold text-neutral-900"
+                                    >
+
+                                        <i
+                                            class="fa-regular fa-image text-neutral-500"
+                                        ></i>
+
+                                        Vision Diagnostic Complete
+
+                                    </div>
+
+                                    <p class="text-neutral-600 text-[11px]">
+                                        Detected potential single point of
+                                        failure in the ingress cache tier.
+                                        Recommending distributed Redis cluster
+                                        with auto-partitioning.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FLOATING VOICE BADGE -->
+
+                    <div
+                        class="absolute -top-5 -left-4 bg-white/95 backdrop-blur border border-subtleBorder shadow-lg rounded-xl px-3.5 py-2.5 flex items-center gap-3 animate-float-1 z-20"
+                    >
+
+                        <div
+                            class="w-7 h-7 rounded-lg bg-black text-white flex items-center justify-center text-xs"
+                        >
+                            <i class="fa-solid fa-microphone"></i>
+                        </div>
+
+                        <div>
+
+                            <div
+                                class="text-[11px] font-bold text-neutral-900"
+                            >
+                                Live Voice Protocol
+                            </div>
+
+                            <div
+                                class="text-[10px] text-neutral-400"
+                            >
+                                Natural bidirectional speech
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FLOATING SECURITY BADGE -->
+
+                    <div
+                        class="absolute -bottom-5 -right-3 bg-white/95 backdrop-blur border border-subtleBorder shadow-lg rounded-xl px-3.5 py-2.5 flex items-center gap-3 animate-float-2 z-20"
+                    >
+
+                        <div
+                            class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200/60 flex items-center justify-center text-xs"
+                        >
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <div>
+
+                            <div
+                                class="text-[11px] font-bold text-neutral-900"
+                            >
+                                Zero Data Retention
+                            </div>
+
+                            <div
+                                class="text-[10px] text-neutral-400"
+                            >
+                                Ephemeral memory mode
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FEATURES
+    ====================================================== -->
+
+    <section
+        id="features"
+        class="py-24 border-t border-subtleBorder bg-white/40"
+    >
+
+        <div class="max-w-7xl mx-auto px-6 sm:px-8">
+
+
+            <!-- HEADER -->
+
+            <div
+                class="text-center max-w-2xl mx-auto mb-16 space-y-3"
+            >
+
+                <span
+                    class="text-[11px] font-bold font-mono tracking-widest uppercase text-neutral-400"
+                >
+                    Engine Capabilities
+                </span>
+
+                <h2
+                    class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brandDark"
+                >
+                    Engineered for precision, clarity, and depth
+                </h2>
+
+                <p class="text-sm text-brandMuted">
+                    Everything you need from an intelligence partner,
+                    without superfluous visual clutter or distracting gimmicks.
+                </p>
+
+            </div>
+
+
+            <!-- FEATURE GRID -->
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+
+
+                <!-- FEATURE 1 -->
+
+                <div
+                    class="group bg-white rounded-2xl p-8 border border-subtleBorder hover:border-neutral-300 hover:shadow-lg transition-all"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 text-sm mb-6 group-hover:bg-brandDark group-hover:text-white transition-colors"
+                    >
+                        <i class="fa-regular fa-comments"></i>
+                    </div>
+
+                    <h3
+                        class="text-base font-bold text-brandDark mb-2"
+                    >
+                        Refined Reasoning
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Formulates crisp summaries, debugs intricate
+                        codebases, and structures multi-step analytical
+                        frameworks with zero extraneous padding.
+                    </p>
+
+                    <div
+                        class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
+                    >
+                        Multimodal AI Core
+                    </div>
+
+                </div>
+
+
+                <!-- FEATURE 2 -->
+
+                <div
+                    class="group bg-white rounded-2xl p-8 border border-subtleBorder hover:border-neutral-300 hover:shadow-lg transition-all"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 text-sm mb-6 group-hover:bg-brandDark group-hover:text-white transition-colors"
+                    >
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </div>
+
+                    <h3
+                        class="text-base font-bold text-brandDark mb-2"
+                    >
+                        Live Voice Duplex
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Conversational audio dialogue with low turn-taking
+                        latency. Interrupt comfortably, clarify nuance,
+                        and discuss ideas naturally out loud.
+                    </p>
+
+                    <div
+                        class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
+                    >
+                        Low-latency synthesis
+                    </div>
+
+                </div>
+
+
+                <!-- FEATURE 3 -->
+
+                <div
+                    class="group bg-white rounded-2xl p-8 border border-subtleBorder hover:border-neutral-300 hover:shadow-lg transition-all"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 text-sm mb-6 group-hover:bg-brandDark group-hover:text-white transition-colors"
+                    >
+                        <i class="fa-regular fa-eye"></i>
+                    </div>
+
+                    <h3
+                        class="text-base font-bold text-brandDark mb-2"
+                    >
+                        Multimodal Vision
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Attach screenshots, product mockups, whiteboards,
+                        or camera snapshots. MAXIMUS extracts text, flags
+                        anomalies, and describes components.
+                    </p>
+
+                    <div
+                        class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
+                    >
+                        Real-time OCR & inspection
+                    </div>
+
+                </div>
+
+
+                <!-- FEATURE 4 -->
+
+                <div
+                    class="group bg-white rounded-2xl p-8 border border-subtleBorder hover:border-neutral-300 hover:shadow-lg transition-all"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 text-sm mb-6 group-hover:bg-brandDark group-hover:text-white transition-colors"
+                    >
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+
+                    <h3
+                        class="text-base font-bold text-brandDark mb-2"
+                    >
+                        Persistent History
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Search, tag, and restore prior discussions in
+                        milliseconds. Your context is preserved across
+                        devices with client-side encryption.
+                    </p>
+
+                    <div
+                        class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
+                    >
+                        Synced across workspaces
+                    </div>
+
+                </div>
+
+
+                
+                <!-- FEATURE 5 -->
+
+                <div
+                    class="group bg-white rounded-2xl p-8 border border-subtleBorder hover:border-neutral-300 hover:shadow-lg transition-all"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 text-sm mb-6 group-hover:bg-brandDark group-hover:text-white transition-colors"
+                    >
+                        <i class="fa-regular fa-square"></i>
+                    </div>
+
+                    <h3
+                        class="text-base font-bold text-brandDark mb-2"
+                    >
+                        Privacy & Compliance
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Explicit data-sharing controls with opt-out switches
+                        for model retraining. Your private prompts and
+                        intellectual property stay strictly yours.
+                    </p>
+
+                    <div
+                        class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
+                    >
+                        SOC2 Type II aligned
+                    </div>
+
+                </div>
+
+                <!-- FEATURE 6 — API & BYOK -->
+
+                <div
+                    class="group bg-white rounded-2xl p-8 border border-subtleBorder hover:border-neutral-300 hover:shadow-lg transition-all"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 text-sm mb-6 group-hover:bg-brandDark group-hover:text-white transition-colors"
+                    >
+                        <i class="fa-solid fa-plug"></i>
+                    </div>
+
+                    <h3
+                        class="text-base font-bold text-brandDark mb-2"
+                    >
+                        Bring Your Own API Key
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Connect your own AI providers and API keys. Manage
+                        provider connections, discover supported models, and
+                        select the model you want to use inside MAXIMUS.
+                    </p>
+
+                    <div
+                        class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
+                    >
+                        Custom providers &amp; model selection
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WORKFLOW
+    ====================================================== -->
+
+    <section
+        id="workflow"
+        class="py-24 border-t border-subtleBorder"
+    >
+
+        <div class="max-w-7xl mx-auto px-6 sm:px-8">
+
+
+            <div
+                class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4"
+            >
+
+                <div>
+
+                    <span
+                        class="text-[11px] font-bold font-mono tracking-widest uppercase text-neutral-400"
+                    >
+                        Onboarding Flow
+                    </span>
+
+                    <h2
+                        class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brandDark mt-2"
+                    >
+                        Start collaborating in seconds
+                    </h2>
+
+                </div>
+
+                <p
+                    class="text-xs text-brandMuted max-w-sm"
+                >
+                    No complicated orchestration or extensive setup required.
+                    Simple, secure, and ready to deploy.
+                </p>
+
+            </div>
+
+
+            <!-- STEPS -->
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-4 gap-8"
+            >
+
+                <div class="space-y-3">
+
+                    <div
+                        class="font-mono text-xs font-semibold text-neutral-400"
+                    >
+                        01 / SETUP
+                    </div>
+
+                    <h3
+                        class="text-sm font-bold text-neutral-900"
+                    >
+                        Verify Identity
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Sign up using verified email or pair instantaneously
+                        via mobile QR token.
+                    </p>
+
+                </div>
+
+
+                <div class="space-y-3">
+
+                    <div
+                        class="font-mono text-xs font-semibold text-neutral-400"
+                    >
+                        02 / INTERACTION
+                    </div>
+
+                    <h3
+                        class="text-sm font-bold text-neutral-900"
+                    >
+                        Select Modality
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Type queries, talk via continuous mic streaming,
+                        or drop in images and files.
+                    </p>
+
+                </div>
+
+
+                <div class="space-y-3">
+
+                    <div
+                        class="font-mono text-xs font-semibold text-neutral-400"
+                    >
+                        03 / PROCESSING
+                    </div>
+
+                    <h3
+                        class="text-sm font-bold text-neutral-900"
+                    >
+                        Real-Time Synthesis
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Watch structured answers, code blocks, or voice
+                        replies stream with near-zero latency.
+                    </p>
+
+                </div>
+
+
+                <div class="space-y-3">
+
+                    <div
+                        class="font-mono text-xs font-semibold text-neutral-400"
+                    >
+                        04 / KNOWLEDGE
+                    </div>
+
+                    <h3
+                        class="text-sm font-bold text-neutral-900"
+                    >
+                        Retain & Iterate
+                    </h3>
+
+                    <p
+                        class="text-xs text-brandMuted leading-relaxed"
+                    >
+                        Sessions are automatically archived and indexed
+                        for rapid retrieval at any time.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PRIVACY
+    ====================================================== -->
+
+    <section
+        id="privacy"
+        class="py-24 border-t border-subtleBorder bg-white/40"
+    >
+        <div class="max-w-4xl mx-auto px-6 sm:px-8 text-center">
+            <span
+                class="text-[11px] font-bold font-mono tracking-widest uppercase text-neutral-400"
+            >
+                Privacy
+            </span>
+
+            <h2
+                class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brandDark mt-3"
+            >
+                Your conversations stay yours.
+            </h2>
+
+            <p class="text-sm text-brandMuted leading-relaxed mt-5 max-w-2xl mx-auto">
+                MAXIMUS is designed with clear session controls and straightforward
+                privacy settings, so you stay in control of how your conversations
+                are handled.
+            </p>
+
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         CALL TO ACTION
+    ====================================================== -->
+
+    <section class="py-20 px-6 sm:px-8">
+
+        <div
+            class="max-w-6xl mx-auto rounded-3xl bg-brandDark text-white p-10 sm:p-16 relative overflow-hidden text-center shadow-2xl"
+        >
+
+            <div
+                class="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none"
+            ></div>
+
+            <div
+                class="relative z-10 max-w-2xl mx-auto space-y-6"
+            >
+
+                <span
+                    class="text-[10px] font-mono tracking-widest uppercase text-neutral-400 px-3 py-1 rounded-full border border-neutral-800 bg-neutral-900"
+                >
+                    Ready When You Are
+                </span>
+
+                <h2
+                    class="text-3xl sm:text-5xl font-extrabold tracking-tight"
+                >
+                    Experience intelligence with zero noise.
+                </h2>
+
+                <p
+                    class="text-xs sm:text-sm text-neutral-400 leading-relaxed"
+                >
+                    Join thousands of developers, researchers, and creators
+                    getting more done with JARVIS.
+                </p>
+
+                <div
+                    class="flex flex-wrap items-center justify-center gap-4 pt-4"
+                >
+
+                    <a
+                        href="/signup"
+                        class="bg-white text-brandDark hover:bg-neutral-100 text-xs font-bold px-7 py-3.5 rounded-full transition-all hover:scale-105"
+                    >
+                        Create A Free Account Now 
+                    </a>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer
+        class="border-t border-subtleBorder py-12 bg-white/60"
+    >
+
+        <div
+            class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-brandMuted"
+        >
+
+            <div class="flex items-center gap-2">
+
+                <div
+                    class="w-5 h-5 rounded bg-black overflow-hidden flex items-center justify-center"
+                >
+                    <img
+                        src="/static/logo.jpg"
+                        alt="MAXIMUS"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+
+                <span class="font-bold text-brandDark">
+                    MAXIMUS AI
+                </span>
+
+                <span>
+                    — Powered by Gemini 3.6-FLASH
+                </span>
+
+            </div>
+
+
+            <div class="flex items-center gap-6">
+
+                <a
+                    href="#features"
+                    class="hover:text-brandDark transition-colors"
+                >
+                    Features
+                </a>
+
+                <a
+                    href="/login"
+                    class="hover:text-brandDark transition-colors"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="/signup"
+                    class="hover:text-brandDark transition-colors"
+                >
+                    Sign Up
+                </a>
+
+                <a
+                    href="#privacy"
+                    class="hover:text-brandDark transition-colors"
+                >
+                    Privacy
+                </a>
+
+            </div>
+
+
+            <div
+                class="font-mono text-[11px] text-neutral-400"
+            >
+                © 2026 MAXIMUS AI Inc. All rights reserved.
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+        /* ==========================================
+           NAVBAR SCROLL EFFECT
+        ========================================== */
+
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-sm');
+                navbar.classList.remove('h-20');
+                navbar.classList.add('h-16');
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.classList.remove('h-16');
+                navbar.classList.add('h-20');
+            }
+        });
+
+        /* ==========================================
+           MOBILE NAVIGATION
+        ========================================== */
+
+        const mobileMenuButton =
+            document.getElementById('mobileMenuButton');
+
+        const mobileMenu =
+            document.getElementById('mobileMenu');
+
+        function closeMobileMenu() {
+            if (!mobileMenu || !mobileMenuButton) return;
+
+            mobileMenu.classList.remove('open');
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+
+            const icon = mobileMenuButton.querySelector('i');
+
+            if (icon) {
+                icon.className = 'fa-solid fa-bars text-sm';
+            }
+        }
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                const isOpen = mobileMenu.classList.toggle('open');
+
+                mobileMenu.setAttribute(
+                    'aria-hidden',
+                    String(!isOpen)
+                );
+
+                mobileMenuButton.setAttribute(
+                    'aria-expanded',
+                    String(isOpen)
+                );
+
+                const icon = mobileMenuButton.querySelector('i');
+
+                if (icon) {
+                    icon.className = isOpen
+                        ? 'fa-solid fa-xmark text-sm'
+                        : 'fa-solid fa-bars text-sm';
+                }
+            });
+        }
+
+        document.querySelectorAll('[data-mobile-link]').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                closeMobileMenu();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+```

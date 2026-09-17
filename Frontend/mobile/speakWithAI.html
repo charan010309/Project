@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#f9f9f9;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#1c1b1d", "tertiary-fixed": "#e3e1ec", "primary-fixed-dim": "#c8c6c8", "error": "#ba1a1a", "on-tertiary-fixed": "#1a1b22", "surface": "#f9f9f9", "background": "#f9f9f9", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#68dba9", "tertiary": "#000000", "surface-dim": "#dadada", "surface-container": "#eeeeee", "surface-tint": "#5f5e60", "inverse-primary": "#c8c6c8", "outline-variant": "#c8c5ca", "error-container": "#ffdad6", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#005137", "surface-container-high": "#e8e8e8", "primary": "#000000", "on-error": "#ffffff", "tertiary-fixed-dim": "#c6c5cf", "on-background": "#1a1c1c", "secondary-fixed": "#85f8c4", "on-secondary-container": "#00714e", "primary-fixed": "#e5e1e4", "on-tertiary-fixed-variant": "#46464e", "surface-container-low": "#f3f3f3", "tertiary-container": "#1a1b22", "primary-container": "#1c1b1d", "surface-variant": "#e2e2e2", "inverse-on-surface": "#f1f1f1", "inverse-surface": "#2f3131", "surface-container-lowest": "#ffffff", "on-primary-fixed-variant": "#474649", "on-surface": "#1a1c1c", "surface-bright": "#f9f9f9", "on-tertiary-container": "#83838c", "on-primary-container": "#858386", "on-error-container": "#93000a", "on-secondary-fixed": "#002114", "secondary-container": "#82f5c1", "surface-container-highest": "#e2e2e2", "on-primary": "#ffffff", "secondary": "#006c4a", "on-surface-variant": "#47464a", "outline": "#78767b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin": "1rem", "space-lg": "1rem", "space-md": "0.75rem", "space-xl": "1.5rem", "gutter": "0.75rem", "space-xs": "0.25rem", "space-sm": "0.5rem" }, "fontFamily": { "label-lg": ["JetBrains Mono"], "body-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["JetBrains Mono"], "label-sm": ["JetBrains Mono"], "headline-md": ["Plus Jakarta Sans"] }, "fontSize": { "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-14 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm"><button aria-label="Open navigation menu" class="w-10 h-10 -ml-1 flex items-center justify-center rounded-xl text-on-surface hover:bg-surface-container transition-colors" id="open-sidebar-btn"><span class="material-symbols-outlined text-[24px]">menu</span></button><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary">MAXIMUS</span><div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container/30"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm text-secondary font-semibold uppercase">v4.5-LIVE</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="Search or Filter" class="w-11 h-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">tune</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-14 bg-surface px-margin pb-safe"><div class="flex flex-col w-full gap-y-space-md max-w-5xl mx-auto">
+<!-- System Telemetry Ribbon -->
+<div class="w-full bg-surface-container-low rounded-xl px-space-md py-space-xs flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container/40">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-on-secondary-container uppercase">DUPLEX ACTIVE</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">ws://engine.maximus.internal/v4/stream</span>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">bolt</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">38ms TTFT</span>
+</div>
+<span class="hidden sm:inline font-label-sm text-label-sm text-outline">|</span>
+<span class="hidden sm:inline font-label-sm text-label-sm text-on-surface-variant">opus-48khz</span>
+</div>
+</div>
+<!-- Adaptive Grid Layout (Single-col mobile, 2-col tablet/desktop) -->
+<div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
+<!-- Left / Primary Column: Voice Stage & Realtime Transcript -->
+<div class="lg:col-span-7 flex flex-col gap-y-space-md w-full">
+<!-- Central Voice Stage Card -->
+<div class="relative w-full rounded-xl bg-surface-container-lowest p-space-md flex flex-col items-center justify-between min-h-[340px] shadow-sm overflow-hidden">
+<!-- Background Ambient Ring Flare -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+<div class="w-64 h-64 rounded-full bg-secondary-container/20 blur-2xl"></div>
+</div>
+<!-- Top Stage Status Bar -->
+<div class="w-full flex items-center justify-between z-10">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary"></span>
+</span>
+<span class="font-headline-sm text-headline-sm text-on-surface" id="voice-state-label">Listening to you...</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">graphic_eq</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Dual-Stream</span>
+</div>
+</div>
+<!-- Concentric Mic Hero Target -->
+<div class="relative my-4 flex items-center justify-center">
+<!-- Pulse Outer Ring 2 -->
+<div class="absolute w-44 h-44 rounded-full bg-secondary-container/30 animate-pulse pointer-events-none"></div>
+<!-- Pulse Outer Ring 1 -->
+<div class="absolute w-32 h-32 rounded-full bg-secondary-container/60 animate-ping opacity-60 pointer-events-none" style="animation-duration: 2.8s;"></div>
+<!-- Master Mic Button -->
+<button aria-label="Toggle Microphone" class="relative z-10 w-24 h-24 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg transition-transform active:scale-95 group" id="mic-toggle-btn">
+<div class="absolute inset-0 rounded-full bg-secondary opacity-15 blur-sm group-hover:opacity-25 transition-opacity"></div>
+<span class="material-symbols-outlined text-[36px] text-on-primary" id="mic-icon">mic</span>
+</button>
+</div>
+<!-- Live Audio Waveform Visualizer -->
+<div class="w-full max-w-xs flex items-center justify-center gap-1.5 h-10 px-space-sm z-10">
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_1s_infinite_100ms] h-4"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_1.2s_infinite_200ms] h-7"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_0.9s_infinite_50ms] h-3"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_1.4s_infinite_300ms] h-9"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_1.1s_infinite_150ms] h-6"></div>
+<div class="w-1.5 bg-primary rounded-full animate-[bounce_1.3s_infinite_250ms] h-8"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_0.8s_infinite_120ms] h-5"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_1.5s_infinite_180ms] h-9"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_1.0s_infinite_90ms] h-6"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_1.2s_infinite_220ms] h-4"></div>
+<div class="w-1.5 bg-secondary rounded-full animate-[bounce_0.9s_infinite_70ms] h-2"></div>
+</div>
+<!-- Micro-Interaction Controls Row -->
+<div class="w-full flex items-center justify-between pt-space-sm z-10">
+<button class="px-space-md py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors flex items-center gap-2" id="mute-stream-btn">
+<span class="material-symbols-outlined text-[18px]">mic_off</span>
+<span class="font-body-sm text-body-sm font-medium">Mute</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" title="Audio Device Switcher">
+<span class="material-symbols-outlined text-[18px]">headphones</span>
+</button>
+<button class="px-space-md py-2 rounded-xl bg-error text-on-error hover:opacity-90 transition-opacity flex items-center gap-1.5" id="end-session-btn">
+<span class="material-symbols-outlined text-[18px]">call_end</span>
+<span class="font-body-sm text-body-sm font-medium">Disconnect</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Contextual Chips -->
+<div class="w-full flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+<button class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-body-sm text-body-sm shadow-sm hover:bg-surface-container transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">bolt</span>
+<span>Summarize thread</span>
+</button>
+<button class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-body-sm text-body-sm shadow-sm hover:bg-surface-container transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">psychology</span>
+<span>Explain this simply</span>
+</button>
+<button class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-body-sm text-body-sm shadow-sm hover:bg-surface-container transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">bug_report</span>
+<span>Help debug latency</span>
+</button>
+<button class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-body-sm text-body-sm shadow-sm hover:bg-surface-container transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">translate</span>
+<span>Translate to Hindi</span>
+</button>
+</div>
+<!-- Real-Time Transcript Feed -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md flex flex-col gap-y-space-md shadow-sm">
+<!-- Transcript Header -->
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">forum</span>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Live Transcript</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">ARCHITECTURAL LATENCY // REAL-TIME SYNC</p>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface" title="Pin Transcript">
+<span class="material-symbols-outlined text-[16px]">keep</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface" title="Export Logs">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+</button>
+</div>
+</div>
+<!-- Transcript Feed Items -->
+<div class="flex flex-col gap-y-space-md max-h-72 overflow-y-auto pr-1">
+<!-- User Entry -->
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0 bg-surface-container-low p-space-sm rounded-xl rounded-tl-none">
+<div class="flex items-center justify-between gap-2 mb-1">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">You</span>
+<span class="font-label-sm text-label-sm text-outline">10:42:08.120</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                "Explain the primary differences between speculative decoding and parallel prefix caching for voice latency reduction."
+              </p>
+</div>
+</div>
+<!-- AI Response Entry -->
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-on-primary">
+<span class="material-symbols-outlined text-[18px]">memory</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0 bg-secondary-container/20 p-space-sm rounded-xl rounded-tl-none">
+<div class="flex items-center justify-between gap-2 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">MAXIMUS</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary text-on-secondary font-label-sm text-label-sm">4.5-FLASH</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-medium">32ms latency</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Speculative decoding uses a draft model to propose tokens validated by the primary model in a single forward pass, slashing per-token generation time. Parallel prefix caching instead eliminates KV-cache recomputation for persistent system frames and conversation turns.
+              </p>
+<div class="mt-2 flex items-center gap-2 pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tokens: 64 • Audio Synthesized: 1.8s</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Direct Command Input -->
+<div class="relative flex items-center w-full mt-space-xs">
+<input class="w-full bg-surface-container-low text-on-surface placeholder:text-outline font-body-md text-body-md rounded-xl pl-space-md pr-12 py-2.5 focus:outline-none focus:bg-surface-container-high transition-colors" placeholder="Type prompt fallback or inject text context..." type="text"/>
+<button aria-label="Send query" class="absolute right-1.5 w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Settings & Live Telemetry Configuration (Foldable/Tablet Side Panel) -->
+<div class="lg:col-span-5 flex flex-col gap-y-space-md w-full">
+<!-- Session Parameters Accordion / Config Panel -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md flex flex-col gap-y-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">tune</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Duplex Pipeline Setup</h3>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded text-on-surface-variant">PERSISTENT</span>
+</div>
+<!-- Model Selection -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Neural Engine</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex flex-col items-start p-2.5 rounded-xl bg-primary text-on-primary text-left">
+<span class="font-body-sm text-body-sm font-semibold">MAX-4.5 Flash</span>
+<span class="font-label-sm text-label-sm text-on-primary-fixed-variant opacity-80">Sub-50ms Ultra</span>
+</button>
+<button class="flex flex-col items-start p-2.5 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors text-left">
+<span class="font-body-sm text-body-sm font-semibold">MAX-Omni Pro</span>
+<span class="font-label-sm text-label-sm text-outline">Complex Reasoning</span>
+</button>
+</div>
+</div>
+<!-- Voice Persona Selection -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Voice Persona (Acoustic Output)</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="p-2 rounded-xl bg-surface-container-high text-on-surface text-center font-body-sm text-body-sm font-semibold">
+              Caelum
+            </button>
+<button class="p-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors text-center font-body-sm text-body-sm">
+              Lyra
+            </button>
+<button class="p-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors text-center font-body-sm text-body-sm">
+              Zephyr
+            </button>
+</div>
+</div>
+<!-- Input Language Matrix -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Input Audio Language</label>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+<button class="py-1.5 px-2 rounded-lg bg-surface-container-high text-on-surface text-center font-label-md text-label-md font-semibold">
+              EN-US
+            </button>
+<button class="py-1.5 px-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-center font-label-md text-label-md">
+              HI-IN
+            </button>
+<button class="py-1.5 px-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-center font-label-md text-label-md">
+              FR-FR
+            </button>
+<button class="py-1.5 px-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-center font-label-md text-label-md">
+              JA-JP
+            </button>
+</div>
+</div>
+<!-- Live Web Grounding Switch -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Web Grounding</span>
+<span class="font-label-sm text-label-sm text-outline">Augment replies with real-time web telemetry</span>
+</div>
+<button aria-pressed="true" class="w-12 h-6 rounded-full bg-secondary p-0.5 flex items-center justify-end transition-colors" id="grounding-toggle">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+<!-- Save and Sync Preference -->
+<button class="w-full py-2.5 rounded-xl bg-primary text-on-primary font-body-sm text-body-sm font-semibold hover:opacity-90 transition-opacity">
+          Save Configuration
+        </button>
+</div>
+<!-- Real-Time Hardware & Stream Metrics (Foldable/Tablet visual anchor) -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md flex flex-col gap-y-space-sm shadow-sm">
+<div class="flex items-center justify-between pb-1">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Live Telemetry</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">SYNCED</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="p-2 rounded-xl bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Jitter</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">1.4ms</span>
+</div>
+<div class="p-2 rounded-xl bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Buffer</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">12ms</span>
+</div>
+<div class="p-2 rounded-xl bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Loss</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-bold">0.00%</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">security</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">E2E Enclave Secured</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">TLS 1.3 AES-GCM</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Interactive Micro-Interactions
+    const micBtn = document.getElementById('mic-toggle-btn');
+    const micIcon = document.getElementById('mic-icon');
+    const stateLabel = document.getElementById('voice-state-label');
+    const muteBtn = document.getElementById('mute-stream-btn');
+    const groundingToggle = document.getElementById('grounding-toggle');
+    
+    let isListening = true;
+    let isMuted = false;
+    let isGroundingOn = true;
+
+    if (micBtn && micIcon && stateLabel) {
+      micBtn.addEventListener('click', function() {
+        isListening = !isListening;
+        if (isListening) {
+          micIcon.textContent = 'mic';
+          stateLabel.textContent = 'Listening to you...';
+          stateLabel.className = 'font-headline-sm text-headline-sm text-on-surface';
+        } else {
+          micIcon.textContent = 'mic_off';
+          stateLabel.textContent = 'Voice Paused (Tap to Speak)';
+          stateLabel.className = 'font-headline-sm text-headline-sm text-on-surface-variant';
+        }
+      });
+    }
+
+    if (muteBtn) {
+      muteBtn.addEventListener('click', function() {
+        isMuted = !isMuted;
+        if (isMuted) {
+          muteBtn.classList.add('bg-error-container', 'text-on-error-container');
+          muteBtn.querySelector('span:last-child').textContent = 'Muted';
+        } else {
+          muteBtn.classList.remove('bg-error-container', 'text-on-error-container');
+          muteBtn.querySelector('span:last-child').textContent = 'Mute';
+        }
+      });
+    }
+
+    if (groundingToggle) {
+      groundingToggle.addEventListener('click', function() {
+        isGroundingOn = !isGroundingOn;
+        if (isGroundingOn) {
+          groundingToggle.className = 'w-12 h-6 rounded-full bg-secondary p-0.5 flex items-center justify-end transition-colors';
+        } else {
+          groundingToggle.className = 'w-12 h-6 rounded-full bg-surface-container-high p-0.5 flex items-center justify-start transition-colors';
+        }
+      });
+    }
+  })();
+</script></main><aside aria-label="Sidebar Navigation" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300" id="mobile-sidebar"><div class="absolute inset-0 bg-primary/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out" id="sidebar-backdrop"></div><div class="relative flex flex-col justify-between w-[85vw] max-w-xs h-full bg-surface-container-lowest text-on-surface shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out pointer-events-auto overflow-y-auto" id="sidebar-panel"><div class="flex flex-col"><div class="flex items-center justify-between p-space-md border-b border-surface-container"><div class="flex items-center gap-2"><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary">MAXIMUS</span><div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container/30"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm text-secondary font-semibold uppercase">v4.5-LIVE</span></div></div><button aria-label="Close navigation menu" class="w-9 h-9 flex items-center justify-center rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" id="close-sidebar-btn"><span class="material-symbols-outlined text-[20px]">close</span></button></div><div class="p-space-md pb-space-sm"><div class="flex items-center gap-3 p-2.5 rounded-xl bg-surface-container-low"><div class="w-10 h-10 rounded-full bg-primary text-on-primary font-bold flex items-center justify-center shrink-0 text-body-md">U</div><div class="flex flex-col min-w-0 flex-1"><div class="flex items-center justify-between"><span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Operator Core</span><span class="px-1.5 py-0.2 rounded bg-secondary-container/40 text-on-secondary-container font-label-sm text-label-sm">PRO</span></div><span class="font-label-sm text-label-sm text-outline truncate">operator@maximus-core.ai</span></div></div></div><nav aria-label="Mobile Main Navigation" class="flex flex-col px-space-sm py-1 gap-1"><a class="flex items-center gap-3 px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">chat_bubble</span><span class="font-body-md text-body-md font-medium">Chat</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-xl bg-primary text-on-primary font-medium transition-colors" href="#"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-on-primary">graphic_eq</span><span class="font-body-md text-body-md font-semibold text-on-primary">Live AI Voice</span></div><span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span></a><a class="flex items-center gap-3 px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span class="font-body-md text-body-md font-medium">History &amp; Vault</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px]">hub</span><span class="font-body-md text-body-md font-medium">BYOK &amp; Providers</span></div><span class="font-label-sm text-label-sm bg-surface-container px-1.5 py-0.2 rounded text-outline">4 active</span></a><a class="flex items-center gap-3 px-space-md py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md font-medium">Settings &amp; Parameters</span></a></nav><div class="mx-space-md my-space-sm p-space-sm rounded-xl bg-surface-container border border-outline-variant/30 flex flex-col gap-1.5"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Duplex Stream</span><span class="font-label-sm text-label-sm text-secondary font-semibold">CONNECTED</span></div><div class="flex items-center justify-between text-label-sm font-label-sm text-outline"><span>Latency:</span><span class="text-on-surface font-semibold">38ms TTFT</span></div><div class="flex items-center justify-between text-label-sm font-label-sm text-outline"><span>Pipeline:</span><span class="text-on-surface font-semibold">WebRTC Op-48k</span></div><div class="flex items-center justify-between text-label-sm font-label-sm text-outline"><span>Security:</span><span class="text-on-surface font-semibold">AES-GCM TLS 1.3</span></div></div></div><div class="p-space-md border-t border-surface-container flex flex-col gap-2"><button class="w-full flex items-center justify-between px-space-md py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">power_settings_new</span><span class="font-body-sm text-body-sm font-medium">Sign Out</span></div><span class="font-label-sm text-label-sm text-outline">Session #412</span></button></div></div><script>(function(){const s=document.getElementById('mobile-sidebar');const b=document.getElementById('sidebar-backdrop');const p=document.getElementById('sidebar-panel');const o=document.getElementById('open-sidebar-btn');const c=document.getElementById('close-sidebar-btn');function openDrawer(){s.classList.remove('pointer-events-none');b.classList.remove('opacity-0','pointer-events-none');b.classList.add('opacity-100','pointer-events-auto');p.classList.remove('-translate-x-full');p.classList.add('translate-x-0');document.body.style.overflow='hidden';}function closeDrawer(){b.classList.remove('opacity-100','pointer-events-auto');b.classList.add('opacity-0','pointer-events-none');p.classList.remove('translate-x-0');p.classList.add('-translate-x-full');setTimeout(()=>{s.classList.add('pointer-events-none');document.body.style.overflow='';},300);}if(o)o.addEventListener('click',openDrawer);if(c)c.addEventListener('click',closeDrawer);if(b)b.addEventListener('click',closeDrawer);document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer();});})();</script></aside></body></html>

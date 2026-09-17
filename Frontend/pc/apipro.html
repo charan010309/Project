@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en" data-page="apipro"><head>
+<script src="/static/theme.js"></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">  document.getElementById('provider-type-input')?.addEventListener('change', updateProviderTypeUI);
+  updateProviderTypeUI();
+</script>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f4f4f5; }
+    ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+    .ambient-grid {
+      background-size: 32px 32px;
+      background-image: linear-gradient(to right, rgba(228, 228, 231, 0.6) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(228, 228, 231, 0.6) 1px, transparent 1px);
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#fafafa",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f4f4f5",
+            "surface-container": "#ececee",
+            "surface-container-high": "#e4e4e7",
+            "surface-container-highest": "#d4d4d8",
+            "on-surface": "#09090b",
+            "on-surface-variant": "#52525b",
+            "primary": "#09090b",
+            "primary-container": "#18181b",
+            "on-primary": "#ffffff",
+            "secondary": "#059669",
+            "secondary-container": "#d1fae5",
+            "on-secondary-container": "#065f46",
+            "border-line": "#e4e4e7",
+            "border-subtle": "#f4f4f5"
+          },
+          fontFamily: {
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "headline": ["Plus Jakarta Sans", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+<title>MAXIMUS — Models &amp; Providers</title>
+<link rel="stylesheet" href="/static/theme.css">
+</head>
+<body class="min-h-full bg-surface text-on-surface font-body ambient-grid flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Sticky Navigation Bar (Full Viewport Panoramic) -->
+<header class="sticky top-0 z-40 w-full bg-surface-container-lowest/90 backdrop-blur-md border-b border-border-line px-4 sm:px-8 py-3 transition-colors">
+<div class="w-full flex items-center justify-between gap-4">
+<!-- Brand & Navigation Links -->
+<div class="flex items-center gap-6 sm:gap-8">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg overflow-hidden bg-primary shadow-sm tracking-tight flex items-center justify-center" title="MAXIMUS"><img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover"/></div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline font-bold text-base tracking-tight text-on-surface">MAXIMUS</span>
+</div>
+</div>
+<div class="h-4 w-px bg-border-line hidden md:block"></div>
+<!-- Desktop Navigation Items -->
+<nav class="hidden md:flex items-center gap-1 text-xs font-semibold text-on-surface-variant">
+<a class="px-3 py-1.5 rounded-md hover:text-on-surface hover:bg-surface-container-low transition-colors" href="/home">Home</a>
+<a class="px-3 py-1.5 rounded-md bg-surface-container text-on-surface transition-colors flex items-center gap-1.5" href="/api-pro">
+<span class="material-symbols-outlined text-[16px] text-secondary">hub</span>
+<span>Models &amp; Providers</span>
+</a>
+<a class="px-3 py-1.5 rounded-md hover:text-on-surface hover:bg-surface-container-low transition-colors" href="/speakwithai">Live AI Mesh</a>
+<a class="px-3 py-1.5 rounded-md hover:text-on-surface hover:bg-surface-container-low transition-colors" href="/settings">Settings</a>
+</nav>
+</div>
+<!-- Right Header Actions & Live Telemetry Indicator -->
+<div class="flex items-center gap-3 sm:gap-5">
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-low border border-border-line text-xs">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+</span>
+<span id="header-system-status" class="font-mono text-[11px] font-semibold text-on-surface uppercase tracking-wider hidden sm:inline">Checking Systems</span>
+<span id="header-gateway-latency" class="text-on-surface-variant font-mono text-[10px] hidden lg:inline">• — Gateway</span>
+</div>
+
+<div class="flex items-center gap-2 pl-2 border-l border-border-line">
+<div id="header-avatar" class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface font-semibold text-xs border border-border-line" title="Account">—</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Workstation Viewport -->
+<main class="flex-1 w-full px-4 sm:px-8 py-6 max-w-[1920px] mx-auto flex flex-col gap-6">
+<!-- Panoramic Header & HUD Row -->
+<div class="w-full flex flex-col gap-4">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-on-surface-variant mb-1">
+<span>MAXIMUS</span>
+<span>/</span>
+<span>Provider Routing</span>
+<span>/</span>
+<span class="text-on-surface font-semibold">Provider Registry</span>
+</div>
+<div class="flex items-center gap-3">
+<h1 class="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-on-surface">Model Providers &amp; Custom Endpoints</h1>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-xs font-mono font-semibold">BYOK</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1 max-w-4xl">
+            Configure BYOK API credentials, custom host specifications, private vLLM clusters, and fallback load balancing priority for active reasoning and task execution.
+          </p>
+</div>
+<!-- Global Action CTAs -->
+<div class="flex flex-wrap items-center gap-2.5">
+
+
+</div>
+</div>
+<!-- High-Density Telemetry Metrics Bar (5 Columns) -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 pt-2">
+<div class="bg-surface-container-lowest border border-border-line p-3.5 rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-[11px]">
+<span class="uppercase font-medium">Active Gateways</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">lan</span>
+</div>
+<div class="mt-2 flex items-baseline justify-between">
+<span id="metric-active-gateways" class="font-headline text-2xl font-bold text-on-surface">0</span>
+<span id="metric-gateway-health" class="font-mono text-[11px] text-secondary font-semibold">NO PROVIDERS</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-border-line p-3.5 rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-[11px]">
+<span class="uppercase font-medium">Registered Models</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">model_training</span>
+</div>
+<div class="mt-2 flex items-baseline justify-between">
+<span id="metric-registered-models" class="font-headline text-2xl font-bold text-on-surface">0</span>
+<span id="metric-provider-breakdown" class="font-mono text-[11px] text-on-surface-variant font-medium">0 PROVIDERS</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-border-line p-3.5 rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-[11px]">
+<span class="uppercase font-medium">P95 Response · 24h</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">speed</span>
+</div>
+<div class="mt-2 flex items-baseline justify-between">
+<span class="font-headline text-2xl font-bold text-on-surface" id="telemetry-p95">—</span>
+<span id="metric-p95-sub" class="font-mono text-[11px] text-secondary font-semibold">LIVE TELEMETRY</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-border-line p-3.5 rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-[11px]">
+<span class="uppercase font-medium">Active Enclave</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+</div>
+<div class="mt-2 flex items-baseline justify-between">
+<span class="font-headline text-2xl font-bold text-on-surface">Encrypted</span>
+<span class="font-mono text-[11px] text-secondary font-semibold">APP KEY VAULT</span>
+</div>
+</div>
+<div class="col-span-2 sm:col-span-1 bg-surface-container-lowest border border-border-line p-3.5 rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-[11px]">
+<span class="uppercase font-medium">Provider Requests · 24h</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">bolt</span>
+</div>
+<div class="mt-2 flex items-baseline justify-between">
+<span id="metric-requests" class="font-headline text-2xl font-bold text-on-surface">0</span>
+<span class="font-mono text-[11px] text-on-surface-variant font-medium">custom provider text</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Workspace: Full-Width Stacked Workstation Layout -->
+<div class="w-full min-w-0 flex flex-col gap-6">
+<!-- Connected Provider Gateways + Discovered Models -->
+<div class="flex flex-col gap-6 w-full min-w-0">
+<!-- Connected Providers Gateway Card Grid -->
+<section class="bg-surface-container-lowest border border-border-line rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between mb-4 gap-3">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-[20px] text-on-surface">hub</span>
+<h2 class="font-headline text-base font-bold text-on-surface">Connected Provider Gateways</h2>
+<span id="provider-count-badge" class="font-mono text-[11px] px-2 py-0.5 rounded bg-surface-container text-on-surface-variant whitespace-nowrap">0 Online</span>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<span class="font-mono text-[11px] text-on-surface-variant hidden sm:inline">AUTO POLLING (15s)</span>
+<button type="button" onclick="focusProviderForm()" class="h-9 px-3.5 rounded-lg bg-primary hover:bg-primary/90 text-on-primary text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all" title="Connect a new provider">
+<span class="material-symbols-outlined text-[16px]">add_link</span>
+<span>Connect Provider</span>
+</button>
+</div>
+</div>
+<!-- Live provider cards are rendered from /api/providers -->
+        <div id="providers-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+          <div class="col-span-full border border-dashed border-border-line rounded-xl p-8 text-center">
+            <div class="mx-auto w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-[20px]">key</span>
+            </div>
+            <div class="font-semibold text-sm text-on-surface">No provider connected</div>
+            <div class="text-xs text-on-surface-variant mt-1 mb-4">Connect a provider to let MAXIMUS discover its available models and enable routing.</div>
+            <button type="button" onclick="focusProviderForm()" class="px-4 py-2 rounded-lg bg-primary text-on-primary text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-primary/90 transition-all">
+              <span class="material-symbols-outlined text-[16px]">add_link</span> Connect Your Provider
+            </button>
+          </div>
+        </div>
+</section>
+<!-- Custom Model Registry Table Section -->
+<!-- Full-Width Provider Connection + Security -->
+<div class="flex flex-col gap-6 w-full min-w-0">
+<!-- Connect New Provider Endpoint Form -->
+<section class="bg-surface-container-lowest border border-border-line rounded-xl p-5 shadow-sm flex flex-col justify-between" id="provider-form-container">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-border-line pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-on-surface">electrical_services</span>
+<h2 class="font-headline text-base font-bold text-on-surface">Connect New Provider</h2>
+</div>
+<span class="font-mono text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 rounded" id="provider-spec-badge">OPENAI SPEC</span>
+</div>
+<p class="text-xs text-on-surface-variant">
+              Register an upstream inference gateway. Provider keys are encrypted on the MAXIMUS backend and are never returned to the browser in plaintext.
+            </p>
+<!-- Form Fields -->
+<div class="flex flex-col gap-3.5">
+<!-- Provider Type -->
+<div class="flex flex-col gap-1">
+<label class="text-xs font-semibold text-on-surface">Provider Type</label>
+<select id="provider-type-input" class="h-9 px-3 rounded-lg border border-border-line bg-surface-container-low text-xs text-on-surface focus:outline-none focus:border-on-surface">
+  <option value="custom">Custom / OpenAI-compatible</option>
+  <option value="ollama">Ollama (Local — no API key)</option>
+</select>
+</div>
+<!-- Gateway Label -->
+<div class="flex flex-col gap-1">
+<label class="text-xs font-semibold text-on-surface">Custom Provider Label</label>
+<input class="h-9 px-3 rounded-lg border border-border-line bg-surface-container-low text-xs text-on-surface focus:outline-none focus:border-on-surface" id="provider-label" placeholder="e.g. My Private Cluster" type="text" />
+</div>
+<!-- Base API URL -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="text-xs font-semibold text-on-surface">Base API URL</label>
+<span class="font-mono text-[10px] text-on-surface-variant" id="base-url-hint">Use your provider's API base URL</span>
+</div>
+<input class="h-9 px-3 rounded-lg border border-border-line bg-surface-container-low font-mono text-xs text-on-surface focus:outline-none focus:border-on-surface" id="base-url-input" placeholder="https://..." type="text" />
+</div>
+<!-- API Format -->
+<div class="flex flex-col gap-1">
+<label class="text-xs font-semibold text-on-surface">API Format</label>
+<select id="api-format-input" class="h-9 px-3 rounded-lg border border-border-line bg-surface-container-low text-xs text-on-surface focus:outline-none focus:border-on-surface">
+<option value="chat_completions">OpenAI-compatible Chat Completions (/chat/completions)</option>
+<option value="responses">OpenAI Responses (/responses)</option>
+<option value="anthropic_messages">Anthropic Messages (/messages)</option>
+</select>
+</div>
+<!-- API Key / Secret -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="text-xs font-semibold text-on-surface">API Key / Bearer Auth <span class="font-normal text-on-surface-variant" id="api-key-optional-label">(required for most providers)</span></label>
+<button class="font-mono text-[10px] text-on-surface-variant hover:text-on-surface" onclick="toggleKeyVisibility()" type="button">Show/Hide</button>
+</div>
+<div class="relative flex items-center">
+<input class="h-9 w-full pl-3 pr-9 rounded-lg border border-border-line bg-surface-container-low font-mono text-xs text-on-surface focus:outline-none focus:border-on-surface" id="api-key-input" placeholder="sk-..." type="password" />
+<button class="absolute right-2.5 text-on-surface-variant hover:text-on-surface flex items-center" onclick="toggleKeyVisibility()" type="button">
+<span class="material-symbols-outlined text-[16px]" id="key-visibility-icon">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Project ID / Org (Optional) -->
+<div class="flex flex-col gap-1">
+<label class="text-xs font-semibold text-on-surface">Organization / Project ID (Optional)</label>
+<input class="h-9 px-3 rounded-lg border border-border-line bg-surface-container-low text-xs text-on-surface focus:outline-none focus:border-on-surface font-mono" placeholder="org-..." type="text" />
+</div>
+<!-- Security Enclave Note -->
+<div class="flex items-start gap-2 p-2.5 rounded-lg bg-surface-container-low border border-border-subtle text-[11px] text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-secondary shrink-0 mt-0.5">verified_user</span>
+<span>API keys are encrypted at rest. The browser only receives a masked key fingerprint.</span>
+</div>
+</div>
+</div>
+<!-- Bottom Action Buttons -->
+<div class="pt-4 mt-4 border-t border-border-line flex flex-col gap-2.5">
+<div class="flex items-center gap-1.5 font-mono text-[11px] text-on-surface-variant" id="verify-status-msg">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Ready for provider verification.</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 h-9 rounded-lg border border-border-line bg-surface-container-low hover:bg-surface-container text-xs font-semibold text-on-surface transition-colors" onclick="resetForm()" type="button">
+                Reset
+              </button>
+<button class="flex-1 h-9 rounded-lg bg-primary hover:bg-primary/90 text-on-primary text-xs font-semibold flex items-center justify-center gap-1.5 shadow transition-all" id="verify-btn" onclick="verifyAndFetchModels()" type="button">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+<span id="verify-btn-text">Validate Key &amp; Connect</span>
+</button>
+</div>
+</div>
+</section>
+<section class="bg-surface-container-low border border-border-line rounded-xl p-5 flex flex-col gap-4">
+  <div class="flex items-center justify-between border-b border-border-line pb-3">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px] text-secondary">security</span>
+        <h3 class="font-headline text-sm font-bold text-on-surface tracking-wide">Provider Security</h3>
+      </div>
+      <p class="text-xs text-on-surface-variant mt-1">Credentials stay on the MAXIMUS backend and provider keys are never exposed back to the browser.</p>
+    </div>
+    <span class="font-mono text-[10px] px-2 py-1 rounded bg-secondary-container text-on-secondary-container font-semibold">SECURE</span>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+    <div class="rounded-lg border border-border-line bg-surface-container-lowest p-3">
+      <span class="material-symbols-outlined text-[18px] text-secondary">key</span>
+      <p class="mt-2 text-xs font-semibold text-on-surface">API Key</p>
+      <p class="text-[10px] text-on-surface-variant mt-0.5">Validated server-side</p>
+    </div>
+    <div class="rounded-lg border border-border-line bg-surface-container-lowest p-3">
+      <span class="material-symbols-outlined text-[18px] text-secondary">lock</span>
+      <p class="mt-2 text-xs font-semibold text-on-surface">Credentials</p>
+      <p class="text-[10px] text-on-surface-variant mt-0.5">Masked in the UI</p>
+    </div>
+    <div class="rounded-lg border border-border-line bg-surface-container-lowest p-3">
+      <span class="material-symbols-outlined text-[18px] text-secondary">dns</span>
+      <p class="mt-2 text-xs font-semibold text-on-surface">Model ID</p>
+      <p class="text-[10px] text-on-surface-variant mt-0.5">Models discovered automatically</p>
+    </div>
+  </div>
+
+  <div class="rounded-lg border border-border-line bg-surface-container-lowest p-3.5 flex items-start gap-2.5">
+    <span class="material-symbols-outlined text-[18px] text-secondary mt-0.5">tips_and_updates</span>
+    <div>
+      <p class="text-xs font-semibold text-on-surface">Recommended setup</p>
+      <p class="text-[11px] text-on-surface-variant mt-0.5">Connect your provider with its API key. MAXIMUS validates the credential server-side and discovers the models exposed by that gateway.</p>
+    </div>
+  </div>
+</section>
+</div>
+</div>
+</main>
+<!-- Full-Width Panoramic Footer -->
+<footer class="w-full border-t border-border-line bg-surface-container-lowest px-4 sm:px-8 py-3.5 mt-auto text-on-surface-variant font-mono text-xs">
+<div class="w-full flex flex-col sm:flex-row items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>© 2026 MAXIMUS AI • Provider Control Center</span>
+</div>
+<div class="flex items-center gap-6">
+<a class="hover:text-on-surface transition-colors" href="/profile-settings">ACCOUNT SECURITY</a>
+<a class="hover:text-on-surface transition-colors" href="/settings">MODEL SETTINGS</a>
+<a class="hover:text-on-surface transition-colors" href="/overview">ACTIVITY</a>
+</div>
+</div>
+</footer>
+<!-- Model action warning dialog -->
+<div id="model-action-modal" class="hidden fixed inset-0 z-[120] bg-black/60 backdrop-blur-sm p-4 flex items-center justify-center" onclick="if(event.target===this)closeModelActionModal(false)">
+  <div class="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+    <div class="px-5 py-4 border-b border-zinc-800 flex items-start gap-3">
+      <div id="model-action-icon" class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined">warning</span>
+      </div>
+      <div class="min-w-0">
+        <h3 id="model-action-title" class="text-lg font-semibold">Confirm model action</h3>
+        <p id="model-action-message" class="text-sm text-zinc-400 mt-1 leading-5"></p>
+      </div>
+    </div>
+    <div class="px-5 py-4 bg-zinc-950/30">
+      <div id="model-action-warning" class="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2.5 text-xs text-amber-200 leading-5"></div>
+    </div>
+    <div class="px-5 py-4 border-t border-zinc-800 flex justify-end gap-2">
+      <button type="button" onclick="closeModelActionModal(false)" class="px-4 py-2.5 rounded-lg border border-zinc-700 hover:bg-zinc-800 text-sm font-semibold">Cancel</button>
+      <button id="model-action-confirm" type="button" onclick="closeModelActionModal(true)" class="px-4 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-sm font-semibold">Continue</button>
+    </div>
+  </div>
+</div>
+<!-- Client-Side Workstation Script -->
+<!-- Model input modal -->
+<div id="model-input-modal" class="hidden fixed inset-0 z-[130] bg-black/60 backdrop-blur-sm p-4 flex items-center justify-center" onclick="if(event.target===this)closeModelInputModal(false)">
+  <div class="w-full max-w-lg rounded-2xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+    <div class="px-5 py-4 border-b border-zinc-800 flex items-start gap-3">
+      <div class="w-10 h-10 rounded-xl bg-zinc-800 text-zinc-200 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined">deployed_code</span>
+      </div>
+      <div class="min-w-0">
+        <h3 id="model-input-title" class="text-lg font-semibold">Add model</h3>
+        <p id="model-input-message" class="text-sm text-zinc-400 mt-1 leading-5"></p>
+      </div>
+    </div>
+    <div class="px-5 py-4 space-y-3">
+      <label class="block">
+        <span id="model-input-label" class="text-sm text-zinc-300">Model ID</span>
+        <input id="model-input-field" type="text" autocomplete="off" class="mt-1.5 w-full h-11 rounded-lg border border-zinc-700 bg-zinc-800 px-3 text-zinc-100 outline-none focus:border-zinc-500 font-mono" />
+      </label>
+      <div id="model-input-warning" class="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2.5 text-xs text-amber-200 leading-5"></div>
+    </div>
+    <div class="px-5 py-4 border-t border-zinc-800 flex justify-end gap-2">
+      <button type="button" onclick="closeModelInputModal(false)" class="px-4 py-2.5 rounded-lg border border-zinc-700 hover:bg-zinc-800 text-sm font-semibold">Cancel</button>
+      <button id="model-input-confirm" type="button" onclick="closeModelInputModal(true)" class="px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- Provider configuration modal -->
+<div id="provider-config-modal" class="hidden fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm p-4 sm:p-8" onclick="if(event.target===this)closeProviderConfig()">
+  <div class="mx-auto w-full max-w-5xl h-full max-h-[760px] rounded-2xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl overflow-hidden flex flex-col" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between px-5 sm:px-7 py-4 border-b border-zinc-800">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-semibold">Model settings</h2>
+        <p class="text-sm text-zinc-400 mt-1">Manage custom model providers. Once configured, they can be selected during chat.</p>
+      </div>
+      <button type="button" onclick="closeProviderConfig()" class="w-9 h-9 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center" title="Close"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="flex-1 min-h-0 flex flex-col md:flex-row">
+      <aside class="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-zinc-800 p-4 overflow-auto">
+        <div class="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">Providers</div>
+        <div id="config-provider-list" class="space-y-1"></div>
+        <button type="button" onclick="closeProviderConfig(); focusProviderForm()" class="mt-4 w-full px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-[17px]">add</span>Add provider</button>
+      </aside>
+      <section class="flex-1 min-w-0 overflow-auto p-5 sm:p-7">
+        <div class="flex items-center justify-between gap-3 mb-5">
+          <div class="flex items-center gap-3">
+            <h3 id="config-provider-name" class="text-xl font-semibold">Provider</h3>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input id="config-enabled" type="checkbox" class="sr-only peer">
+              <span class="px-3 py-1.5 rounded-full bg-zinc-700 text-zinc-300 text-sm font-semibold peer-checked:bg-emerald-500 peer-checked:text-black">Enabled</span>
+            </label>
+          </div>
+          <button type="button" onclick="removeProvider(configProviderId, document.getElementById('config-provider-name').textContent)" class="text-zinc-400 hover:text-red-400" title="Delete provider"><span class="material-symbols-outlined">delete</span></button>
+        </div>
+        <div class="space-y-4 max-w-3xl">
+          <label class="block"><span class="text-sm text-zinc-400">Provider name</span><input id="config-provider-name-input" class="mt-1.5 w-full h-11 rounded-lg border border-zinc-700 bg-zinc-800 px-3 text-zinc-100 outline-none focus:border-zinc-500" /></label>
+          <label class="block"><span class="text-sm text-zinc-400">Base URL</span><input id="config-base-url" class="mt-1.5 w-full h-11 rounded-lg border border-zinc-700 bg-zinc-800 px-3 text-zinc-100 outline-none focus:border-zinc-500" /></label>
+          <label class="block"><span class="text-sm text-zinc-400">API format</span><select id="config-api-format" class="mt-1.5 w-full h-11 rounded-lg border border-zinc-700 bg-zinc-800 px-3 text-zinc-100 outline-none focus:border-zinc-500"><option value="chat_completions">Chat completions (/chat/completions)</option><option value="responses">Responses (/responses)</option><option value="anthropic_messages">Anthropic Messages (/messages)</option></select></label>
+          <label class="block"><span class="text-sm text-zinc-400">API key</span><div class="relative"><input id="config-api-key" type="password" class="mt-1.5 w-full h-11 rounded-lg border border-zinc-700 bg-zinc-800 px-3 pr-11 text-zinc-100 outline-none focus:border-zinc-500" /><button type="button" onclick="const i=document.getElementById('config-api-key'); i.type=i.type==='password'?'text':'password'" class="absolute right-3 top-4 text-zinc-500"><span class="material-symbols-outlined text-[18px]">visibility</span></button></div></label>
+          <div>
+            <div class="flex items-center justify-between mb-2 gap-3">
+              <span class="text-sm text-zinc-400">Model list</span>
+              <div class="flex items-center gap-3">
+                <button type="button" onclick="refreshConfigModels()" class="text-sm text-emerald-400 hover:text-emerald-300 font-semibold">↻ Refresh models</button>
+                <button type="button" onclick="addModelToConfig()" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-sm font-semibold flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px]">add</span>Add model
+                </button>
+              </div>
+            </div>
+            <div id="config-model-list" class="space-y-2"></div>
+          </div>
+        </div>
+        <div class="mt-7 pt-4 border-t border-zinc-800 flex items-center justify-end gap-3"><span id="config-save-status" class="text-xs text-zinc-500 mr-auto"></span><button type="button" onclick="closeProviderConfig()" class="px-4 py-2.5 rounded-lg border border-zinc-700 hover:bg-zinc-800 text-sm font-semibold">Cancel</button><button id="config-save-btn" type="button" onclick="saveProviderConfig()" class="px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold">Save Changes</button></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  let providerCache = [];
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    }[ch]));
+  }
+
+  async function api(path, options = {}) {
+    try {
+      const response = await fetch(path, {
+        credentials: 'same-origin',
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        }
+      });
+
+      const text = await response.text();
+      let data = {};
+      try { 
+        data = text ? JSON.parse(text) : {}; 
+      } catch (parseError) { 
+        data = { detail: text || 'Invalid response format' }; 
+      }
+
+      if (!response.ok) {
+        const errorMsg = data.detail || data.message || data.error || `Request failed (${response.status})`;
+        throw new Error(errorMsg);
+      }
+      
+      return data;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error('Network error - unable to connect to server');
+      }
+      throw error;
+    }
+  }
+
+  function setVerifyStatus(message, ok = true) {
+    const el = document.getElementById('verify-status-msg');
+    el.innerHTML = ok
+      ? `<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span><span class="text-secondary font-semibold">${escapeHtml(message)}</span>`
+      : `<span class="material-symbols-outlined text-[16px] text-red-600">error</span><span class="text-red-600 font-semibold">${escapeHtml(message)}</span>`;
+  }
+
+  function toggleKeyVisibility() {
+    const input = document.getElementById('api-key-input');
+    const icon = document.getElementById('key-visibility-icon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = 'visibility';
+    } else {
+      input.type = 'password';
+      icon.textContent = 'visibility_off';
+    }
+  }
+
+  async function verifyAndFetchModels() {
+    const btn = document.getElementById('verify-btn');
+    const btnText = document.getElementById('verify-btn-text');
+    const type = document.getElementById('provider-type-input')?.value || 'custom';
+    const label = document.getElementById('provider-label').value.trim();
+    const baseUrl = document.getElementById('base-url-input').value.trim().replace(/\/$/, '');
+    const apiKey = document.getElementById('api-key-input').value.trim();
+    const organization = document.querySelector('input[placeholder="org-..."]')?.value.trim() || '';
+    const apiFormat = document.getElementById('api-format-input')?.value || 'chat_completions';
+
+    if (!label) return setVerifyStatus('Enter a provider name.', false);
+    if (!baseUrl) return setVerifyStatus(type === 'ollama' ? 'Enter your Ollama URL (normally http://localhost:11434).' : 'Enter the provider API base URL.', false);
+    if (type !== 'ollama' && !apiKey) return setVerifyStatus('Enter your API key.', false);
+
+    btn.disabled = true;
+    btnText.textContent = 'Testing connection...';
+    setVerifyStatus('Testing the provider from the MAXIMUS backend...', true);
+
+    try {
+      const test = await api('/api/providers/test', {
+        method: 'POST',
+        body: JSON.stringify({ provider: type, label, base_url: baseUrl, api_key: apiKey || null, organization, api_format: apiFormat })
+      });
+      if (!test.valid) throw new Error(test.message || 'Provider authentication failed.');
+
+      const saved = await api('/api/providers', {
+        method: 'POST',
+        body: JSON.stringify({ provider: type, label, base_url: baseUrl, api_key: apiKey || null, organization, api_format: apiFormat, is_active: true })
+      });
+
+      const count = Array.isArray(test.models) ? test.models.length : 0;
+      setVerifyStatus(`Connected ✓ • ${test.latency_ms ?? '—'} ms${count ? ` • ${count} model${count === 1 ? '' : 's'} found` : ''}`, true);
+      btnText.textContent = 'Connected ✓';
+      appendLog(`${label}: connection verified successfully.`);
+      if (count) appendLog(`${label}: discovered ${count} model(s).`);
+      await refreshAll();
+      setTimeout(() => { resetForm(); }, 1200);
+    } catch (error) {
+      setVerifyStatus(error.message || 'Connection failed.', false);
+      btnText.textContent = 'Connection Failed';
+      appendLog(`Provider connection failed: ${error.message}`, false);
+    } finally {
+      setTimeout(() => {
+        btn.disabled = false;
+        btnText.textContent = 'Validate & Connect';
+      }, 1400);
+    }
+  }
+
+  function updateProviderTypeUI() {
+    const type = document.getElementById('provider-type-input')?.value || 'custom';
+    const base = document.getElementById('base-url-input');
+    const key = document.getElementById('api-key-input');
+    const format = document.getElementById('api-format-input');
+    const hint = document.getElementById('base-url-hint');
+    const badge = document.getElementById('provider-spec-badge');
+    const optional = document.getElementById('api-key-optional-label');
+    if (type === 'ollama') {
+      if (base && !base.value) base.value = 'http://localhost:11434';
+      if (base) base.placeholder = 'http://localhost:11434';
+      if (hint) hint.textContent = 'Local Ollama server — no /v1 required';
+      if (badge) badge.textContent = 'OLLAMA';
+      if (optional) optional.textContent = '(not required)';
+      if (key) { key.value = ''; key.placeholder = 'Not required for local Ollama'; key.disabled = true; }
+      if (format) format.value = 'chat_completions';
+    } else {
+      if (base && base.value === 'http://localhost:11434') base.value = '';
+      if (base) base.placeholder = 'https://...';
+      if (hint) hint.textContent = "Use your provider's API base URL";
+      if (badge) badge.textContent = 'OPENAI SPEC';
+      if (optional) optional.textContent = '(required for most providers)';
+      if (key) { key.disabled = false; key.placeholder = 'sk-...'; }
+    }
+  }
+
+  function resetForm() {
+    ['provider-label', 'base-url-input', 'api-key-input'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    const type = document.getElementById('provider-type-input');
+    if (type) type.value = 'custom';
+    const fmt = document.getElementById('api-format-input');
+    if (fmt) fmt.value = 'chat_completions';
+    updateProviderTypeUI();
+    const key = document.getElementById('api-key-input');
+    if (key) key.placeholder = 'Paste your provider API key';
+    setVerifyStatus('Ready to connect your provider.', true);
+    const btnText = document.getElementById('verify-btn-text');
+    if (btnText) btnText.textContent = 'Connect Provider';
+  }
+
+  function appendLog(message, ok = true) {
+    const logs = document.getElementById('console-logs');
+    const timestamp = new Date().toISOString().substring(11, 19);
+    const text = `[${timestamp}] ${message}`;
+
+    // The console panel is optional on this page. Never let a missing
+    // log container break provider/model actions such as Ollama setup.
+    if (!logs) {
+      if (ok) console.log(text);
+      else console.error(text);
+      return;
+    }
+
+    const entry = document.createElement('div');
+    entry.className = ok ? 'text-emerald-400' : 'text-red-400';
+    entry.textContent = text;
+    logs.appendChild(entry);
+    logs.scrollTop = logs.scrollHeight;
+  }
+
+  let configProviderId = null;
+
+  function editProvider(providerId) {
+    const provider = providerCache.find(p => String(p.id) === String(providerId));
+    if (!provider) {
+      appendLog(`Provider "${providerId}" was not found in the current registry.`, false);
+      return;
+    }
+    configProviderId = provider.id;
+    renderConfigModal(provider);
+  }
+
+  // Backward-compatible alias for older cards/markup.
+  function openProviderConfig(providerId) {
+    editProvider(providerId);
+  }
+
+  function renderConfigModal(provider) {
+    const modal = document.getElementById('provider-config-modal');
+    if (!modal) return;
+    const list = document.getElementById('config-provider-list');
+    if (list) {
+      list.innerHTML = providerCache.map(p => `
+        <button type="button" class="w-full text-left px-3 py-2.5 rounded-lg flex items-center justify-between gap-2 ${p.id === provider.id ? 'bg-white/10 border border-white/15' : 'hover:bg-white/5'}" onclick="switchConfigProvider(${p.id})">
+          <span class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full ${p.is_active ? 'bg-emerald-400' : 'bg-zinc-500'} shrink-0"></span>
+            <span class="truncate text-sm font-semibold text-zinc-200">${escapeHtml(p.label || p.provider || 'Provider')}</span>
+          </span>
+          <span class="text-[10px] font-mono text-zinc-500">${p.is_active ? 'ON' : 'OFF'}</span>
+        </button>`).join('');
+    }
+
+    const models = Array.isArray(provider.models) ? provider.models : [];
+    document.getElementById('config-provider-name').textContent = provider.label || provider.provider || 'Provider';
+    document.getElementById('config-provider-name-input').value = provider.label || provider.provider || 'Provider';
+    document.getElementById('config-enabled').checked = provider.is_active !== false;
+    document.getElementById('config-base-url').value = provider.base_url || '';
+    document.getElementById('config-api-format').value = provider.api_format || 'chat_completions';
+    document.getElementById('config-api-key').value = '';
+    document.getElementById('config-api-key').placeholder = provider.masked_key ? `Stored key: ${provider.masked_key}` : 'Stored securely on backend';
+    document.getElementById('config-model-list').innerHTML = models.length
+      ? models.map((m, index) => {
+          const modelId = typeof m === 'string' ? m : (m?.id || m?.name || '');
+          return `<div class="flex items-center gap-2 border border-zinc-700 bg-zinc-800 rounded-lg px-3 py-2">
+            <span class="material-symbols-outlined text-[16px] text-zinc-400">deployed_code</span>
+            <span class="text-sm text-zinc-200 font-mono truncate flex-1">${escapeHtml(modelId)}</span>
+            <button type="button" class="w-8 h-8 rounded-md hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center" title="Edit model" onclick="editConfigModel(${index})"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+            <button type="button" class="w-8 h-8 rounded-md hover:bg-red-950 text-zinc-400 hover:text-red-400 flex items-center justify-center" title="Remove model" onclick="removeConfigModel(${index})"><span class="material-symbols-outlined text-[17px]">delete</span></button>
+          </div>`;
+        }).join('')
+      : '<div class="text-sm text-zinc-500 py-2">No models configured yet. Click Add model or Refresh models.</div>';
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  }
+
+  function switchConfigProvider(id) {
+    const provider = providerCache.find(p => String(p.id) === String(id));
+    if (provider) { configProviderId = provider.id; renderConfigModal(provider); }
+  }
+
+  function closeProviderConfig() {
+    const modal = document.getElementById('provider-config-modal');
+    if (modal) modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+  }
+
+  async function saveProviderConfig() {
+    if (!configProviderId) return;
+    const provider = providerCache.find(p => String(p.id) === String(configProviderId));
+    if (!provider) return;
+    const saveBtn = document.getElementById('config-save-btn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+    try {
+      const payload = {
+        label: document.getElementById('config-provider-name-input').value.trim(),
+        base_url: document.getElementById('config-base-url').value.trim().replace(/\/$/, ''),
+        api_format: document.getElementById('config-api-format').value,
+        is_active: document.getElementById('config-enabled').checked
+      };
+      const newKey = document.getElementById('config-api-key').value.trim();
+      if (newKey) payload.api_key = newKey;
+      await api(`/api/providers/${configProviderId}`, { method: 'PATCH', body: JSON.stringify(payload) });
+      appendLog(`${payload.label || provider.label} configuration saved.`);
+      await refreshAll();
+      const updated = providerCache.find(p => String(p.id) === String(configProviderId));
+      if (updated) renderConfigModal(updated);
+      document.getElementById('config-save-status').textContent = 'Saved';
+    } catch (error) {
+      document.getElementById('config-save-status').textContent = error.message || 'Save failed';
+      appendLog(`Provider configuration update failed: ${error.message}`, false);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Changes';
+    }
+  }
+
+  function currentConfigModels() {
+    const provider = providerCache.find(p => String(p.id) === String(configProviderId));
+    return provider && Array.isArray(provider.models) ? provider.models : [];
+  }
+
+  let modelActionResolver = null;
+  let modelInputResolver = null;
+
+  function showModelInputModal({ title, message, label = 'Model ID', value = '', warning, confirmText = 'Continue' }) {
+    return new Promise(resolve => {
+      modelInputResolver = resolve;
+      document.getElementById('model-input-title').textContent = title;
+      document.getElementById('model-input-message').textContent = message || '';
+      document.getElementById('model-input-label').textContent = label;
+      document.getElementById('model-input-field').value = value;
+      document.getElementById('model-input-warning').textContent = warning || '';
+      document.getElementById('model-input-confirm').textContent = confirmText;
+      const modal = document.getElementById('model-input-modal');
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        const input = document.getElementById('model-input-field');
+        input.focus();
+        input.select();
+      });
+    });
+  }
+
+  function closeModelInputModal(confirmed) {
+    const modal = document.getElementById('model-input-modal');
+    const input = document.getElementById('model-input-field');
+    if (modal) modal.classList.add('hidden');
+    const resolve = modelInputResolver;
+    modelInputResolver = null;
+    if (resolve) resolve(confirmed ? input.value.trim() : null);
+  }
+
+  document.getElementById('model-input-field')?.addEventListener('keydown', event => {
+    if (event.key === 'Enter') { event.preventDefault(); closeModelInputModal(true); }
+    if (event.key === 'Escape') { event.preventDefault(); closeModelInputModal(false); }
+  });
+
+  function showModelActionModal({ title, message, warning, confirmText = 'Continue', danger = false }) {
+    return new Promise(resolve => {
+      modelActionResolver = resolve;
+      document.getElementById('model-action-title').textContent = title;
+      document.getElementById('model-action-message').textContent = message;
+      document.getElementById('model-action-warning').textContent = warning;
+      const icon = document.getElementById('model-action-icon');
+      const confirmBtn = document.getElementById('model-action-confirm');
+      if (danger) {
+        icon.className = 'w-10 h-10 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center shrink-0';
+        icon.querySelector('.material-symbols-outlined').textContent = 'delete_forever';
+        confirmBtn.className = 'px-4 py-2.5 rounded-lg bg-red-500 hover:bg-red-400 text-white text-sm font-semibold';
+      } else {
+        icon.className = 'w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0';
+        icon.querySelector('.material-symbols-outlined').textContent = 'warning';
+        confirmBtn.className = 'px-4 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-sm font-semibold';
+      }
+      confirmBtn.textContent = confirmText;
+      document.getElementById('model-action-modal').classList.remove('hidden');
+    });
+  }
+
+  function closeModelActionModal(confirmed) {
+    const modal = document.getElementById('model-action-modal');
+    if (modal) modal.classList.add('hidden');
+    const resolve = modelActionResolver;
+    modelActionResolver = null;
+    if (resolve) resolve(confirmed);
+  }
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      const actionModal = document.getElementById('model-action-modal');
+      if (actionModal && !actionModal.classList.contains('hidden')) closeModelActionModal(false);
+    }
+  });
+
+  async function addModelToConfig() {
+    if (!configProviderId) return;
+    const modelId = await showModelInputModal({
+      title: 'Add model',
+      message: 'Enter the model ID you want to register for this provider.',
+      label: 'Model ID',
+      warning: 'Make sure the model ID exactly matches a model supported by the connected provider. An incorrect ID may cause chat requests to fail.',
+      confirmText: 'Continue'
+    });
+    if (!modelId) return;
+
+    const trimmed = modelId;
+    const existing = currentConfigModels().map(m => typeof m === 'string' ? m : (m?.id || m?.name || ''));
+    if (existing.includes(trimmed)) {
+      await showModelActionModal({
+        title: 'Model already registered',
+        message: `"${trimmed}" is already registered for this provider.`,
+        warning: 'Choose a different model ID or edit the existing model instead.',
+        confirmText: 'OK'
+      });
+      return;
+    }
+
+    const confirmed = await showModelActionModal({
+      title: 'Register this model?',
+      message: `You are about to add "${trimmed}" to this provider.`,
+      warning: 'Make sure the model ID exactly matches a model supported by the connected provider. An incorrect ID may cause chat requests to fail.',
+      confirmText: 'Register Model'
+    });
+    if (!confirmed) return;
+
+    try {
+      await api('/api/models', {
+        method: 'POST',
+        body: JSON.stringify({
+          provider_id: configProviderId,
+          model_name: trimmed,
+          model_id: trimmed
+        })
+      });
+      appendLog(`Model "${trimmed}" registered.`);
+      await refreshAll();
+      const updated = providerCache.find(p => String(p.id) === String(configProviderId));
+      if (updated) renderConfigModal(updated);
+    } catch (error) {
+      appendLog(`Model registration failed: ${error.message}`, false);
+      await showModelActionModal({
+        title: 'Model could not be registered',
+        message: `MAXIMUS could not register "${trimmed}".`,
+        warning: error.message || 'The backend rejected the model registration request.',
+        confirmText: 'OK'
+      });
+    }
+  }
+
+  async function editConfigModel(index) {
+    const models = currentConfigModels();
+    const current = models[index];
+    const oldId = typeof current === 'string' ? current : (current?.id || current?.name || '');
+    if (!oldId) return;
+
+    const newId = await showModelInputModal({
+      title: 'Edit model',
+      message: `Update the model ID for "${oldId}".`,
+      label: 'Model ID',
+      value: oldId,
+      warning: 'Changing a model ID can affect model selection and routing. Only continue if the new ID is valid for this provider.',
+      confirmText: 'Continue'
+    });
+    if (!newId || newId === oldId) return;
+    const trimmed = newId;
+
+    const existing = models.map(m => typeof m === 'string' ? m : (m?.id || m?.name || ''));
+    if (existing.includes(trimmed)) {
+      await showModelActionModal({
+        title: 'Model already registered',
+        message: `"${trimmed}" is already registered for this provider.`,
+        warning: 'Choose a different model ID or edit the existing model instead.',
+        confirmText: 'OK'
+      });
+      return;
+    }
+
+    const confirmed = await showModelActionModal({
+      title: 'Change model ID?',
+      message: `Change "${oldId}" to "${trimmed}"?`,
+      warning: 'Changing a model ID can affect model selection and routing. Only continue if the new ID is valid for this provider.',
+      confirmText: 'Save Model Change'
+    });
+    if (!confirmed) return;
+
+    try {
+      await api('/api/models', {
+        method: 'POST',
+        body: JSON.stringify({
+          provider_id: configProviderId,
+          model_name: trimmed,
+          model_id: trimmed,
+          replace_model: oldId
+        })
+      });
+      appendLog(`Model "${oldId}" updated to "${trimmed}".`);
+      await refreshAll();
+      const updated = providerCache.find(p => String(p.id) === String(configProviderId));
+      if (updated) renderConfigModal(updated);
+    } catch (error) {
+      appendLog(`Model update failed: ${error.message}`, false);
+      await showModelActionModal({
+        title: 'Model could not be updated',
+        message: `MAXIMUS could not update "${oldId}".`,
+        warning: error.message || 'The backend rejected the model update request.',
+        confirmText: 'OK'
+      });
+    }
+  }
+
+  async function removeConfigModel(index) {
+    const models = currentConfigModels();
+    const current = models[index];
+    const modelId = typeof current === 'string' ? current : (current?.id || current?.name || '');
+    if (!modelId) return;
+
+    const confirmed = await showModelActionModal({
+      title: 'Remove this model?',
+      message: `Remove "${modelId}" from this provider?`,
+      warning: 'This removes the model from MAXIMUS model settings. Any routing or chat configuration that relies on this model may stop working until another model is selected.',
+      confirmText: 'Remove Model',
+      danger: true
+    });
+    if (!confirmed) return;
+
+    try {
+      await api('/api/models', {
+        method: 'DELETE',
+        body: JSON.stringify({
+          provider_id: configProviderId,
+          model_name: modelId,
+          model_id: modelId
+        })
+      });
+      appendLog(`Model "${modelId}" removed.`);
+      await refreshAll();
+      const updated = providerCache.find(p => String(p.id) === String(configProviderId));
+      if (updated) renderConfigModal(updated);
+    } catch (error) {
+      appendLog(`Model removal failed: ${error.message}`, false);
+      await showModelActionModal({
+        title: 'Model could not be removed',
+        message: `MAXIMUS could not remove "${modelId}".`,
+        warning: error.message || 'The backend rejected the model removal request.',
+        confirmText: 'OK'
+      });
+    }
+  }
+
+  async function refreshConfigModels() {
+    if (!configProviderId) return;
+    const provider = providerCache.find(p => String(p.id) === String(configProviderId));
+    if (!provider) return;
+    const status = document.getElementById('config-save-status');
+    const button = document.querySelector('#provider-config-modal button[onclick="refreshConfigModels()"]');
+    if (button) { button.disabled = true; button.textContent = '↻ Refreshing...'; }
+    if (status) status.textContent = `Checking ${provider.label || 'provider'} for available models...`;
+    try {
+      const result = await discoverModels(provider.id, provider.label);
+      const updated = providerCache.find(p => String(p.id) === String(configProviderId));
+      if (updated) renderConfigModal(updated);
+      const count = Array.isArray(result?.models) ? result.models.length : 0;
+      if (status) status.textContent = count ? `${count} model${count === 1 ? '' : 's'} discovered from provider` : 'Provider returned no models';
+    } catch (error) {
+      if (status) status.textContent = error.message || 'Model discovery failed';
+      await showModelActionModal({
+        title: 'Model refresh failed',
+        message: `MAXIMUS could not refresh the models for "${provider.label || 'this provider'}".`,
+        warning: error.message || 'Check the provider URL, credentials, network access, and whether the provider is running. Your existing model settings were not intentionally removed.',
+        confirmText: 'OK'
+      });
+    } finally {
+      if (button) { button.disabled = false; button.textContent = '↻ Refresh models'; }
+    }
+  }
+
+  async function removeProvider(id, label) {
+    if (!id || !label) {
+      appendLog('Invalid provider specified', false);
+      return;
+    }
+
+    const confirmed = await showModelActionModal({
+      title: 'Remove provider?',
+      message: `Remove "${label}" from MAXIMUS?`,
+      warning: 'This permanently removes the provider connection, stored credential reference, telemetry, and its registered models from MAXIMUS. Any chat configuration using this provider may stop working.',
+      confirmText: 'Remove Provider',
+      danger: true
+    });
+    if (!confirmed) return;
+
+    try {
+      await api(`/api/providers/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      appendLog(`${label} removed from MAXIMUS.`);
+      if (String(configProviderId) === String(id)) {
+        closeProviderConfig();
+        configProviderId = null;
+      }
+      await refreshAll();
+      await loadHeaderProfile();
+    } catch (error) {
+      appendLog(`Failed to remove ${label}: ${error.message}`, false);
+      await showModelActionModal({
+        title: 'Provider could not be removed',
+        message: `MAXIMUS could not remove "${label}".`,
+        warning: error.message || 'The backend rejected the deletion request. Check that the provider ID and DELETE endpoint are available.',
+        confirmText: 'OK'
+      });
+    }
+  }
+
+  function focusProviderForm() {
+    const container = document.getElementById('provider-form-container');
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('provider-label').focus();
+  }
+
+  // Use event delegation for gateway actions so dynamically-rendered cards
+  // always keep working after polling, refreshes, and model discovery.
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('[data-provider-action]');
+    if (!button) return;
+    const id = button.getAttribute('data-provider-id');
+    const provider = providerCache.find(p => String(p.id) === String(id));
+    if (!provider) {
+      appendLog('Provider was not found in the current registry.', false);
+      return;
+    }
+    if (button.disabled) return;
+    if (button.dataset.providerAction === 'refresh') {
+      button.disabled = true;
+      const oldText = button.textContent;
+      button.textContent = '↻ Refreshing...';
+      try {
+        await refreshProviderCard(provider.id);
+      } finally {
+        // refreshAll() may have replaced the button, so only restore this node
+        // if it is still attached to the document.
+        if (button.isConnected) { button.disabled = false; button.textContent = oldText; }
+      }
+    } else if (button.dataset.providerAction === 'remove') {
+      button.disabled = true;
+      try {
+        await removeProvider(provider.id, provider.label || provider.provider || 'Provider');
+      } finally {
+        if (button.isConnected) button.disabled = false;
+      }
+    }
+  });
+
+  async function refreshProviderCard(id) {
+    const provider = providerCache.find(p => String(p.id) === String(id));
+    if (!provider) {
+      appendLog('Provider was not found in the current registry.', false);
+      return;
+    }
+    try {
+      await discoverModels(provider.id, provider.label);
+    } catch (error) {
+      await showModelActionModal({
+        title: 'Model refresh failed',
+        message: `MAXIMUS could not refresh the models for "${provider.label || 'this provider'}".`,
+        warning: error.message || 'Check the provider URL, credentials, network connection, and provider availability.',
+        confirmText: 'OK'
+      });
+    }
+  }
+
+  async function discoverModels(id, label = 'Provider') {
+    if (!id) return null;
+    try {
+      appendLog(`Discovering models for ${label}...`);
+      const result = await api(`/api/providers/${encodeURIComponent(id)}/models`, { method: 'GET' });
+      await refreshAll();
+      const count = Array.isArray(result.models) ? result.models.length : 0;
+      appendLog(`Model discovery completed for ${label}: ${count} model(s) found.`);
+      if (result.model_available === false) {
+        throw new Error(result.provider?.last_error || 'The selected model is not available to this provider credential.');
+      }
+      return result;
+    } catch (error) {
+      appendLog(`Model discovery failed for ${label}: ${error.message}`, false);
+      throw error;
+    }
+  }
+
+  function renderProviders(providers) {
+    if (!Array.isArray(providers)) {
+      providers = [];
+    }
+    providerCache = providers;
+    const grid = document.getElementById('providers-grid');
+    
+    if (!grid) return; // Safety check
+
+    if (!providers || !providers.length) {
+      grid.innerHTML = `
+        <div class="col-span-full border border-dashed border-border-line rounded-xl p-8 text-center">
+          <div class="mx-auto w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center mb-3">
+            <span class="material-symbols-outlined text-[20px]">key</span>
+          </div>
+          <div class="font-semibold text-sm text-on-surface">No provider connected</div>
+          <div class="text-xs text-on-surface-variant mt-1 mb-4">Connect at least one API key to enable MAXIMUS model routing.</div>
+          <button type="button" onclick="focusProviderForm()" class="px-4 py-2 rounded-lg bg-primary text-on-primary text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-primary/90 transition-all">
+            <span class="material-symbols-outlined text-[16px]">add</span> Add Your Provider
+          </button>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = providers.map(p => {
+      const latency = p.last_latency_ms != null ? `${p.last_latency_ms}ms` : '—';
+      const statusClass = p.is_valid
+        ? 'bg-secondary-container text-on-secondary-container'
+        : 'bg-red-100 text-red-700';
+      const statusText = p.is_valid ? 'Connected' : 'Failed';
+      return `
+        <div class="border border-border-line bg-surface-container-lowest p-4 rounded-xl flex flex-col justify-between gap-3 shadow-sm">
+          <div class="flex flex-col gap-2.5">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center min-w-0">
+                <h3 class="font-headline font-semibold text-sm leading-tight text-on-surface truncate">${escapeHtml(p.label || p.provider || 'Provider')}</h3>
+              </div>
+              <span class="px-2 py-0.5 rounded-full ${statusClass} font-mono text-[10px] font-semibold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full ${p.is_valid ? 'bg-secondary' : 'bg-red-500'}"></span>
+                ${statusText} • ${latency}
+              </span>
+            </div>
+            <div class="bg-surface-container-low p-2 rounded font-mono text-[10px] text-on-surface-variant flex items-center justify-between gap-2">
+              <span class="truncate">${escapeHtml(p.masked_key)}</span>
+              <span class="font-semibold shrink-0">${p.is_active ? 'Active' : 'Disabled'}</span>
+            </div>
+            <div class="flex flex-wrap gap-1">
+              ${(p.models || []).slice(0, 12).map(m =>
+                `<span class="px-1.5 py-0.5 bg-surface-container text-on-surface font-mono text-[10px] rounded">${escapeHtml(m)}</span>`
+              ).join('') || '<span class="text-[10px] text-on-surface-variant">No models returned</span>'}
+            </div>
+            ${p.last_error ? `<div class="text-[10px] text-red-600">${escapeHtml(p.last_error)}</div>` : ''}
+          </div>
+          <div class="pt-2 border-t border-border-line flex items-center justify-between text-xs">
+            <button type="button" class="text-on-surface-variant hover:text-on-surface font-medium flex items-center gap-1" onclick="openProviderConfig(${JSON.stringify(p.id)})">
+              <span class="material-symbols-outlined text-[14px]">tune</span> Config
+            </button>
+            <div class="flex items-center gap-3">
+              <button type="button" class="provider-card-refresh font-mono text-[11px] text-secondary font-semibold hover:underline disabled:opacity-50 disabled:cursor-wait" data-provider-action="refresh" data-provider-id="${escapeHtml(p.id)}">↻ Refresh Models</button>
+              <button type="button" class="provider-card-remove font-mono text-[11px] text-red-600 font-semibold hover:underline disabled:opacity-50 disabled:cursor-wait" data-provider-action="remove" data-provider-id="${escapeHtml(p.id)}">Remove</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function refreshTelemetry() {
+    try {
+      const data = await api('/api/providers/telemetry');
+      
+      // Provide defaults for missing data
+      const p95 = (data?.p95_latency_ms == null) ? '—' : `${data.p95_latency_ms}ms`;
+      const activeGateways = data?.active_gateways ?? 0;
+      const registeredModels = data?.registered_models ?? 0;
+      const providersTotal = data?.providers_total ?? 0;
+      const requests = data?.requests ?? 0;
+      const errors = data?.errors ?? 0;
+
+      const metricGatewaysEl = document.getElementById('metric-active-gateways');
+      const metricModelsEl = document.getElementById('metric-registered-models');
+      const telemetryP95El = document.getElementById('telemetry-p95');
+      const metricRequestsEl = document.getElementById('metric-requests');
+      const providerCountEl = document.getElementById('provider-count-badge');
+      const providerBreakdownEl = document.getElementById('metric-provider-breakdown');
+      const gatewayHealthEl = document.getElementById('metric-gateway-health');
+      const p95SubEl = document.getElementById('metric-p95-sub');
+      const routingStateEl = document.getElementById('routing-state');
+
+      if (metricGatewaysEl) metricGatewaysEl.textContent = activeGateways;
+      if (metricModelsEl) metricModelsEl.textContent = registeredModels;
+      if (telemetryP95El) telemetryP95El.textContent = p95;
+      if (metricRequestsEl) metricRequestsEl.textContent = requests;
+      if (providerCountEl) providerCountEl.textContent = `${activeGateways} Configured`;
+      if (providerBreakdownEl) providerBreakdownEl.textContent = `${providersTotal} PROVIDER${providersTotal === 1 ? '' : 'S'}`;
+      if (gatewayHealthEl) gatewayHealthEl.textContent =
+        providersTotal === 0 ? 'NO PROVIDERS' : `${activeGateways}/${providersTotal} VALIDATED`;
+      if (p95SubEl) p95SubEl.textContent = requests ? `${errors} failed / ${requests} requests` : 'NO REQUESTS YET';
+      const headerLatencyEl = document.getElementById('header-gateway-latency');
+      if (headerLatencyEl) headerLatencyEl.textContent = `• ${p95} Gateway`;
+      const headerStatusEl = document.getElementById('header-system-status');
+      if (headerStatusEl) headerStatusEl.textContent = providersTotal === 0 ? 'No Providers' : (errors ? 'Attention Required' : (activeGateways ? 'Systems Normal' : 'No Healthy Gateways'));
+      
+      if (routingStateEl) {
+        const lastSpan = routingStateEl.querySelector('span:last-child');
+        if (lastSpan) {
+          lastSpan.textContent = activeGateways ? 'Provider routing ready' : 'Connect a provider to enable routing';
+        }
+      }
+    } catch (error) {
+      console.warn('Telemetry update error:', error);
+      // Set default/error states
+      const elements = {
+        'metric-active-gateways': '0',
+        'metric-registered-models': '0',
+        'telemetry-p95': '—',
+        'metric-requests': '0',
+        'metric-gateway-health': 'NO PROVIDERS'
+      };
+      
+      Object.entries(elements).forEach(([id, text]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      });
+    }
+  }
+
+  async function refreshAll() {
+    try {
+      const providers = await api('/api/providers');
+      if (!Array.isArray(providers)) {
+        throw new Error('Invalid provider data received');
+      }
+      renderProviders(providers);
+      
+      try {
+        await refreshTelemetry();
+      } catch (telemetryError) {
+        console.warn('Telemetry update failed:', telemetryError);
+      }
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+      appendLog(`Data refresh failed: ${error.message}`, false);
+    }
+  }
+
+
+  async function loadHeaderProfile() {
+    try {
+      const profile = await api('/api/user/profile');
+      const avatar = document.getElementById('header-avatar');
+      if (avatar) {
+        const name = String(profile.name || 'User').trim();
+        avatar.textContent = name ? name.split(/\s+/).map(x => x[0]).join('').slice(0,2).toUpperCase() : 'U';
+        avatar.title = profile.email || name;
+      }
+    } catch (error) {
+      const avatar = document.getElementById('header-avatar');
+      if (avatar) avatar.textContent = 'U';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    try {
+      await refreshAll();
+    } catch (error) {
+      console.error('Initial load failed:', error);
+      setVerifyStatus(error.message || 'Failed to load providers', false);
+      appendLog(`Could not load provider registry: ${error.message}`, false);
+    }
+
+    // Auto-refresh every 15 seconds
+    setInterval(async () => {
+      try { 
+        await refreshAll(); 
+      } catch (error) {
+        console.warn('Auto-refresh failed:', error);
+        // Silently fail - don't spam logs with refresh errors
+      }
+    }, 15000);
+  });
+</script>
+</body></html>

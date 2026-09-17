@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full" data-page="history">
+<head>
+<script src="/static/theme.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAXIMUS — History & Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{surface:'#f9f9f9','surface-container-low':'#f3f3f3','surface-container':'#eeeeee','surface-container-high':'#e8e8e8','surface-variant':'#e2e2e2',primary:'#000000',secondary:'#006c49','on-surface':'#1a1c1c','on-surface-variant':'#47464a'},fontFamily:{body:['Plus Jakarta Sans','sans-serif'],mono:['JetBrains Mono','monospace']}}}};
+</script>
+<style>
+html,body{margin:0;padding:0} body{overscroll-behavior:none;font-family:'Plus Jakarta Sans',sans-serif}.material-symbols-outlined{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:1em;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:'liga';-webkit-font-smoothing:antialiased;font-feature-settings:'liga';font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 24}::-webkit-scrollbar{display:none}.ambient-grid{background-size:24px 24px;background-image:linear-gradient(to right,rgba(226,226,226,.5) 1px,transparent 1px),linear-gradient(to bottom,rgba(226,226,226,.5) 1px,transparent 1px)}
+@keyframes spin{to{transform:rotate(360deg)}}.spin{animation:spin .8s linear infinite}.session-card{transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}.session-card:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.05)}
+</style>
+<link rel="stylesheet" href="/static/theme.css">
+</head>
+<body class="min-h-full bg-surface text-on-surface ambient-grid flex flex-col">
+<header class="w-full h-16 px-6 flex items-center justify-between bg-white/90 backdrop-blur-md border-b border-surface-variant sticky top-0 z-30">
+  <div class="flex items-center gap-6">
+    <div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-lg overflow-hidden bg-white border border-surface-variant flex items-center justify-center shadow-sm"><img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover"></div><div><div class="text-[15px] font-bold tracking-tight">MAXIMUS</div><div class="text-[9px] uppercase tracking-widest text-on-surface-variant font-mono">History & Archive</div></div></div>
+    <div class="hidden md:block h-4 w-px bg-surface-variant"></div>
+    <nav class="hidden md:flex items-center gap-1 text-[12px] font-medium">
+      <a href="/home" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">chat_bubble_outline</span>Chat</a>
+      <a href="/speakwithai" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">graphic_eq</span>Live AI</a>
+      <a href="/history" class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-semibold flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">history</span>History</a>
+      <a href="/settings" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">settings</span>Settings</a>
+    </nav>
+  </div>
+  <div class="flex items-center gap-3">
+    <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low border border-surface-variant font-mono text-[10px] text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span id="serverStatus">Checking server…</span></div>
+    <button id="refreshBtn" class="w-9 h-9 rounded-lg border border-surface-variant bg-white hover:bg-surface-container-low flex items-center justify-center" title="Refresh archive"><span class="material-symbols-outlined text-[18px]">refresh</span></button>
+    <div class="relative" id="historyProfileWrap">
+      <button id="historyProfileTrigger" type="button" class="w-9 h-9 rounded-full border border-surface-variant bg-white hover:bg-surface-container-low overflow-hidden flex items-center justify-center font-semibold text-[12px]" aria-expanded="false" title="Account">
+        <span id="historyProfileAvatar" class="w-full h-full flex items-center justify-center">U</span>
+      </button>
+      <div id="historyProfileDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-surface-variant bg-white shadow-xl p-3 z-40">
+        <div id="historyProfileName" class="text-sm font-semibold truncate">User</div>
+        <div id="historyProfileEmail" class="text-[11px] text-on-surface-variant mt-0.5 truncate">Loading…</div>
+        <a href="/profile-settings" class="mt-3 w-full px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">person</span>Profile Settings</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="flex-1 min-h-0 flex flex-col lg:flex-row">
+  <aside class="w-full lg:w-72 border-r border-surface-variant bg-white flex flex-col shrink-0">
+    <div class="p-4 flex flex-col gap-5 h-full">
+      <div class="flex items-center justify-between"><span class="font-mono text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Archive Vault</span><span id="totalBadge" class="px-2 py-0.5 rounded bg-surface-container-high font-mono text-[10px] font-semibold">0 STORED</span></div>
+      <div class="grid grid-cols-3 gap-2">
+        <button type="button" data-filter="all" class="filterBtn active rounded-lg bg-black text-white py-2 text-[11px] font-semibold">All</button>
+        <button type="button" data-filter="chat" class="filterBtn rounded-lg border border-surface-variant py-2 text-[11px] text-on-surface-variant font-semibold">Chat</button>
+        <button type="button" data-filter="live" class="filterBtn rounded-lg border border-surface-variant py-2 text-[11px] text-on-surface-variant font-semibold">Live AI</button>
+      </div>
+      <button id="pinnedBtn" type="button" aria-pressed="false" class="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-surface-variant text-on-surface-variant hover:bg-surface-container-low text-[12px] transition-colors"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[17px] text-secondary">push_pin</span>Pinned conversations</span><span id="pinnedCount" class="font-mono text-[11px]">0</span></button>
+      <div class="pt-2 border-t border-surface-variant">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold mb-2">Actions</div>
+        <button id="clearChatBtn" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] text-on-surface-variant hover:bg-red-50 hover:text-red-600"><span class="material-symbols-outlined text-[17px]">delete_sweep</span>Clear Chat history</button>
+        <button id="clearLiveBtn" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] text-on-surface-variant hover:bg-red-50 hover:text-red-600"><span class="material-symbols-outlined text-[17px]">delete_sweep</span>Clear Live AI history</button>
+      </div>
+      <div class="mt-auto p-3.5 rounded-xl bg-surface-container-low border border-surface-variant">
+        <div class="flex items-center justify-between font-mono text-[10px]"><span class="font-semibold">STORAGE</span><span id="storageCount" class="text-secondary">0 sessions</span></div>
+        <div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden mt-3"><div id="storageBar" class="h-full bg-secondary rounded-full" style="width:0%"></div></div>
+        <div class="flex items-center justify-between text-[11px] font-mono text-on-surface-variant mt-2"><span id="chatStorageLabel">Chat 0</span><span id="liveStorageLabel">Live 0</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="w-full lg:w-[420px] border-r border-surface-variant bg-surface flex flex-col shrink-0 min-h-0">
+    <div class="p-3.5 border-b border-surface-variant bg-white">
+      <button id="newConversationBtn" class="w-full mb-3 px-3.5 py-2.5 rounded-lg bg-black text-white hover:bg-neutral-800 flex items-center justify-center gap-2 text-[11px] font-semibold shadow-sm" title="Start a new conversation"><span class="material-symbols-outlined text-[17px]">add_comment</span><span>Start New Conversation</span></button>
+      <div class="relative"><span class="material-symbols-outlined absolute left-2.5 top-2 text-on-surface-variant text-[16px]">search</span><input id="searchInput" type="text" placeholder="Search conversations…" class="w-full bg-surface-container-low pl-8 pr-3 py-2 text-[12px] rounded-lg border border-surface-variant focus:outline-none focus:border-black"></div>
+      <div class="flex items-center justify-between mt-3"><div class="text-[10px] font-mono text-on-surface-variant" id="resultLabel">0 sessions</div><select id="sortSelect" class="text-[10px] font-mono bg-transparent border-0 focus:outline-none text-on-surface-variant"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="most">Most messages</option><option value="least">Least messages</option></select></div>
+    </div>
+    <div id="sessionList" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2"></div>
+    <div id="listEmpty" class="hidden flex-1 items-center justify-center p-6 text-center"><div><span class="material-symbols-outlined text-[34px] text-on-surface-variant">inventory_2</span><p class="text-sm font-semibold mt-2">No matching sessions</p><p class="text-[11px] text-on-surface-variant mt-1">Your real database sessions will appear here.</p></div></div>
+  </section>
+
+  <section class="flex-1 min-w-0 bg-surface-container-low overflow-y-auto">
+    <div id="detailEmpty" class="h-full min-h-[500px] flex items-center justify-center p-8"><div class="max-w-xl text-center"><div class="w-16 h-16 rounded-2xl bg-white border border-surface-variant flex items-center justify-center mx-auto shadow-sm"><span class="material-symbols-outlined text-[32px]">history_toggle_off</span></div><h2 class="text-[28px] font-bold tracking-tight mt-6">Select a session</h2><p class="text-sm text-on-surface-variant leading-relaxed mt-2">Open a real Chat or Live AI session to view its saved transcript.</p></div></div>
+    <div id="detailPanel" class="hidden p-5 md:p-8 max-w-4xl mx-auto w-full">
+      <div class="bg-white border border-surface-variant rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-surface-variant flex items-start justify-between gap-4"><div><div class="flex items-center gap-2"><span id="detailMode" class="text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded bg-surface-container-high">CHAT</span><h2 id="detailTitle" class="text-xl font-bold tracking-tight">Conversation</h2></div><div id="detailMeta" class="text-[10px] font-mono text-on-surface-variant mt-2"></div></div><div class="flex items-center gap-2"><button id="openBtn" class="px-3 py-2 rounded-lg bg-black text-white text-[11px] font-semibold">Open</button><button id="deleteBtn" class="w-9 h-9 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">delete</span></button></div></div>
+        <div id="detailMessages" class="p-5 md:p-7 flex flex-col gap-4"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+<div id="newConversationModal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm items-center justify-center p-4">
+  <div class="w-full max-w-md bg-white rounded-2xl border border-surface-variant shadow-2xl p-5">
+    <div class="flex items-start justify-between gap-4"><div><div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-mono font-semibold">MAXIMUS</div><h3 class="text-lg font-bold mt-1">Start a New Conversation</h3><p class="text-sm text-on-surface-variant mt-1">Choose how you want to interact with MAXIMUS.</p></div><button id="newConversationClose" type="button" class="w-8 h-8 rounded-lg hover:bg-surface-container-low flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">close</span></button></div>
+    <label class="block mt-5 text-[11px] font-semibold text-on-surface-variant">Conversation name</label>
+    <input id="newConversationName" type="text" maxlength="200" value="New Conversation" class="w-full mt-2 px-3 py-2.5 rounded-lg bg-surface-container-low border border-surface-variant text-sm focus:outline-none focus:border-black">
+    <div class="text-[11px] font-semibold text-on-surface-variant mt-5 mb-2">Choose mode</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <button id="modeChatBtn" type="button" class="text-left p-3 rounded-xl border border-black bg-surface-container-low"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[19px]">chat_bubble_outline</span><span class="font-semibold text-sm">Chat</span></div><p class="text-[11px] text-on-surface-variant mt-1.5 leading-relaxed">Text, code, images and normal MAXIMUS conversation.</p></button>
+      <button id="modeLiveBtn" type="button" class="text-left p-3 rounded-xl border border-surface-variant hover:bg-surface-container-low"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[19px] text-secondary">graphic_eq</span><span class="font-semibold text-sm">Live AI</span><span class="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700">Live</span></div><p class="text-[11px] text-on-surface-variant mt-1.5 leading-relaxed">Real-time voice interaction with MAXIMUS.</p></button>
+    </div>
+    <p id="newConversationError" class="hidden mt-3 text-[11px] text-red-600"></p>
+    <div class="flex justify-end gap-2 mt-6"><button id="newConversationCancel" type="button" class="px-4 py-2 rounded-lg border border-surface-variant text-xs font-semibold text-on-surface-variant hover:bg-surface-container-low">Cancel</button><button id="createNewConversationBtn" type="button" class="px-4 py-2 rounded-lg bg-black text-white text-xs font-semibold hover:bg-neutral-800">Create Conversation</button></div>
+  </div>
+</div>
+
+<div id="confirmModal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm items-center justify-center p-4">
+  <div class="w-full max-w-md bg-white rounded-2xl border border-surface-variant shadow-2xl p-5">
+    <div class="flex items-start gap-3">
+      <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[20px]">warning</span>
+      </div>
+      <div class="min-w-0">
+        <h3 id="confirmTitle" class="text-base font-bold">Confirm action</h3>
+        <p id="confirmMessage" class="text-sm text-on-surface-variant mt-1 leading-relaxed"></p>
+      </div>
+    </div>
+    <div class="flex justify-end gap-2 mt-6">
+      <button id="confirmCancel" type="button" class="px-4 py-2 rounded-lg border border-surface-variant text-xs font-semibold text-on-surface-variant hover:bg-surface-container-low">Cancel</button>
+      <button id="confirmProceed" type="button" class="px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700">Clear history</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="fixed left-1/2 bottom-6 -translate-x-1/2 translate-y-3 opacity-0 pointer-events-none bg-black text-white text-[12px] px-4 py-2.5 rounded-xl shadow-xl transition-all z-50"></div>
+
+<script>
+(() => {
+  const state = { chat: [], live: [], filter: 'all', pinnedOnly: false, selected: null, sort: 'newest' };
+  let currentProfile = { name: 'User', email: '', icon_url: '' };
+  const $ = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  const fmt = iso => { if (!iso) return 'Unknown time'; const d = new Date(iso); return isNaN(d) ? 'Unknown time' : d.toLocaleString([], {dateStyle:'medium', timeStyle:'short'}); };
+  const toast = msg => { $('toast').textContent = msg; $('toast').classList.remove('opacity-0','translate-y-3'); $('toast').classList.add('opacity-100','translate-y-0'); clearTimeout(window.__toast); window.__toast=setTimeout(()=>{$('toast').classList.add('opacity-0','translate-y-3');$('toast').classList.remove('opacity-100','translate-y-0')},2200); };
+  function setLoading(on){ $('sessionList').innerHTML = on ? '<div class="flex items-center justify-center py-12 text-on-surface-variant"><span class="material-symbols-outlined spin text-[22px]">progress_activity</span></div>' : ''; }
+  async function api(url, options={}){ const r=await fetch(url, options); const data=await r.json().catch(()=>({})); if(!r.ok) throw new Error(data.detail || 'Request failed'); return data; }
+
+
+  function initials(name){
+    const parts = String(name || 'User').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return 'U';
+    return (parts.length === 1 ? parts[0].slice(0,2) : (parts[0][0] + parts[parts.length-1][0])).toUpperCase();
+  }
+
+  function renderHistoryProfileAvatar(){
+    const el = $('historyProfileAvatar');
+    if (!el) return;
+    if (currentProfile.icon_url) {
+      el.innerHTML = `<img src="${esc(currentProfile.icon_url)}" alt="${esc(currentProfile.name)}" class="w-full h-full object-cover">`;
+    } else {
+      el.textContent = initials(currentProfile.name);
+    }
+  }
+
+  async function loadHistoryProfile(force=false){
+    if (!force && $('historyProfileTrigger')?.dataset.loaded === 'true') return;
+    try{
+      const profile = await api('/api/user/profile');
+      currentProfile = { name: profile.name || 'User', email: profile.email || '', icon_url: profile.icon_url || '' };
+      $('historyProfileName').textContent = currentProfile.name;
+      $('historyProfileEmail').textContent = currentProfile.email || 'Signed in';
+      renderHistoryProfileAvatar();
+      if ($('historyProfileTrigger')) $('historyProfileTrigger').dataset.loaded = 'true';
+    }catch(e){
+      renderHistoryProfileAvatar();
+      if ($('historyProfileEmail')) $('historyProfileEmail').textContent = 'Profile unavailable';
+    }
+  }
+
+  async function loadData(){
+    setLoading(true);
+    try{
+      const [chats, lives] = await Promise.all([api('/api/chat/list'), api('/api/live/list')]);
+      state.chat = Array.isArray(chats) ? chats : [];
+      state.live = Array.isArray(lives) ? lives : [];
+      await loadPinnedFlags();
+      $('serverStatus').textContent = `${state.chat.length + state.live.length} sessions loaded`;
+      renderStats(); renderList();
+    } catch(e){
+      $('sessionList').innerHTML='<div class="p-6 text-center"><span class="material-symbols-outlined text-red-500">error</span><p class="text-sm font-semibold mt-2">Could not load archive</p><p class="text-[11px] text-on-surface-variant mt-1">'+esc(e.message)+'</p></div>';
+      $('serverStatus').textContent='Archive unavailable';
+      if(e.message.toLowerCase().includes('authenticated')) toast('Please log in first');
+    }
+  }
+  async function loadPinnedFlags(){
+    // Pinning belongs to the conversation/session itself.
+    state.chat.forEach(c => {
+      c.pinned = !!c.pinned;
+      c.pinnedCount = c.pinned ? 1 : 0;
+    });
+    state.live.forEach(s => {
+      s.pinned = !!s.pinned;
+      s.pinnedCount = s.pinned ? 1 : 0;
+    });
+  }
+
+  function allSessions(){
+    const out=[];
+    if(state.filter==='all'||state.filter==='chat') state.chat.forEach(s=>out.push({...s,type:'chat',key:'chat:'+s.id}));
+    if(state.filter==='all'||state.filter==='live') state.live.forEach(s=>out.push({...s,type:'live',key:'live:'+s.id}));
+    return state.pinnedOnly ? out.filter(s=>!!s.pinned) : out;
+  }
+
+  function renderStats(){
+    const chat=state.chat.length, live=state.live.length, total=chat+live;
+    const pins=state.chat.filter(s=>s.pinned).length + state.live.filter(s=>s.pinned).length;
+    $('totalBadge').textContent = total+' STORED';
+    $('storageCount').textContent=total+' sessions';
+    $('chatStorageLabel').textContent='Chat '+chat;
+    $('liveStorageLabel').textContent='Live '+live;
+    $('pinnedCount').textContent=pins;
+    $('storageBar').style.width=Math.min(100,total*10)+'%';
+  }
+
+  async function togglePinnedConversation(s){
+    const base = s.type==='live'
+      ? `/api/live/${encodeURIComponent(s.id)}`
+      : `/api/chat/${encodeURIComponent(s.id)}`;
+    const action = s.pinned ? 'unpin' : 'pin';
+    const result = await api(`${base}/${action}`, {
+      method:'POST',
+      credentials:'same-origin',
+      headers:{'Accept':'application/json'},
+      cache:'no-store'
+    });
+    s.pinned = !s.pinned;
+    const source = s.type==='live' ? state.live : state.chat;
+    const found = source.find(item => String(item.id)===String(s.id));
+    if(found) found.pinned = s.pinned;
+    return result;
+  }
+
+  function renderList(){
+    let sessions=allSessions();
+    const q=$('searchInput').value.trim().toLowerCase();
+    if(q) sessions=sessions.filter(s=>(s.title||'').toLowerCase().includes(q));
+    sessions.sort((a,b)=>{
+      if(state.sort==='most') return (b.message_count||0)-(a.message_count||0);
+      if(state.sort==='least') return (a.message_count||0)-(b.message_count||0);
+      const ta=new Date(a.updated_at||a.created_at||0).getTime();
+      const tb=new Date(b.updated_at||b.created_at||0).getTime();
+      return state.sort==='oldest'?ta-tb:tb-ta;
+    });
+    $('resultLabel').textContent=sessions.length+' session'+(sessions.length===1?'':'s');
+    $('sessionList').innerHTML='';
+    $('listEmpty').classList.toggle('hidden',sessions.length>0);
+    $('listEmpty').classList.toggle('flex',sessions.length===0);
+
+    sessions.forEach(s=>{
+      const el=document.createElement('div');
+      el.tabIndex=0;
+      el.setAttribute('role','button');
+      el.className='session-card w-full text-left bg-white border border-surface-variant rounded-xl p-3.5 hover:border-neutral-300 cursor-pointer';
+      if(state.selected && state.selected.key===s.key) el.classList.add('ring-2','ring-black');
+      const mode=s.type==='live';
+      el.innerHTML=`
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-lg ${mode?'bg-emerald-50 text-emerald-700':'bg-surface-container-low text-on-surface'} flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[18px]">${mode?'graphic_eq':'chat_bubble_outline'}</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+              <div class="text-sm font-semibold truncate">${esc(s.title||'Untitled conversation')}</div>
+              <span class="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded ${mode?'bg-emerald-50 text-emerald-700':'bg-surface-container-high text-on-surface-variant'}">${mode?'Live':'Chat'}</span>
+            </div>
+            <div class="text-[10px] font-mono text-on-surface-variant mt-1">${fmt(s.updated_at||s.created_at)}</div>
+            <div class="text-[10px] text-on-surface-variant mt-1">${s.message_count||0} messages</div>
+          </div>
+          <button type="button" data-pin-id="${esc(s.id)}" data-pin-type="${mode?'live':'chat'}" data-pinned="${s.pinned?'1':'0'}"
+            class="shrink-0 px-2.5 py-1.5 rounded-lg border border-surface-variant bg-white hover:bg-surface-container-low text-[11px] font-semibold text-on-surface-variant flex items-center gap-1.5"
+            title="${s.pinned?'Unpin conversation':'Pin conversation'}" aria-label="${s.pinned?'Unpin conversation':'Pin conversation'}">
+            <span class="material-symbols-outlined text-[16px]">${s.pinned?'push_pin':'push_pin'}</span>
+            <span>${s.pinned?'Unpin':'Pin'}</span>
+          </button>
+        </div>`;
+      el.addEventListener('click', event=>{
+        if(event.target.closest('[data-pin-id]')) return;
+        selectSession(s);
+      });
+      el.addEventListener('keydown', event=>{
+        if((event.key==='Enter'||event.key===' ') && !event.target.closest('[data-pin-id]')){
+          event.preventDefault();
+          selectSession(s);
+        }
+      });
+      $('sessionList').appendChild(el);
+    });
+  }
+
+  $('sessionList').addEventListener('click', async event=>{
+    const pinBtn=event.target.closest('[data-pin-id]');
+    if(!pinBtn) return;
+    event.stopPropagation();
+    const id=pinBtn.dataset.pinId;
+    const type=pinBtn.dataset.pinType || 'chat';
+    const source=type==='live' ? state.live : state.chat;
+    const session=source.find(s=>String(s.id)===String(id));
+    if(!session) return;
+    try{
+      const target={...session,type};
+      await togglePinnedConversation(target);
+      toast(target.pinned ? 'Conversation pinned' : 'Conversation unpinned');
+      if(state.selected && String(state.selected.id)===String(id)) state.selected.pinned=target.pinned;
+      renderStats();
+      renderList();
+    }catch(e){
+      toast(e.message||'Could not change pin state');
+    }
+  });
+
+  async function selectSession(s){
+    try{
+      state.selected=s; renderList(); $('detailEmpty').classList.add('hidden'); $('detailPanel').classList.remove('hidden'); $('detailMessages').innerHTML='<div class="flex justify-center py-8 text-on-surface-variant"><span class="material-symbols-outlined spin">progress_activity</span></div>';
+      const d=await api(s.type==='chat'?'/api/chat/'+s.id:'/api/live/'+s.id); state.selected={...s,messages:d.messages||[],title:d.title||s.title};
+      $('detailMode').textContent=s.type==='live'?'LIVE AI':'CHAT'; $('detailMode').className='text-[9px] uppercase tracking-wider font-bold px-2 py-1 rounded '+(s.type==='live'?'bg-emerald-50 text-emerald-700':'bg-surface-container-high text-on-surface-variant'); $('detailTitle').textContent=state.selected.title; $('detailMeta').textContent=`${fmt(s.created_at)} · ${(d.messages||[]).length} messages`;
+      $('detailMessages').innerHTML='';
+      if(!(d.messages||[]).length){ $('detailMessages').innerHTML='<div class="py-12 text-center text-on-surface-variant"><span class="material-symbols-outlined text-[30px]">chat_bubble_outline</span><p class="text-sm font-semibold mt-2">No messages saved</p></div>'; return; }
+      d.messages.forEach(m=>{
+        const row=document.createElement('div');
+        const user=m.role==='user';
+        row.className=user?'flex items-start justify-end gap-3':'flex items-start gap-3';
+        if(user){
+          const avatarHtml = currentProfile.icon_url
+            ? `<img src="${esc(currentProfile.icon_url)}" alt="${esc(currentProfile.name)}" class="w-full h-full object-cover">`
+            : `<span>${esc(initials(currentProfile.name))}</span>`;
+          row.innerHTML=`<div class="max-w-[82%]"><div class="text-[10px] uppercase tracking-wider font-semibold text-right text-on-surface-variant mb-1">${esc(currentProfile.name || 'You')}</div><div class="bg-black text-white rounded-2xl rounded-tr-sm px-4 py-3 text-sm whitespace-pre-wrap">${esc(m.content)}</div></div><div class="w-9 h-9 rounded-full bg-surface-container-high shrink-0 overflow-hidden flex items-center justify-center text-[11px] font-bold text-on-surface" title="${esc(currentProfile.name || 'You')}">${avatarHtml}</div>`;
+        }else{
+          row.innerHTML=`<div class="w-9 h-9 rounded-lg bg-black text-white flex items-center justify-center font-bold shrink-0">M</div><div class="max-w-[82%]"><div class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant mb-1">MAXIMUS</div><div class="bg-surface-container-low border border-surface-variant rounded-2xl rounded-tl-sm px-4 py-3 text-sm whitespace-pre-wrap">${esc(m.content)}</div></div>`;
+        }
+        $('detailMessages').appendChild(row);
+      });
+    }catch(e){ toast(e.message); }
+  }
+  $('openBtn').onclick=()=>{
+    if(!state.selected)return;
+    window.location.href=state.selected.type==='live'
+      ? `/speakwithai?live_id=${encodeURIComponent(state.selected.id)}`
+      : `/home?chat_id=${encodeURIComponent(state.selected.id)}`;
+  };
+
+  // Start a New Conversation (same behavior as Home)
+  let selectedNewMode = 'chat';
+  const newConversationModal = $('newConversationModal');
+  const newConversationName = $('newConversationName');
+  const newConversationError = $('newConversationError');
+  const createNewConversationBtn = $('createNewConversationBtn');
+
+  function openNewConversationModal(){
+    newConversationModal.classList.remove('hidden');
+    newConversationModal.classList.add('flex');
+    newConversationError.classList.add('hidden');
+    setTimeout(()=>{newConversationName.focus();newConversationName.select();},0);
+  }
+  function closeNewConversationModal(){
+    newConversationModal.classList.add('hidden');
+    newConversationModal.classList.remove('flex');
+    newConversationError.classList.add('hidden');
+    newConversationError.textContent='';
+    createNewConversationBtn.disabled=false;
+    createNewConversationBtn.textContent='Create Conversation';
+  }
+  function setNewMode(mode){
+    selectedNewMode=mode;
+    $('modeChatBtn').classList.toggle('border-black',mode==='chat');
+    $('modeChatBtn').classList.toggle('bg-surface-container-low',mode==='chat');
+    $('modeChatBtn').classList.toggle('border-surface-variant',mode!=='chat');
+    $('modeLiveBtn').classList.toggle('border-black',mode==='live');
+    $('modeLiveBtn').classList.toggle('bg-surface-container-low',mode==='live');
+    $('modeLiveBtn').classList.toggle('border-surface-variant',mode!=='live');
+  }
+  $('newConversationBtn').onclick=openNewConversationModal;
+  $('newConversationClose').onclick=closeNewConversationModal;
+  $('newConversationCancel').onclick=closeNewConversationModal;
+  $('modeChatBtn').onclick=()=>setNewMode('chat');
+  $('modeLiveBtn').onclick=()=>setNewMode('live');
+  newConversationModal.addEventListener('click',e=>{if(e.target===newConversationModal)closeNewConversationModal();});
+  createNewConversationBtn.onclick=async()=>{
+    const title=(newConversationName.value||'').trim()||'New Conversation';
+    createNewConversationBtn.disabled=true;
+    createNewConversationBtn.textContent='Creating…';
+    newConversationError.classList.add('hidden');
+    try{
+      const endpoint=selectedNewMode==='live'?'/api/live/new':'/api/chat/new';
+      const payload=selectedNewMode==='live'?{title}:{title,mode:'chat'};
+      const response=await fetch(endpoint,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+      const raw=await response.text();
+      let data={}; try{data=raw?JSON.parse(raw):{};}catch{}
+      if(!response.ok)throw new Error(data.detail||`Could not create conversation (${response.status})`);
+      closeNewConversationModal();
+      if(selectedNewMode==='live'){window.location.href='/speakwithai';return;}
+      await loadData();
+      const created=state.chat.find(c=>String(c.id)===String(data.id));
+      if(created)await selectSession({...created,type:'chat',key:'chat:'+created.id});
+      toast(data.title?`Started: ${data.title}`:'New conversation started');
+    }catch(e){
+      newConversationError.textContent=e.message||'Could not create conversation.';
+      newConversationError.classList.remove('hidden');
+      createNewConversationBtn.disabled=false;
+      createNewConversationBtn.textContent='Create Conversation';
+    }
+  };
+
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!newConversationModal.classList.contains('hidden'))closeNewConversationModal();});
+
+  let pendingAction = null; // {kind:'delete'|'clear', type?, session?}
+
+  function closeConfirmModal(){
+    const modal = $('confirmModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    pendingAction = null;
+    const btn = $('confirmProceed');
+    if (btn) { btn.disabled = false; btn.textContent = 'Confirm'; }
+  }
+
+  function openDeleteSessionModal(){
+    if (!state.selected) return;
+    pendingAction = { kind:'delete', session:{...state.selected} };
+    $('confirmTitle').textContent = 'Delete conversation';
+    $('confirmMessage').textContent = `This will permanently delete "${pendingAction.session.title || 'this conversation'}" and all saved messages. This cannot be undone.`;
+    $('confirmProceed').textContent = 'Delete';
+    $('confirmModal').classList.remove('hidden');
+    $('confirmModal').classList.add('flex');
+  }
+
+  function openClearHistoryModal(type){
+    pendingAction = { kind:'clear', type };
+    const label = type === 'chat' ? 'Chat' : 'Live AI';
+    $('confirmTitle').textContent = `Clear ${label} history`;
+    $('confirmMessage').textContent = `This will permanently delete all saved ${label} conversations and messages from your account. This cannot be undone.`;
+    $('confirmProceed').textContent = 'Clear history';
+    $('confirmModal').classList.remove('hidden');
+    $('confirmModal').classList.add('flex');
+  }
+
+  $('deleteBtn').onclick = openDeleteSessionModal;
+  $('clearChatBtn').onclick = () => openClearHistoryModal('chat');
+  $('clearLiveBtn').onclick = () => openClearHistoryModal('live');
+  $('confirmCancel').onclick = closeConfirmModal;
+
+  async function performClearHistory(type, btn){
+    const endpoint = type === 'chat' ? '/api/chat/history' : '/api/live/history';
+    const label = type === 'chat' ? 'Chat' : 'Live AI';
+    btn.disabled = true;
+    btn.textContent = type === 'chat' ? 'Clearing chat…' : 'Clearing Live AI…';
+    try {
+      const response = await fetch(endpoint, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json' },
+        cache: 'no-store'
+      });
+      const raw = await response.text();
+      let data = {};
+      try { data = raw ? JSON.parse(raw) : {}; } catch {}
+      if (!response.ok) {
+        throw new Error(data.detail || `Clear ${label} history failed (${response.status})`);
+      }
+
+      state.selected = null;
+      $('detailPanel').classList.add('hidden');
+      $('detailEmpty').classList.remove('hidden');
+      closeConfirmModal();
+      toast(data.message || `${label} history cleared`);
+      await loadData();
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Clear history';
+      toast(e.message || `Could not clear ${label} history`);
+      console.error('History clear failed:', e);
+      return false;
+    }
+    return true;
+  }
+
+  $('confirmProceed').onclick = async () => {
+    const action = pendingAction;
+    if (!action) return;
+    const btn = $('confirmProceed');
+
+    if (action.kind === 'clear') {
+      await performClearHistory(action.type, btn);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Deleting…';
+    try {
+      const endpoint = action.session.type === 'live'
+        ? `/api/live/${encodeURIComponent(action.session.id)}`
+        : `/api/chat/${encodeURIComponent(action.session.id)}`;
+      const result = await api(endpoint, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: { 'Accept':'application/json' }
+      });
+      state.selected = null;
+      $('detailPanel').classList.add('hidden');
+      $('detailEmpty').classList.remove('hidden');
+      closeConfirmModal();
+      toast(result.message || 'Conversation deleted');
+      await loadData();
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Delete';
+      toast(e.message || 'Delete failed');
+      console.error('Delete failed:', e);
+    }
+  };
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConfirmModal(); });
+  $('confirmModal').addEventListener('click', e => { if (e.target === $('confirmModal')) closeConfirmModal(); });
+  document.addEventListener('keydown',e=>{if(e.key==='/' && document.activeElement!==$('searchInput')){e.preventDefault();$('searchInput').focus()} if(e.key==='Escape'){ $('searchInput').blur(); }});
+
+  // Archive Vault filters: All / Chat / Live AI / Pinned conversations
+  const archiveFilterButtons = Array.from(document.querySelectorAll('.filterBtn'));
+
+  function updateArchiveFilterUI() {
+    archiveFilterButtons.forEach(btn => {
+      const active = !state.pinnedOnly && btn.dataset.filter === state.filter;
+      btn.classList.toggle('active', active);
+      btn.classList.toggle('bg-black', active);
+      btn.classList.toggle('text-white', active);
+      btn.classList.toggle('border', !active);
+      btn.classList.toggle('border-surface-variant', !active);
+      btn.classList.toggle('text-on-surface-variant', !active);
+    });
+
+    const pinnedBtn = $('pinnedBtn');
+    if (pinnedBtn) {
+      const active = state.pinnedOnly;
+      pinnedBtn.setAttribute('aria-pressed', String(active));
+      pinnedBtn.classList.toggle('bg-black', active);
+      pinnedBtn.classList.toggle('text-white', active);
+      pinnedBtn.classList.toggle('border-black', active);
+      pinnedBtn.classList.toggle('border-surface-variant', !active);
+      pinnedBtn.classList.toggle('text-on-surface-variant', !active);
+
+      const pinIcon = pinnedBtn.querySelector('.material-symbols-outlined');
+      if (pinIcon) {
+        pinIcon.classList.toggle('text-secondary', !active);
+        pinIcon.classList.toggle('text-white', active);
+      }
+    }
+  }
+
+  archiveFilterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.filter = btn.dataset.filter || 'all';
+      state.pinnedOnly = false;
+      state.selected = null;
+      updateArchiveFilterUI();
+      renderList();
+    });
+  });
+
+  $('pinnedBtn')?.addEventListener('click', () => {
+    state.pinnedOnly = true;
+    state.filter = 'all';
+    state.selected = null;
+    updateArchiveFilterUI();
+    renderList();
+  });
+
+  updateArchiveFilterUI();
+
+  const historyProfileTrigger = $('historyProfileTrigger');
+  const historyProfileDropdown = $('historyProfileDropdown');
+  if (historyProfileTrigger && historyProfileDropdown) {
+    historyProfileTrigger.addEventListener('click', async (event)=>{
+      event.stopPropagation();
+      const isOpen = historyProfileDropdown.classList.toggle('hidden') === false;
+      historyProfileTrigger.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen && historyProfileTrigger.dataset.loaded !== 'true') await loadHistoryProfile();
+    });
+    document.addEventListener('click', ()=>historyProfileDropdown.classList.add('hidden'));
+  }
+
+  loadHistoryProfile();
+  loadData();
+})();
+</script>
+</body>
+</html>

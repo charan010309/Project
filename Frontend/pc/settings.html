@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en" data-page="settings">
+<head>
+<script src="/static/theme.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings · MAXIMUS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f4f4f5",
+            "surface-container": "#eeeeee",
+            "surface-container-high": "#e8e8ea",
+            "outline-variant": "#e4e4e7",
+            "background": "#f9f9f9",
+            "primary": "#09090b",
+            "on-primary": "#ffffff",
+            "on-surface": "#09090b",
+            "on-surface-variant": "#52525b",
+            "secondary": "#10b981",
+            "secondary-container": "#e6f9f0",
+            "on-secondary-container": "#006c49",
+            "error": "#ba1a1a",
+            "error-container": "#fee2e2"
+          },
+          borderRadius: {
+            "lg": "0.375rem",
+            "xl": "0.5rem",
+            "2xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #e2e2e2; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #c8c5ca; }
+    .ambient-grid {
+      background-size: 32px 32px;
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    }
+    .anchor-active {
+      background: #eeeeee !important;
+      color: #09090b !important;
+      font-weight: 600 !important;
+    }
+  </style>
+<link rel="stylesheet" href="/static/theme.css">
+</head>
+
+<body class="min-h-screen bg-background text-on-surface font-sans antialiased ambient-grid flex flex-col">
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 w-full bg-background/90 backdrop-blur-md border-b border-outline-variant/70">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg overflow-hidden bg-primary flex items-center justify-center shadow-sm ring-1 ring-outline-variant">
+            <img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="font-bold text-base tracking-tight">MAXIMUS</span>
+            
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1 pl-4 border-l border-outline-variant/60 text-sm">
+          <a class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-1.5" href="/home">
+            <span class="material-symbols-outlined text-[17px]">forum</span><span>Home / Chat</span>
+          </a>
+          <a class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-1.5" href="/speakwithai">
+            <span class="material-symbols-outlined text-[17px]">graphic_eq</span><span>Speak with AI</span>
+          </a>
+          <a class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-1.5" href="/history">
+            <span class="material-symbols-outlined text-[17px]">history</span><span>History</span>
+          </a>
+          <a class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-semibold flex items-center gap-1.5" href="/settings">
+            <span class="material-symbols-outlined text-[17px]">settings</span><span>Settings</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-5">
+        <div class="settings-header-status hidden lg:flex items-center gap-2.5 px-3 py-1 bg-surface-container-lowest border border-outline-variant/70 rounded-full text-xs font-mono">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+          </span>
+          <span class="text-on-surface-variant">SYSTEM ONLINE</span>
+          <span class="text-outline-variant">//</span>
+          <span id="header-engine" class="text-on-surface font-medium">Loading engine...</span>
+        </div>
+        <div class="flex items-center gap-2.5 pl-1">
+          <div id="header-avatar" class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold font-mono ring-1 ring-outline-variant">U</div>
+          <span id="header-name" class="hidden sm:inline text-xs font-semibold">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex-1 w-full max-w-[1600px] mx-auto px-6 lg:px-8 py-8">
+    <div class="settings-heading flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-8 mb-8 border-b border-outline-variant/80">
+      <div>
+        <div class="flex items-center gap-2 font-mono text-[11px] tracking-wider uppercase text-on-surface-variant mb-2">
+          <span>MAXIMUS</span><span class="text-outline-variant">//</span><span>SETTINGS</span><span class="text-outline-variant">//</span>
+          <span class="text-on-surface font-semibold bg-surface-container-low px-2 py-0.5 rounded">YOUR WORKSPACE</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Make MAXIMUS yours.</h1>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-mono text-[11px] font-semibold border border-secondary/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> CONFIGURATION READY
+          </span>
+        </div>
+        <p class="text-sm text-on-surface-variant mt-1.5 max-w-3xl">
+          A workspace that works your way. Personalize appearance, intelligence, and voice.
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <button id="discard-btn" class="px-4 py-2 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-surface-container-low transition-all shadow-sm" type="button">Discard Changes</button>
+        <button id="save-btn" class="flex items-center gap-2 px-5 py-2 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-neutral-800 transition-all shadow-sm" type="button">
+          <span class="material-symbols-outlined text-[16px]">save</span><span>Save Changes</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- LEFT -->
+      <aside class="lg:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24 self-start">
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm">
+          <div class="flex items-center gap-4">
+            <div id="settings-profile-avatar" class="w-16 h-16 rounded-2xl bg-primary text-on-primary flex items-center justify-center text-2xl font-bold font-mono shadow-sm shrink-0">U</div>
+            <div class="min-w-0">
+              <p class="font-mono text-[10px] tracking-wider uppercase text-on-surface-variant">Signed in as</p>
+              <h2 id="settings-profile-name" class="text-lg font-bold truncate mt-1">Loading...</h2>
+              <p id="settings-profile-email" class="text-xs text-on-surface-variant truncate mt-0.5">Loading...</p>
+            </div>
+          </div>
+
+          <a href="/profile-settings" class="mt-5 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-neutral-800 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[16px]">manage_accounts</span>
+            Manage Profile
+          </a>
+
+          <div class="mt-5 pt-4 border-t border-outline-variant/60 flex items-center justify-between gap-3">
+            <span class="text-xs text-on-surface-variant">Settings status</span>
+            <span id="dirty-state" class="px-2 py-1 rounded bg-surface-container text-on-surface-variant font-mono text-[11px]">Saved</span>
+          </div>
+        </div>
+
+        <nav id="settings-anchors" class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-3 shadow-sm flex flex-col gap-1">
+          <span class="px-3 py-2 font-mono text-[10px] tracking-wider uppercase text-on-surface-variant font-semibold">Settings Navigation</span>
+          <a data-anchor="appearance-section" class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant text-xs" href="#appearance-section"><span class="flex items-center gap-2.5"><span class="material-symbols-outlined text-[18px]">contrast</span>Appearance</span><span class="material-symbols-outlined text-[14px]">chevron_right</span></a>
+
+          <a data-anchor="intelligence-section" class="flex items-center justify-between px-3 py-2 rounded-lg anchor-active text-xs" href="#intelligence-section">
+            <span class="flex items-center gap-2.5"><span class="material-symbols-outlined text-[18px]">psychology</span>Intelligence & Core</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+          <a data-anchor="voice-section" class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant text-xs hover:bg-surface-container-low transition-colors" href="#voice-section">
+            <span class="flex items-center gap-2.5"><span class="material-symbols-outlined text-[18px]">graphic_eq</span>Voice & Duplex Audio</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+          <a data-anchor="vision-section" class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant text-xs hover:bg-surface-container-low transition-colors" href="#vision-section">
+            <span class="flex items-center gap-2.5"><span class="material-symbols-outlined text-[18px]">visibility</span>Multimodal & Vision</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+          <a data-anchor="privacy-section" class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant text-xs hover:bg-surface-container-low transition-colors" href="#privacy-section">
+            <span class="flex items-center gap-2.5"><span class="material-symbols-outlined text-[18px]">shield_lock</span>Privacy & Security</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- RIGHT -->
+      <div class="lg:col-span-8 flex flex-col gap-6">
+        <section id="appearance-section" class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm" aria-labelledby="appearance-title">
+          <div class="appearance-top">
+            <div><h2 class="appearance-title" id="appearance-title">Appearance</h2><p class="appearance-copy" id="theme-description">Choose a familiar light canvas or a softer space for focused work.</p></div>
+            <button type="button" class="theme-switch" data-theme-toggle role="switch" aria-checked="false" aria-label="Dark mode" aria-describedby="theme-description"></button>
+          </div>
+          <div class="theme-options" role="group" aria-label="Colour theme">
+            <button type="button" class="theme-option" data-theme-choice="light" aria-pressed="true"><div class="theme-preview" aria-hidden="true"><span></span><div><i></i><i></i><i></i></div></div><span class="theme-option-label">Light</span></button>
+            <button type="button" class="theme-option" data-theme-choice="dark" aria-pressed="false"><div class="theme-preview theme-preview-dark" aria-hidden="true"><span></span><div><i></i><i></i><i></i></div></div><span class="theme-option-label">Dark</span></button>
+          </div>
+          <div class="appearance-foot"><span id="appearance-status" role="status" aria-live="polite">Saved automatically for this browser. No need to press Save Changes.</span><span class="appearance-badge"><span data-theme-name>Light</span> theme</span></div>
+        </section>
+        <!-- INTELLIGENCE -->
+        <section id="intelligence-section" class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">psychology</span></div>
+              <div><h3 class="text-base font-bold">Intelligence & Core</h3><p class="text-xs text-on-surface-variant">Choose the MAXIMUS reasoning profile and response behavior.</p></div>
+            </div>
+            <span class="font-mono text-[11px] text-secondary bg-secondary-container px-2.5 py-1 rounded font-medium">CORE</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold">MAXIMUS Model</label>
+              <select id="model-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none">
+                <option value="flash">Flash</option>
+                
+              </select>
+              <p class="text-[11px] text-on-surface-variant">Uses the models configured by your MAXIMUS backend.</p>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="flex justify-between"><label class="text-xs font-semibold">Temperature</label><span id="temperature-value" class="font-mono text-[11px] text-on-surface-variant">0.25</span></div>
+              <input id="temperature-input" type="range" min="0" max="1" step="0.01" class="w-full accent-black mt-2" />
+              <p class="text-[11px] text-on-surface-variant">Lower values are more deterministic; higher values are more varied.</p>
+            </div>
+
+            <div class="sm:col-span-2 space-y-1.5">
+              <div class="flex justify-between items-center"><label class="text-xs font-semibold">Context Limit</label><span id="context-value" class="font-mono text-[11px] text-on-surface-variant">128</span></div>
+              <input id="context-input" type="range" min="8" max="256" step="8" class="w-full accent-black mt-2" />
+              <p class="text-[11px] text-on-surface-variant">Application history budget in thousands of tokens.</p>
+            </div>
+
+            <div class="sm:col-span-2 space-y-1.5">
+              <div class="flex justify-between items-center"><label class="text-xs font-semibold">System Prompt</label><span id="prompt-count" class="font-mono text-[10px] text-on-surface-variant">0 / 12000</span></div>
+              <textarea id="system-prompt-input" maxlength="12000" rows="6" class="w-full p-3.5 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg text-sm outline-none resize-y leading-relaxed"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- VOICE -->
+        <section id="voice-section" class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">graphic_eq</span></div>
+              <div><h3 class="text-base font-bold">Voice & Duplex Audio</h3><p class="text-xs text-on-surface-variant">Configure MAXIMUS voice output and duplex behavior.</p></div>
+            </div>
+            <span class="font-mono text-[11px] bg-surface-container-low px-2.5 py-1 rounded">AUDIO</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+              <label class="text-xs font-semibold">Input Language</label>
+              <select id="input-language-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none">
+                <option value="en-IN">🇮🇳 English (India)</option>
+                <option value="ru-RU">🇷🇺 Русский (Russian)</option>
+                <option value="fr-FR">🇫🇷 Français (French)</option>
+                <option value="ja-JP">🇯🇵 日本語 (Japanese)</option>
+                <option value="hi-IN">🇮🇳 हिन्दी (Hindi)</option>
+                <option value="te-IN">🇮🇳 తెలుగు (Telugu)</option>
+                <option value="ta-IN">🇮🇳 தமிழ் (Tamil)</option>
+                <option value="kn-IN">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+                <option value="ml-IN">🇮🇳 മലയാളം (Malayalam)</option>
+              </select>
+              <p class="text-[11px] text-on-surface-variant">Language MAXIMUS listens for from the microphone.</p>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold">Output Text Language</label>
+              <select id="output-text-language-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none">
+                <option value="en-IN">🇮🇳 English (India)</option>
+                <option value="ru-RU">🇷🇺 Русский (Russian)</option>
+                <option value="fr-FR">🇫🇷 Français (French)</option>
+                <option value="ja-JP">🇯🇵 日本語 (Japanese)</option>
+                <option value="hi-IN">🇮🇳 हिन्दी (Hindi)</option>
+                <option value="te-IN">🇮🇳 తెలుగు (Telugu)</option>
+                <option value="ta-IN">🇮🇳 தமிழ் (Tamil)</option>
+                <option value="kn-IN">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+                <option value="ml-IN">🇮🇳 മലയാളം (Malayalam)</option>
+              </select>
+              <p class="text-[11px] text-on-surface-variant">Language MAXIMUS uses for the answer text.</p>
+            </div>
+
+<div class="space-y-1.5">
+              <label class="text-xs font-semibold">Region</label>
+              <select id="voice-region-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none">
+                <option value="en-IN">🇮🇳 English (India) — en-IN</option>
+                <option value="en-US">🇺🇸 English (United States) — en-US</option>
+                <option value="en-GB">🇬🇧 English (United Kingdom) — en-GB</option>
+                <option value="en-AU">🇦🇺 English (Australia) — en-AU</option>
+                <option value="de-DE">🇩🇪 German (Germany) — de-DE</option>
+                <option value="ja-JP">🇯🇵 Japanese (Japan) — ja-JP</option>
+                <option value="ru-RU">🇷🇺 Russian (Russia) — ru-RU</option>
+                <option value="fr-FR">🇫🇷 French (France) — fr-FR</option>
+                <option value="hi-IN">🇮🇳 Hindi — hi-IN</option>
+                <option value="te-IN">🇮🇳 Telugu — te-IN</option>
+                <option value="ta-IN">🇮🇳 Tamil — ta-IN</option>
+                <option value="kn-IN">🇮🇳 Kannada — kn-IN</option>
+                <option value="ml-IN">🇮🇳 Malayalam — ml-IN</option>
+              </select>
+              <p class="text-[11px] text-on-surface-variant">Choose the language/region for MAXIMUS voice output.</p>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold">Voice gender</label>
+              <select id="voice-gender-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none">
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+              </select>
+              <p class="text-[11px] text-on-surface-variant">Filter the available voices for the selected region.</p>
+            </div>
+
+            <div class="space-y-1.5 sm:col-span-2">
+              <div class="flex items-center justify-between gap-3">
+                <label class="text-xs font-semibold">Voice</label>
+                <button id="voice-preview-btn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant bg-white hover:bg-surface-container-low text-[11px] font-semibold">
+                  <span class="material-symbols-outlined text-[16px]">volume_up</span>
+                  Play Sample
+                </button>
+              </div>
+              <select id="voice-select-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none"></select>
+              <input id="voice-input" type="hidden" value="en-IN-NeerjaNeural" />
+              <p id="voice-help-text" class="text-[11px] text-on-surface-variant">Select a voice and preview it before saving. The saved voice ID is sent to your MAXIMUS backend.</p>
+            </div>
+
+            <label class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex items-start justify-between gap-4 cursor-pointer">
+              <span><span class="text-xs font-bold block">Duplex Audio</span><span class="text-[11px] text-on-surface-variant mt-1 block">Enable continuous duplex voice interaction.</span></span>
+              <span class="relative inline-flex items-center shrink-0">
+                <input id="duplex-input" class="sr-only peer" type="checkbox" />
+                <span class="w-10 h-5 bg-surface-container-high rounded-full peer-checked:bg-secondary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></span>
+              </span>
+            </label>
+
+            <label class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex items-start justify-between gap-4 cursor-pointer">
+              <span><span class="text-xs font-bold block">Auto Mute</span><span class="text-[11px] text-on-surface-variant mt-1 block">Mute input while MAXIMUS is speaking.</span></span>
+              <span class="relative inline-flex items-center shrink-0">
+                <input id="auto-mute-input" class="sr-only peer" type="checkbox" />
+                <span class="w-10 h-5 bg-surface-container-high rounded-full peer-checked:bg-primary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <!-- VISION -->
+        <section id="vision-section" class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">visibility</span></div>
+              <div><h3 class="text-base font-bold">Multimodal & Vision</h3><p class="text-xs text-on-surface-variant">Screen snapshots use the selected resolution limit. Text and position hints guide image responses.</p></div>
+            </div>
+            <span class="font-mono text-[11px] bg-surface-container-low px-2.5 py-1 rounded">VISION</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold">Screen capture — on demand only</label>
+              <select id="vision-sampling-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none">
+                <option>1 Frame / Sec (Standard Duplex)</option>
+                <option>2 Frames / Sec</option>
+                <option>5 Frames / Sec</option>
+                <option>On Demand</option>
+              </select>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold">Vision Fidelity</label>
+              <select id="vision-fidelity-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-white rounded-lg font-mono text-xs outline-none">
+                <option>Native 4K (High Precision)</option>
+                <option>1080p (Balanced)</option>
+                <option>720p (Efficient)</option>
+              </select>
+            </div>
+
+            <label class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex items-start justify-between gap-4 cursor-pointer">
+              <span><span class="text-xs font-bold block">Read Visible Text</span><span class="text-[11px] text-on-surface-variant mt-1 block">Ask the image model to quote relevant visible text. Accuracy depends on image quality.</span></span>
+              <span class="relative inline-flex items-center shrink-0">
+                <input id="auto-ocr-input" class="sr-only peer" type="checkbox" />
+                <span class="w-10 h-5 bg-surface-container-high rounded-full peer-checked:bg-secondary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></span>
+              </span>
+            </label>
+
+            <label class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex items-start justify-between gap-4 cursor-pointer">
+              <span><span class="text-xs font-bold block">Describe Positions</span><span class="text-[11px] text-on-surface-variant mt-1 block">Ask the image model to describe relative positions when relevant.</span></span>
+              <span class="relative inline-flex items-center shrink-0">
+                <input id="spatial-grounding-input" class="sr-only peer" type="checkbox" />
+                <span class="w-10 h-5 bg-surface-container-high rounded-full peer-checked:bg-primary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <!-- PRIVACY -->
+        <section id="privacy-section" class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">shield_lock</span></div>
+              <div><h3 class="text-base font-bold">Privacy & Security</h3><p class="text-xs text-on-surface-variant">Application-level privacy controls that are already supported by your settings API.</p></div>
+            </div>
+            <span class="font-mono text-[11px] bg-surface-container-low px-2.5 py-1 rounded">PRIVACY</span>
+          </div>
+
+          <label class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex items-start justify-between gap-4 cursor-pointer">
+            <span><span class="text-xs font-bold block">Zero Data Retention — unavailable</span><span class="text-[11px] text-on-surface-variant mt-1 block">Conversations are saved to your account. This app does not currently offer a no-storage mode or control provider retention. Delete saved conversations from History.</span></span>
+            <span class="relative inline-flex items-center shrink-0">
+              <input id="zdr-input" class="sr-only peer" type="checkbox" disabled />
+              <span class="w-10 h-5 bg-surface-container-high rounded-full peer-checked:bg-primary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></span>
+            </span>
+          </label>
+
+          <div class="mt-4 p-4 rounded-lg border border-secondary/20 bg-secondary-container/40 text-xs text-on-secondary-container">
+            <div class="flex items-center gap-2 font-semibold"><span class="material-symbols-outlined text-[16px]">info</span>API key management is intentionally separate.</div>
+            <p class="mt-1 leading-relaxed">BYOK & Providers is not part of this Settings page. Use the dedicated provider manager from Home when you need to add or manage provider credentials.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="toast-notification" class="fixed bottom-6 right-6 bg-primary text-on-primary px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50">
+      <span id="toast-icon" class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+      <span id="toast-text" class="text-xs font-medium">Settings saved.</span>
+    </div>
+  </main>
+
+  <footer class="w-full border-t border-outline-variant/70 mt-auto bg-surface-container-lowest">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-8 h-14 flex items-center justify-between text-on-surface-variant font-mono text-xs">
+      <span>© 2026 MAXIMUS AI // SETTINGS</span>
+      <div class="flex items-center gap-6">
+        <span>ENGINE CONFIG</span><span>VOICE</span><span>VISION</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const setText = (id, value) => { const el = $(id); if (el) el.textContent = value; };
+
+      let original = null;
+      let current = null;
+
+      function showToast(message, error = false) {
+        const toast = $("toast-notification");
+        const text = $("toast-text");
+        const icon = $("toast-icon");
+        if (!toast) return;
+        text.textContent = message;
+        icon.textContent = error ? "error" : "check_circle";
+        icon.classList.toggle("text-red-400", error);
+        icon.classList.toggle("text-secondary", !error);
+        toast.classList.remove("translate-y-24", "opacity-0");
+        toast.classList.add("translate-y-0", "opacity-100");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => {
+          toast.classList.remove("translate-y-0", "opacity-100");
+          toast.classList.add("translate-y-24", "opacity-0");
+        }, 3000);
+      }
+
+      async function api(url, options = {}) {
+        const response = await fetch(url, {
+          credentials: "include",
+          headers: {
+            "Accept": "application/json",
+            ...(options.body ? {"Content-Type": "application/json"} : {})
+          },
+          ...options
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          window.location.href = "/login";
+          throw new Error("Not authenticated");
+        }
+        if (!response.ok) {
+          throw new Error(data.detail || data.message || `Request failed (${response.status})`);
+        }
+        return data;
+      }
+
+      function modelLabel(model, modelId) {
+        if (modelId) return modelId;
+        return model === "ultra" ? "Deep Reasoning" : "Flash";
+      }
+
+      const VOICE_CATALOG = {
+        "en-IN": [
+          { id: "en-IN-NeerjaNeural", name: "Neerja", gender: "female" },
+          { id: "en-IN-PrabhatNeural", name: "Prabhat", gender: "male" }
+        ],
+        "en-US": [
+          { id: "en-US-AriaNeural", name: "Aria", gender: "female" },
+          { id: "en-US-GuyNeural", name: "Guy", gender: "male" },
+          { id: "en-US-JennyNeural", name: "Jenny", gender: "female" },
+          { id: "en-US-ChristopherNeural", name: "Christopher", gender: "male" }
+        ],
+        "en-GB": [
+          { id: "en-GB-SoniaNeural", name: "Sonia", gender: "female" },
+          { id: "en-GB-RyanNeural", name: "Ryan", gender: "male" }
+        ],
+        "en-AU": [
+          { id: "en-AU-NatashaNeural", name: "Natasha", gender: "female" },
+          { id: "en-AU-WilliamNeural", name: "William", gender: "male" }
+        ],
+        "de-DE": [
+          { id: "de-DE-KatjaNeural", name: "Katja", gender: "female" },
+          { id: "de-DE-ConradNeural", name: "Conrad", gender: "male" }
+        ],
+        "ja-JP": [
+          { id: "ja-JP-NanamiNeural", name: "Nanami", gender: "female" },
+          { id: "ja-JP-KeitaNeural", name: "Keita", gender: "male" }
+        ],
+        "ru-RU": [
+          { id: "ru-RU-SvetlanaNeural", name: "Svetlana", gender: "female" },
+          { id: "ru-RU-DmitryNeural", name: "Dmitry", gender: "male" }
+        ],
+        "fr-FR": [
+          { id: "fr-FR-DeniseNeural", name: "Denise", gender: "female" },
+          { id: "fr-FR-HenriNeural", name: "Henri", gender: "male" }
+        ],
+        "hi-IN": [
+          { id: "hi-IN-SwaraNeural", name: "Swara", gender: "female" },
+          { id: "hi-IN-MadhurNeural", name: "Madhur", gender: "male" }
+        ],
+        "te-IN": [
+          { id: "te-IN-ShrutiNeural", name: "Shruti", gender: "female" },
+          { id: "te-IN-MohanNeural", name: "Mohan", gender: "male" }
+        ],
+        "ta-IN": [
+          { id: "ta-IN-PallaviNeural", name: "Pallavi", gender: "female" },
+          { id: "ta-IN-ValluvarNeural", name: "Valluvar", gender: "male" }
+        ],
+        "kn-IN": [
+          { id: "kn-IN-SapnaNeural", name: "Sapna", gender: "female" },
+          { id: "kn-IN-GaganNeural", name: "Gagan", gender: "male" }
+        ],
+        "ml-IN": [
+          { id: "ml-IN-SobhanaNeural", name: "Sobhana", gender: "female" },
+          { id: "ml-IN-MidhunNeural", name: "Midhun", gender: "male" }
+        ]
+      };
+
+      function getVoiceMeta(voiceId) {
+        for (const [region, voices] of Object.entries(VOICE_CATALOG)) {
+          const found = voices.find(v => v.id === voiceId);
+          if (found) return { ...found, region };
+        }
+        return null;
+      }
+
+      const LANGUAGE_LABELS = {
+              "en-IN": "English (India)",
+              "te-IN": "తెలుగు (Telugu)",
+              "hi-IN": "हिन्दी (Hindi)",
+              "ta-IN": "தமிழ் (Tamil)",
+              "ml-IN": "മലയാളം (Malayalam)",
+              "kn-IN": "ಕನ್ನಡ (Kannada)",
+              "mr-IN": "मराठी (Marathi)",
+              "gu-IN": "ગુજરાતી (Gujarati)",
+              "bn-IN": "বাংলা (Bengali)",
+              "pa-IN": "ਪੰਜਾਬੀ (Punjabi)",
+              "ur-IN": "اردو (Urdu)",
+              "as-IN": "অসমীয়া (Assamese)",
+              "or-IN": "ଓଡ଼ିଆ (Odia)"
+      };
+
+
+      function regionLanguageName(voiceId) {
+        const meta = getVoiceMeta(voiceId);
+        return meta?.region ? (LANGUAGE_LABELS[meta.region] || meta.region) : "";
+      }
+
+      function renderVoiceOptions(preferredVoice = "") {
+        const regionEl = $("voice-region-input");
+        const genderEl = $("voice-gender-input");
+        const voiceEl = $("voice-select-input");
+        const hiddenVoice = $("voice-input");
+        if (!regionEl || !genderEl || !voiceEl || !hiddenVoice) return;
+
+        const region = regionEl.value || "en-IN";
+        const gender = genderEl.value || "female";
+        const voices = (VOICE_CATALOG[region] || []).filter(v => v.gender === gender);
+        voiceEl.innerHTML = voices.map(v => `<option value="${v.id}">${v.name} — ${v.gender === "female" ? "Female" : "Male"} — ${regionLanguageName(v.id)}</option>`).join("");
+
+        const exact = voices.find(v => v.id === preferredVoice);
+        const fallback = voices[0];
+        const selected = exact || fallback;
+        if (selected) {
+          voiceEl.value = selected.id;
+          hiddenVoice.value = selected.id;
+          $("voice-help-text")?.replaceChildren(document.createTextNode(`${selected.name} selected · ${selected.id}. Preview this voice before saving.`));
+        } else {
+          hiddenVoice.value = preferredVoice || "";
+          if (voiceEl) voiceEl.innerHTML = `<option value="">No voices available</option>`;
+        }
+        updateDirtyState();
+      }
+
+      function syncVoiceSelectorsFromId(voiceId) {
+        const meta = getVoiceMeta(voiceId);
+        const regionEl = $("voice-region-input");
+        const genderEl = $("voice-gender-input");
+        if (!regionEl || !genderEl) return;
+        if (meta) {
+          regionEl.value = meta.region;
+          genderEl.value = meta.gender;
+          renderVoiceOptions(meta.id);
+        } else {
+          regionEl.value = "en-IN";
+          genderEl.value = "female";
+          renderVoiceOptions(voiceId);
+        }
+      }
+
+      let previewAudio = null;
+      let previewUrl = null;
+      let previewRequest = 0;
+      async function previewSelectedVoice() {
+        const voiceId = $("voice-input")?.value?.trim();
+        if (!voiceId) return showToast("Choose a voice first.", true);
+        const requestId = ++previewRequest;
+        previewAudio?.pause();
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        showToast("Generating selected voice sample…");
+        try {
+          const response = await fetch('/api/tts', {
+            method: 'POST', credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({text: 'Hello. I am MAXIMUS. This is your selected voice.', voice: voiceId})
+          });
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.detail || 'Voice preview failed.');
+          }
+          const blob = await response.blob();
+          if (requestId !== previewRequest) return;
+          previewUrl = URL.createObjectURL(blob);
+          previewAudio = new Audio(previewUrl);
+          await previewAudio.play();
+          showToast(`${getVoiceMeta(voiceId)?.name || voiceId} sample playing.`);
+        } catch (error) { showToast(error.message, true); }
+      }
+
+      function readForm() {
+        return {
+          model: $("model-input").value,
+          temperature: Number($("temperature-input").value),
+          context_limit: Number($("context-input").value),
+          system_prompt: $("system-prompt-input").value,
+          voice: $("voice-input").value.trim(),
+          input_language: $("input-language-input").value,
+          output_language: $("output-text-language-input").value,
+          voice_gender: $("voice-gender-input").value,
+          duplex: $("duplex-input").checked,
+          auto_mute: $("auto-mute-input").checked,
+          zdr: false,
+          vision_sampling: "On Demand",
+          vision_fidelity: $("vision-fidelity-input").value,
+          auto_ocr: $("auto-ocr-input").checked,
+          spatial_grounding: $("spatial-grounding-input").checked
+        };
+      }
+
+      function updateDirtyState() {
+        const form = readForm();
+        const dirty = JSON.stringify(form) !== JSON.stringify(original);
+        const state = $("dirty-state");
+        if (state) {
+          state.textContent = dirty ? "Unsaved" : "Saved";
+          state.className = dirty
+            ? "px-2 py-1 rounded bg-amber-100 text-amber-800 font-mono text-[11px]"
+            : "px-2 py-1 rounded bg-surface-container text-on-surface-variant font-mono text-[11px]";
+        }
+      }
+
+      function applySettings(data) {
+        current = {
+          ...data,
+          model: data.model || "flash",
+          temperature: Number(data.temperature ?? 0.25),
+          context_limit: Number(data.context_limit ?? 128),
+          system_prompt: data.system_prompt || "",
+          voice: data.voice || "en-US-AriaNeural",
+          duplex: !!data.duplex,
+          auto_mute: !!data.auto_mute,
+          zdr: !!data.zdr,
+          vision_sampling: data.vision_sampling || "1 Frame / Sec (Standard Duplex)",
+          vision_fidelity: data.vision_fidelity || "Native 4K (High Precision)",
+          auto_ocr: !!data.auto_ocr,
+          spatial_grounding: !!data.spatial_grounding
+        };
+
+        if (current.model.startsWith('provider:') && !Array.from($("model-input").options).some(option => option.value === current.model)) {
+          $("model-input").add(new Option('Custom provider · ' + (data.model_id || current.model.split(':').slice(2).join(':')), current.model));
+        }
+        $("model-input").value = current.model;
+        $("temperature-input").value = current.temperature;
+        $("context-input").value = current.context_limit;
+        $("system-prompt-input").value = current.system_prompt;
+        $("voice-input").value = current.voice;
+        syncVoiceSelectorsFromId(current.voice);
+        $("duplex-input").checked = current.duplex;
+        $("auto-mute-input").checked = current.auto_mute;
+        $("zdr-input").checked = false;
+        $("vision-sampling-input").value = "On Demand";
+        $("vision-sampling-input").disabled = true;
+        $("vision-fidelity-input").value = current.vision_fidelity;
+        $("auto-ocr-input").checked = current.auto_ocr;
+        $("spatial-grounding-input").checked = current.spatial_grounding;
+
+        setText("temperature-value", current.temperature.toFixed(2));
+        setText("context-value", String(current.context_limit));
+        setText("prompt-count", `${current.system_prompt.length} / 12000`);
+
+        const label = modelLabel(current.model, current.model_id);
+        setText("header-engine", label);
+        setText("engine-summary", label);
+        setText("side-model", label);
+        setText("side-context", `${current.context_limit}k`);
+        setText("side-duplex", current.duplex ? "Enabled" : "Disabled");
+        setText("side-vision", current.auto_ocr ? "Text reading enabled" : "Image descriptions");
+
+        original = JSON.parse(JSON.stringify(readForm()));
+        updateDirtyState();
+      }
+
+      async function loadProfile() {
+        try {
+          const profile = await api("/api/user/profile");
+          $("header-name").textContent = profile.name || "User";
+          const name = (profile.name || "User").trim();
+          const parts = name.split(/\s+/).filter(Boolean);
+          const initials = parts.length > 1
+            ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+            : (parts[0]?.[0] || "U").toUpperCase();
+
+          const avatar = $("header-avatar");
+          if (profile.icon_url) {
+            avatar.innerHTML = `<img src="${profile.icon_url}" alt="Profile" class="w-full h-full object-cover rounded-full">`;
+          } else {
+            avatar.textContent = initials;
+          }
+        } catch (error) {
+          console.warn("Profile load failed:", error);
+        }
+      }
+
+      async function loadSettingsProfile() {
+        try {
+          const res = await fetch("/api/user/profile", { credentials: "include", cache: "no-store" });
+          if (!res.ok) return;
+          const data = await res.json();
+          const name = (data.name || "User").trim() || "User";
+          const email = data.email || "";
+          const nameEl = $("settings-profile-name");
+          const emailEl = $("settings-profile-email");
+          const avatarEl = $("settings-profile-avatar");
+          if (nameEl) nameEl.textContent = name;
+          if (emailEl) emailEl.textContent = email;
+          if (avatarEl) {
+            const avatar = data.icon_url || data.avatar_url || data.avatar || "";
+            if (avatar) {
+              avatarEl.innerHTML = `<img src="${String(avatar).replace(/"/g, '&quot;')}" alt="Profile" class="w-full h-full object-cover rounded-2xl">`;
+              avatarEl.classList.remove("bg-primary", "text-on-primary");
+            } else {
+              const parts = name.split(/\s+/).filter(Boolean);
+              const initials = parts.length > 1
+                ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+                : (parts[0]?.[0] || "U").toUpperCase();
+              avatarEl.textContent = initials;
+              avatarEl.classList.add("bg-primary", "text-on-primary");
+            }
+          }
+        } catch (err) {
+          console.warn("Settings profile load failed:", err);
+        }
+      }
+
+    async function loadSettings() {
+        try {
+          const data = await api("/api/settings");
+          applySettings(data.settings || data);
+        } catch (error) {
+          showToast(error.message || "Unable to load settings.", true);
+        }
+      }
+
+      async function saveSettings() {
+        const payload = readForm();
+
+        if (!payload.voice) {
+          showToast("Voice cannot be empty.", true);
+          return;
+        }
+
+        $("save-btn").disabled = true;
+        $("save-btn").classList.add("opacity-60", "cursor-not-allowed");
+
+        try {
+          const data = await api("/api/settings", {
+            method: "PUT",
+            body: JSON.stringify(payload)
+          });
+          applySettings(data.settings || data);
+          showToast("MAXIMUS settings saved successfully.");
+        } catch (error) {
+          showToast(error.message || "Unable to save settings.", true);
+        } finally {
+          $("save-btn").disabled = false;
+          $("save-btn").classList.remove("opacity-60", "cursor-not-allowed");
+        }
+      }
+
+      function discardChanges() {
+        if (!original) return;
+        applySettings({
+          ...current,
+          ...original,
+          model_id: current?.model_id
+        });
+        showToast("Changes discarded.");
+      }
+
+      function bindDirtyTracking() {
+        [
+          "model-input","temperature-input","context-input","system-prompt-input","voice-input","voice-region-input","voice-gender-input","voice-select-input","input-language-input","output-text-language-input",
+          "duplex-input","auto-mute-input","zdr-input","vision-sampling-input","vision-fidelity-input",
+          "auto-ocr-input","spatial-grounding-input"
+        ].forEach(id => {
+          const el = $(id);
+          if (!el) return;
+          el.addEventListener("input", () => {
+            if (id === "temperature-input") $("temperature-value").textContent = Number(el.value).toFixed(2);
+            if (id === "context-input") $("context-value").textContent = el.value;
+            if (id === "system-prompt-input") $("prompt-count").textContent = `${el.value.length} / 12000`;
+            if (id === "voice-select-input") { $("voice-input").value = el.value; }
+            if (id === "voice-region-input" || id === "voice-gender-input") { renderVoiceOptions($("voice-input").value); }
+            updateDirtyState();
+          });
+          el.addEventListener("change", updateDirtyState);
+        });
+      }
+
+      function setupAnchors() {
+        const links = [...document.querySelectorAll("[data-anchor]")];
+        const sections = links.map(link => $(link.dataset.anchor)).filter(Boolean);
+
+        links.forEach(link => {
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            const section = $(link.dataset.anchor);
+            if (section) {
+              section.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+          const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (!visible) return;
+          links.forEach(link => {
+            const active = link.dataset.anchor === visible.target.id;
+            link.classList.toggle("anchor-active", active);
+            if (!active) {
+              link.classList.remove("anchor-active");
+              link.classList.add("text-on-surface-variant");
+            } else {
+              link.classList.remove("text-on-surface-variant");
+            }
+          });
+        }, { root: null, rootMargin: "-15% 0px -65% 0px", threshold: [0.1, 0.25, 0.5] });
+
+        sections.forEach(section => observer.observe(section));
+      }
+
+      $("save-btn")?.addEventListener("click", saveSettings);
+      $("discard-btn")?.addEventListener("click", discardChanges);
+      $("voice-preview-btn")?.addEventListener("click", previewSelectedVoice);
+      $("voice-region-input")?.addEventListener("change", () => renderVoiceOptions($("voice-input").value));
+      $("voice-gender-input")?.addEventListener("change", () => renderVoiceOptions($("voice-input").value));
+      $("voice-select-input")?.addEventListener("change", () => { $("voice-input").value = $("voice-select-input").value; updateDirtyState(); });
+
+      renderVoiceOptions("en-IN-NeerjaNeural");
+      bindDirtyTracking();
+      setupAnchors();
+      loadProfile();
+      loadSettingsProfile();
+    loadSettings();
+    })();
+  </script>
+</body>
+</html>

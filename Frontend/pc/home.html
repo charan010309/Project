@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en" data-page="home">
+
+<head>
+<script src="/static/theme.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAXIMUS AI </title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        surface: '#FAFAFA',
+                        sidebar: '#F7F7F7',
+                        borderSubtle: '#EEEEEE',
+                        brandDark: '#121212',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAFAFA;
+            color: #121212;
+            overflow: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #E5E5E5;
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4D4D4;
+        }
+
+        /* Sidebar Transition */
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Modal Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-animate {
+            animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* MAXIMUS thinking animation */
+        @keyframes maximusThinkingPulse {
+            0%, 100% { opacity: .35; transform: translateY(0) scale(.9); }
+            50% { opacity: 1; transform: translateY(-2px) scale(1); }
+        }
+
+        .maximus-thinking-dot {
+            animation: maximusThinkingPulse 0.9s ease-in-out infinite;
+        }
+
+        .maximus-thinking-dot:nth-child(2) {
+            animation-delay: .15s;
+        }
+
+        .maximus-thinking-dot:nth-child(3) {
+            animation-delay: .30s;
+        }
+
+
+        /* New Conversation Modal */
+        .new-conversation-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .new-conversation-backdrop.show {
+            display: flex;
+        }
+
+        .new-conversation-card {
+            width: min(100%, 440px);
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.14);
+            padding: 24px;
+            animation: newConversationIn 0.18s ease-out;
+        }
+
+        @keyframes newConversationIn {
+            from { opacity: 0; transform: translateY(8px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .conversation-mode-option {
+            transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .conversation-mode-option.active {
+            border-color: #171717 !important;
+            background: #fafafa;
+            box-shadow: inset 0 0 0 1px #171717;
+        }
+
+        .conversation-mode-radio {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid #cfcfcf;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .conversation-mode-option.active .conversation-mode-radio {
+            border-color: #171717;
+        }
+
+        .conversation-mode-option.active .conversation-mode-radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #171717;
+        }
+
+    </style>
+<link rel="stylesheet" href="/static/theme.css">
+</head>
+
+<body class="h-screen flex antialiased select-none">
+
+    <!-- ==================== SIDEBAR ==================== -->
+
+    <aside
+        id="sidebar"
+        class="sidebar-transition w-64 bg-sidebar border-r border-borderSubtle flex flex-col justify-between shrink-0 h-full relative z-20"
+    >
+
+        <!-- Top Section -->
+        <div class="p-4 flex flex-col h-full overflow-hidden">
+
+            <!-- Header / Logo -->
+            <a
+                href="#"
+                class="flex items-center gap-3 group"
+            >
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-black overflow-hidden flex items-center justify-center shadow-sm group-hover:scale-95 transition-transform"
+                >
+                    <img
+                        src="/static/logo.jpg"
+                        alt="MAXIMUS"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                    <span
+                        class="font-extrabold text-base tracking-tight text-brandDark"
+                    >
+                        MAXIMUS
+                    </span>
+
+                    
+
+                </div>
+
+            </a>
+
+
+            <!-- New Chat -->
+<button 
+    id="newChatBtn" 
+    type="button" 
+    class="w-full mt-6 flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-neutral-200/80 bg-white hover:border-neutral-300 hover:bg-neutral-50 shadow-sm transition-all group" 
+> 
+    <i class="fa-solid fa-plus text-xs text-neutral-500 group-hover:text-neutral-900"></i> 
+
+    <span class="text-xs font-semibold text-neutral-700 group-hover:text-neutral-900 sidebar-label"> 
+        New Conversation 
+    </span> 
+</button>
+
+            <!-- Navigation -->
+            <nav class="mt-6 space-y-1">
+
+                <a
+                    href="/home"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-neutral-200/50 text-neutral-900 font-medium text-xs"
+                >
+                    <i class="fa-regular fa-comment text-sm w-4 text-center"></i>
+                    <span class="sidebar-label">Chat</span>
+                </a>
+
+                <a
+                    href="/speakwithai"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/30 transition-colors font-medium text-xs"
+                >
+                    <i class="fa-solid fa-microphone text-sm w-4 text-center"></i>
+                    <span class="sidebar-label">Live AI</span>
+                </a>
+
+                <a
+                    href="/history"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/30 transition-colors font-medium text-xs"
+                >
+                    <i class="fa-solid fa-clock-rotate-left text-sm w-4 text-center"></i>
+                    <span class="sidebar-label">History</span>
+                </a>
+
+                <a
+                    href="/qr-login"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/30 transition-colors font-medium text-xs"
+                >
+                    <i class="fa-solid fa-qrcode text-sm w-4 text-center"></i>
+                    <span class="sidebar-label">Ecosystem</span>
+                </a>
+
+                <a
+                    href="/static/apipro.html"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/30 transition-colors font-medium text-xs"
+                >
+                    <i class="fa-solid fa-key text-sm w-4 text-center"></i>
+                    <span class="sidebar-label">Models & Providers</span>
+                </a>
+
+                <a
+                    href="/settings"
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/30 transition-colors font-medium text-xs"
+                >
+                    <i class="fa-solid fa-sliders text-sm w-4 text-center"></i>
+                    <span class="sidebar-label">Settings</span>
+                </a>
+
+            </nav>
+
+            <!-- Pinned Conversations -->
+            <div class="mt-6 shrink-0" id="pinnedConversationsSection">
+
+                <div class="flex items-center justify-between px-3.5">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <i class="fa-solid fa-thumbtack text-[10px] text-neutral-400"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400 sidebar-label">Pinned</span>
+                        <span id="pinnedChatsCount" class="hidden text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-neutral-100 text-neutral-500">0</span>
+                    </div>
+                </div>
+
+                <ul id="pinnedChats" class="mt-2 space-y-0.5"></ul>
+                <div id="pinnedEmpty" class="hidden px-3.5 py-2 text-[10px] text-neutral-400 sidebar-label">No pinned conversations</div>
+
+            </div>
+
+            <!-- Recent Conversations -->
+            <div class="mt-6 flex-1 overflow-y-auto min-h-0">
+
+                <div class="flex items-center justify-between px-3.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400 sidebar-label">Recent</span>
+                </div>
+
+                <ul id="recentChats" class="mt-2 space-y-0.5"></ul>
+
+            </div>
+
+        </div>
+
+        <!-- User Profile -->
+
+        <div class="p-3 border-t border-borderSubtle relative">
+
+            <div
+                id="profileTrigger"
+                class="flex items-center justify-between p-2 rounded-xl hover:bg-neutral-200/40 cursor-pointer transition-colors"
+            >
+
+                <div class="flex items-center gap-3 overflow-hidden">
+
+                    <div
+                        id="homeProfileAvatar"
+                        class="w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-medium text-xs shrink-0 overflow-hidden"
+                    >
+                        U
+                    </div>
+
+                    <div class="sidebar-label overflow-hidden">
+
+                        <div class="text-xs font-semibold text-neutral-800 truncate">
+                            User
+                        </div>
+
+                        <div class="text-[11px] text-neutral-400 truncate">
+                            user@jarvis.ai
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <i class="fa-solid fa-chevron-up text-[10px] text-neutral-400 sidebar-label"></i>
+
+            </div>
+
+            <!-- Profile Dropdown -->
+
+            <div
+                id="profileDropdown"
+                class="hidden absolute bottom-16 left-3 right-3 bg-white border border-neutral-200 rounded-xl shadow-lg p-1.5 z-50 text-xs"
+            >
+
+                <a
+                    href="/history"
+                    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 font-semibold"
+                >
+                    <i class="fa-solid fa-clock-rotate-left text-neutral-400"></i>
+                    View all chats
+                </a>
+
+                <div class="h-[1px] bg-neutral-100 my-1"></div>
+
+                <a
+                    href="/static/profile-settings.html"
+                    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900"
+                >
+                    <i class="fa-regular fa-user text-neutral-400"></i>
+                    Account Profile
+                </a>
+
+               
+                <div class="h-[1px] bg-neutral-100 my-1"></div>
+
+                <a
+                    href="/logout"
+                    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50"
+                >
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Sign Out
+                </a>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+
+    <main class="flex-1 flex flex-col h-full bg-surface relative overflow-hidden">
+
+        <!-- Header -->
+
+        <header
+            class="h-14 px-8 border-b border-borderSubtle flex items-center justify-between shrink-0 bg-white/60 backdrop-blur-sm"
+        >
+
+            <div class="flex items-center gap-2 text-xs text-neutral-500 font-medium">
+
+                <button id="mobileSidebarToggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+
+                MAXIMUS / Chat
+
+            </div>
+
+            <div class="flex items-center gap-3">
+
+
+                <button
+                    id="shareBtn"
+                    type="button"
+                    class="text-neutral-400 hover:text-neutral-700 text-xs flex items-center gap-1.5 font-medium transition-colors"
+                >
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                    Share
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- Chat Messages -->
+        <template id="chatWelcomeTemplate"><div class="maximus-welcome">
+  <img src="/static/logo.jpg" alt="MAXIMUS">
+  <div class="maximus-kicker">Your thinking space</div>
+  <h1>Where shall we begin?</h1>
+  <p>A question, a fresh idea, or something you're working through.<br>Let's make progress together.</p>
+  <div class="maximus-starters">
+    <button type="button" data-prompt="Help me brainstorm ideas for "><span class="starter-icon" aria-hidden="true">✦</span><strong>Explore an idea</strong><small>Turn a thought into a starting point.</small></button>
+    <button type="button" data-prompt="Explain this to me simply: "><span class="starter-icon" aria-hidden="true">◎</span><strong>Understand something</strong><small>Get a clear, useful explanation.</small></button>
+    <button type="button" data-prompt="Help me write a first draft of "><span class="starter-icon" aria-hidden="true">↗</span><strong>Create a first draft</strong><small>Find the words to get started.</small></button>
+  </div>
+</div></template>
+        <div id="chatContainer" class="flex-1 overflow-y-auto px-6 py-8"><div class="maximus-welcome">
+  <img src="/static/logo.jpg" alt="MAXIMUS">
+  <div class="maximus-kicker">Your thinking space</div>
+  <h1>Where shall we begin?</h1>
+  <p>A question, a fresh idea, or something you're working through.<br>Let's make progress together.</p>
+  <div class="maximus-starters">
+    <button type="button" data-prompt="Help me brainstorm ideas for "><span class="starter-icon" aria-hidden="true">✦</span><strong>Explore an idea</strong><small>Turn a thought into a starting point.</small></button>
+    <button type="button" data-prompt="Explain this to me simply: "><span class="starter-icon" aria-hidden="true">◎</span><strong>Understand something</strong><small>Get a clear, useful explanation.</small></button>
+    <button type="button" data-prompt="Help me write a first draft of "><span class="starter-icon" aria-hidden="true">↗</span><strong>Create a first draft</strong><small>Find the words to get started.</small></button>
+  </div>
+</div></div>
+
+
+        <!-- Attachment Preview -->
+
+        <div
+            id="attachmentPreviewBar"
+            class="hidden px-8 py-2 bg-neutral-100/70 border-t border-borderSubtle max-w-3xl mx-auto w-full rounded-t-xl"
+        >
+
+            <div class="flex items-center gap-3">
+
+                <div class="relative w-12 h-12 rounded-lg border border-neutral-300 overflow-hidden bg-white shrink-0 flex items-center justify-center">
+                    <img
+                        id="previewImg"
+                        src=""
+                        alt="preview"
+                        class="hidden w-full h-full object-cover"
+                    >
+
+                    <i id="previewFileIcon" class="fa-solid fa-file text-lg text-neutral-400"></i>
+
+                    <button
+                        type="button"
+                        onclick="removeAttachment()"
+                        class="absolute top-0.5 right-0.5 w-4 h-4 bg-black/60 hover:bg-black text-white rounded-full text-[9px] flex items-center justify-center"
+                        aria-label="Remove attachment"
+                    >
+                        ✕
+                    </button>
+
+                </div>
+
+                <div class="text-xs text-neutral-600 min-w-0">
+
+                    <span id="attachmentName" class="font-semibold text-neutral-800 block truncate max-w-[280px]">
+                        File attached
+                    </span>
+
+                    <span id="attachmentMeta" class="block text-neutral-500 mt-0.5">
+                        Ready to send
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Input Bar -->
+
+        <div class="chat-composer p-6 shrink-0">
+
+            <div class="max-w-3xl mx-auto">
+
+                <div class="flex items-center justify-between gap-3 mb-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="text-[10px] uppercase tracking-wider font-semibold text-neutral-400">Model</span>
+                        <select id="chatModelSelect" class="h-8 rounded-lg border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-700 outline-none focus:border-neutral-400 cursor-pointer" aria-label="Select MAXIMUS model">
+                            <option value="flash" data-provider-id="">MAXIMUS Flash</option>
+                        </select>
+                        <span id="chatModelStatus" class="text-[10px] text-neutral-400">Active</span>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer select-none" title="Allow MAXIMUS to open public websites in your browser">
+                    <span class="text-[10px] uppercase tracking-wider font-semibold text-neutral-400">
+                        Network Access
+                     </span>
+
+                      <input id="networkAccessToggle" type="checkbox" class="sr-only peer">
+
+                        <span
+                      class="relative w-8 h-4.5 rounded-full
+                       bg-neutral-200
+                        peer-checked:bg-[#384C37]
+                          transition-colors
+                               after:content-['']
+                            after:absolute
+                             after:top-0.5
+                           after:left-0.5
+                        after:w-3.5
+                         after:h-3.5
+                      after:rounded-full
+                      after:bg-white
+                         after:shadow-sm
+                          after:transition-transform
+                         peer-checked:after:translate-x-3.5">
+                       </span>
+
+                     <span id="networkAccessStatus" class="text-[10px] text-neutral-400 min-w-[22px]">
+                       Off
+                        </span>
+                        </label>
+                </div>
+                    
+
+                <div
+                    class="composer-input flex items-center gap-2 bg-white border border-neutral-200/90 rounded-2xl px-3 py-2 shadow-sm focus-within:border-neutral-400 focus-within:shadow-md transition-all"
+                >
+
+                    <!-- File Button -->
+
+                    <button
+                        onclick="document.getElementById('fileInput').click()"
+                        class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-800 hover:bg-neutral-100 transition-colors"
+                        title="Attach file"
+                    >
+                        <i class="fa-solid fa-paperclip text-sm"></i>
+                    </button>
+
+
+                    <!-- Camera Button -->
+
+                    <button
+                        onclick="openCameraModal()"
+                        class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-800 hover:bg-neutral-100 transition-colors"
+                        title="Take photo"
+                    >
+                        <i class="fa-solid fa-camera text-sm"></i>
+                    </button>
+
+
+                    <!-- Hidden File Input -->
+
+                    <input
+                        type="file"
+                        id="fileInput"
+                        accept="image/*"
+                        class="hidden"
+                        onchange="handleFileSelect(event)"
+                    >
+
+
+                    <!-- Text Input -->
+
+                    <input
+                        type="text"
+                        id="userInput"
+                        placeholder="Ask MAXIMUS anything…"
+                        class="flex-1 bg-transparent border-0 outline-none text-sm text-neutral-800 placeholder:text-neutral-400 px-2 py-1"
+                    >
+
+
+                    <!-- Send -->
+
+                    <button
+                        id="sendBtn"
+                        class="w-8 h-8 rounded-xl bg-black hover:bg-neutral-800 text-white flex items-center justify-center transition-transform active:scale-95 shadow-sm shrink-0"
+                    >
+                        <i class="fa-solid fa-arrow-up text-xs"></i>
+                    </button>
+
+                </div>
+
+                <div class="text-center mt-2.5 text-[11px] text-neutral-400">
+                    MAXIMUS can make mistakes. Check important information.
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+    <button id="mobileSidebarBackdrop" type="button" aria-label="Close navigation" tabindex="-1"></button>
+
+
+
+
+    <!-- ==================== NEW CONVERSATION MODAL ==================== -->
+    <div
+        id="newConversationModal"
+        class="new-conversation-backdrop"
+        onclick="handleNewConversationBackdrop(event)"
+        aria-hidden="true"
+    >
+        <div
+            class="new-conversation-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="newConversationTitle"
+            onclick="event.stopPropagation()"
+        >
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h3 id="newConversationTitle" class="text-base font-semibold text-neutral-900 tracking-tight">Create New Conversation</h3>
+                    <p class="text-xs text-neutral-400 mt-1">Choose how you want to interact with MAXIMUS.</p>
+                </div>
+                <button
+                    type="button"
+                    onclick="closeNewConversationModal()"
+                    class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-800 hover:bg-neutral-100 transition-colors"
+                    aria-label="Close"
+                >
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="mt-5">
+                <label for="conversationNameInput" class="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">Conversation name</label>
+                <input
+                    id="conversationNameInput"
+                    type="text"
+                    maxlength="80"
+                    placeholder="e.g. Python Project, Evening AI Session"
+                    class="w-full h-11 px-3.5 rounded-xl border border-neutral-200 bg-neutral-50 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:bg-white focus:border-neutral-900 transition-colors"
+                >
+            </div>
+
+            <div class="mt-5">
+                <div class="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">Choose mode</div>
+
+                <div class="space-y-2.5">
+                    <button
+                        id="conversationModeChat"
+                        type="button"
+                        onclick="selectNewConversationMode('chat')"
+                        class="conversation-mode-option active w-full text-left flex items-center gap-3 p-3.5 rounded-xl border border-neutral-200 bg-white"
+                    >
+                        <div class="w-9 h-9 rounded-lg bg-neutral-100 flex items-center justify-center text-neutral-700 shrink-0">
+                            <i class="fa-regular fa-comment text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-semibold text-neutral-900">Chat</div>
+                            <div class="text-[11px] text-neutral-500 mt-0.5">Text, code, images and normal MAXIMUS conversation.</div>
+                        </div>
+                        <span class="conversation-mode-radio"></span>
+                    </button>
+
+                    <button
+                        id="conversationModeLive"
+                        type="button"
+                        onclick="selectNewConversationMode('live')"
+                        class="conversation-mode-option w-full text-left flex items-center gap-3 p-3.5 rounded-xl border border-neutral-200 bg-white"
+                    >
+                        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                            <i class="fa-solid fa-microphone text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-semibold text-neutral-900">Live AI</span>
+                                <span class="text-[9px] font-semibold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded">Live</span>
+                            </div>
+                            <div class="text-[11px] text-neutral-500 mt-0.5">Real-time voice interaction with MAXIMUS.</div>
+                        </div>
+                        <span class="conversation-mode-radio"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 mt-6 pt-4 border-t border-neutral-100">
+                <button
+                    type="button"
+                    onclick="closeNewConversationModal()"
+                    class="px-4 py-2.5 rounded-xl text-xs font-semibold text-neutral-600 hover:bg-neutral-100 transition-colors"
+                >
+                    Cancel
+                </button>
+                <button
+                    id="createConversationBtn"
+                    type="button"
+                    onclick="createNewConversation()"
+                    class="px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold transition-colors flex items-center gap-2"
+                >
+                    Create Conversation
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CAMERA MODAL ==================== -->
+
+    <div
+        id="cameraModal"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+
+        <div
+            class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl modal-animate flex flex-col items-center"
+        >
+
+            <div class="w-full flex justify-between items-center pb-3 border-b border-neutral-100">
+
+                <h3 class="text-sm font-semibold text-neutral-800">
+                    Camera Input
+                </h3>
+
+                <button
+                    onclick="closeCameraModal()"
+                    class="text-neutral-400 hover:text-neutral-700 text-sm"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+
+            <!-- Camera -->
+
+            <div
+                class="w-full aspect-video bg-neutral-900 rounded-xl overflow-hidden mt-4 relative"
+            >
+
+                <video
+                    id="cameraVideo"
+                    autoplay
+                    playsinline
+                    class="w-full h-full object-cover"
+                ></video>
+
+                <canvas
+                    id="cameraCanvas"
+                    class="hidden"
+                ></canvas>
+
+            </div>
+
+
+            <!-- Camera Controls -->
+
+            <div class="flex items-center gap-3 mt-4 w-full">
+
+                <button
+                    onclick="captureCameraPhoto()"
+                    class="flex-1 py-2.5 rounded-xl bg-black text-white text-xs font-semibold hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2"
+                >
+                    <i class="fa-solid fa-camera"></i>
+                    Capture Photo
+                </button>
+
+                <button
+                    onclick="closeCameraModal()"
+                    class="px-4 py-2.5 rounded-xl border border-neutral-200 text-neutral-600 text-xs font-medium hover:bg-neutral-50 transition-colors"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================== DELETE CONFIRM MODAL ==================== -->
+
+    <div
+        id="deleteConfirmModal"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+
+        <div
+            class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl modal-animate flex flex-col"
+        >
+
+            <div class="w-full flex justify-between items-center pb-3 border-b border-neutral-100">
+
+                <h3 class="text-sm font-semibold text-neutral-800">
+                    Delete Conversation
+                </h3>
+
+                <button
+                    onclick="closeDeleteConfirmModal()"
+                    class="text-neutral-400 hover:text-neutral-700 text-sm"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <p class="text-xs text-neutral-500 mt-4">
+                This conversation will be permanently deleted. This action cannot be undone.
+            </p>
+
+            <div class="flex items-center justify-end gap-2 mt-6">
+
+                <button
+                    onclick="closeDeleteConfirmModal()"
+                    class="px-3.5 py-2 rounded-lg text-xs font-semibold text-neutral-600 hover:bg-neutral-100 transition-colors"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="confirmDeleteBtn"
+                    class="px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+
+    <script>
+        // =========================================================
+        // MAXIMUS HOME — Chat + Live AI conversation launcher
+        // =========================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+            const sidebarLabels = document.querySelectorAll('.sidebar-label');
+            const newChatBtn = document.getElementById('newChatBtn');
+            const recentChats = document.getElementById('recentChats');
+            const pinnedChats = document.getElementById('pinnedChats');
+            const pinnedEmpty = document.getElementById('pinnedEmpty');
+            const pinnedChatsCount = document.getElementById('pinnedChatsCount');
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const fileInput = document.getElementById('fileInput');
+            const previewBar = document.getElementById('attachmentPreviewBar');
+            const previewImg = document.getElementById('previewImg');
+            const previewFileIcon = document.getElementById('previewFileIcon');
+            const attachmentName = document.getElementById('attachmentName');
+            const attachmentMeta = document.getElementById('attachmentMeta');
+            const shareBtn = document.getElementById('shareBtn');
+            const profileTrigger = document.getElementById('profileTrigger');
+            const profileDropdown = document.getElementById('profileDropdown');
+            const cameraModal = document.getElementById('cameraModal');
+            const cameraVideo = document.getElementById('cameraVideo');
+            const cameraCanvas = document.getElementById('cameraCanvas');
+            const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            let pendingDeleteChatId = null;
+
+            window.closeDeleteConfirmModal = function() {
+                pendingDeleteChatId = null;
+                if (deleteConfirmModal) deleteConfirmModal.classList.add('hidden');
+            };
+
+            window.openDeleteConfirmModal = function(chatId) {
+                pendingDeleteChatId = chatId;
+                if (deleteConfirmModal) deleteConfirmModal.classList.remove('hidden');
+            };
+
+            let currentChatId = null;
+            let selectedProviderId = null;
+            let selectedModelId = '';
+            let attachedImage = null;
+            let attachedFile = null;
+            let videoStream = null;
+            let isCollapsed = false;
+
+            // ---------- Small helpers ----------
+            function escapeHtml(value) {
+                return String(value ?? '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function scrollToBottom() {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function showWelcome() {
+                chatContainer.replaceChildren(document.getElementById('chatWelcomeTemplate').content.cloneNode(true));
+            }
+
+            function formatAssistantContent(content) {
+                const safe = escapeHtml(content);
+                return safe
+                    .split('\n')
+                    .map(line => {
+                        const bullet = line.match(/^(\s*)[-*]\s+(.+)$/);
+                        if (bullet) {
+                            return `<div class="flex items-start gap-2 my-0.5"><span class="mt-2 w-1.5 h-1.5 rounded-full bg-neutral-400 shrink-0"></span><span>${bullet[2]}</span></div>`;
+                        }
+                        const numbered = line.match(/^(\s*)\d+[.)]\s+(.+)$/);
+                        if (numbered) {
+                            return `<div class="my-0.5">${numbered[0]}</div>`;
+                        }
+                        return line;
+                    })
+                    .join('<br>')
+                    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-neutral-900">$1</strong>')
+                    .replace(/`([^`]+)`/g, '<code class="px-1 py-0.5 rounded bg-neutral-100 text-[0.9em]">$1</code>');
+            }
+
+            function renderMessage(role, content) {
+                const isUser = role === 'user';
+                const row = document.createElement('div');
+
+                row.className = isUser
+                    ? 'flex items-start justify-end gap-2.5 w-full max-w-3xl ml-auto animate-fade-in'
+                    : 'flex items-start gap-2.5 w-full max-w-3xl mr-auto animate-fade-in';
+
+                const avatar = isUser
+                    ? `<div class="home-user-avatar w-8 h-8 rounded-full bg-neutral-200 text-neutral-700 flex items-center justify-center text-[11px] font-semibold shrink-0 overflow-hidden">
+                            ${currentProfileAvatarHtml()}
+                       </div>`
+                    : `<div class="w-8 h-8 rounded-lg overflow-hidden bg-black shrink-0">
+                            <img src="/static/logo.jpg" alt="MAXIMUS logo" class="w-full h-full object-cover">
+                       </div>`;
+
+                const bubble = isUser
+                    ? `<div class="bg-neutral-900 text-white rounded-2xl rounded-tr-md px-3 py-2 text-sm leading-5 w-fit max-w-[70%] whitespace-pre-wrap break-words">
+                            ${escapeHtml(content)}
+                       </div>`
+                    : `<div class="bg-white border border-neutral-200 rounded-2xl rounded-tl-md px-3.5 py-2.5 text-sm leading-5 text-neutral-800 shadow-sm w-fit max-w-[85%] break-words">
+                            ${formatAssistantContent(content)}
+                       </div>`;
+
+                row.innerHTML = isUser ? bubble + avatar : avatar + bubble;
+                chatContainer.appendChild(row);
+            }
+            function renderChat(messages) {
+                chatContainer.innerHTML = '';
+                if (!Array.isArray(messages) || messages.length === 0) {
+                    showWelcome();
+                    return;
+                }
+                messages.forEach(message => renderMessage(message.role, message.content));
+                scrollToBottom();
+            }
+
+            // ---------- Sidebar ----------
+            if (toggleSidebarBtn) {
+                toggleSidebarBtn.addEventListener('click', () => {
+                    isCollapsed = !isCollapsed;
+                    sidebar.classList.toggle('w-64', !isCollapsed);
+                    sidebar.classList.toggle('w-16', isCollapsed);
+                    sidebarLabels.forEach(label => label.classList.toggle('hidden', isCollapsed));
+
+                    const icon = toggleSidebarBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars', !isCollapsed);
+                        icon.classList.toggle('fa-chevron-right', isCollapsed);
+                    }
+                    toggleSidebarBtn.title = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+                });
+            }
+
+            // ---------- Profile ----------
+            let currentProfile = { name: '', email: '', icon_url: null };
+
+            function initialsForProfile(name, email) {
+                const source = (name || email || 'U').trim();
+                const parts = source.split(/\s+/).filter(Boolean);
+                if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+                return source.charAt(0).toUpperCase() || 'U';
+            }
+
+            function currentProfileAvatarHtml() {
+                if (currentProfile.icon_url) {
+                    return `<img src="${escapeHtml(currentProfile.icon_url)}" alt="Profile" class="w-full h-full object-cover">`;
+                }
+                return escapeHtml(initialsForProfile(currentProfile.name, currentProfile.email));
+            }
+
+            function syncProfileAvatarUI() {
+                const avatar = document.getElementById('homeProfileAvatar');
+                if (avatar) avatar.innerHTML = currentProfileAvatarHtml();
+                document.querySelectorAll('.home-user-avatar').forEach(el => {
+                    el.innerHTML = currentProfileAvatarHtml();
+                });
+            }
+
+            async function loadUserProfile() {
+    if (!profileTrigger) return;
+
+    try {
+        const response = await fetch('/api/user/profile', {
+            method: 'GET',
+            credentials: 'include',
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            console.warn('Profile request failed:', response.status);
+            return;
+        }
+
+        const profile = await response.json();
+        currentProfile = {
+            name: (profile.name || '').trim(),
+            email: (profile.email || '').trim(),
+            icon_url: profile.icon_url || null
+        };
+
+        const nameElement =
+            profileTrigger.querySelector('.text-xs.font-semibold');
+
+        const emailElement =
+            profileTrigger.querySelector('.text-\\[11px\\]');
+
+        const avatarElement =
+            profileTrigger.querySelector('.w-8.h-8.rounded-full');
+
+        const name = (profile.name || '').trim();
+        const email = (profile.email || '').trim();
+
+        if (nameElement) {
+            nameElement.textContent = name || 'User';
+        }
+
+        if (emailElement) {
+            emailElement.textContent = email || '';
+        }
+
+        syncProfileAvatarUI();
+        profileTrigger.dataset.loaded = 'true';
+
+    } catch (error) {
+        console.error('Profile could not be loaded:', error);
+    }
+}
+
+if (profileTrigger && profileDropdown) {
+
+    // Load immediately when Home opens
+    loadUserProfile();
+
+    profileTrigger.addEventListener('click', async event => {
+        event.stopPropagation();
+
+        profileDropdown.classList.toggle('hidden');
+
+        // Refresh once more when opened
+        if (!profileTrigger.dataset.loaded) {
+            await loadUserProfile();
+        }
+    });
+
+    document.addEventListener('click', event => {
+        if (
+            !profileDropdown.contains(event.target) &&
+            !profileTrigger.contains(event.target)
+        ) {
+            profileDropdown.classList.add('hidden');
+        }
+    });
+}
+
+            // ---------- Sidebar conversations ----------
+            let sidebarConversations = [];
+
+            function sidebarConversationTitle(item) {
+                return escapeHtml(item.title || (item.mode === 'live' ? 'Live Session' : 'New Chat'));
+            }
+
+            function createSidebarConversationRow(item, options = {}) {
+                const li = document.createElement('li');
+                li.className = 'group relative flex items-center';
+                const isLive = false;
+                const icon = 'fa-message';
+                const pinOpacity = item.pinned ? '' : 'opacity-40';
+
+                li.innerHTML = `
+                    <button type="button"
+                        data-sidebar-id="${Number(item.id)}"
+                        class="flex-1 min-w-0 text-left block px-3 py-2 rounded-lg text-xs text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/30 truncate sidebar-label">
+                        ${sidebarConversationTitle(item)}
+                    </button>
+                    <button type="button"
+                        data-pin-id="${Number(item.id)}"
+                        data-pinned="${item.pinned ? '1' : '0'}"
+                        title="${item.pinned ? 'Unpin conversation' : 'Pin conversation'}"
+                        class="shrink-0 w-7 h-7 flex items-center justify-center rounded-md text-neutral-400 hover:text-neutral-900 hover:bg-neutral-200/50 transition-all mr-1">
+                        <i class="fa-solid fa-thumbtack text-[10px] ${pinOpacity}"></i>
+                    </button>
+                    ${options.showDelete && !isLive ? `
+                    <button type="button"
+                        data-delete-id="${Number(item.id)}"
+                        data-delete-mode="chat"
+                        title="Delete conversation"
+                        class="opacity-0 group-hover:opacity-100 shrink-0 w-7 h-7 flex items-center justify-center rounded-md text-neutral-400 hover:text-red-600 hover:bg-red-50 transition-all mr-1">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>` : ''}
+                `;
+                return li;
+            }
+
+            function renderPinnedSidebar() {
+                if (!pinnedChats) return;
+                const items = sidebarConversations.filter(item => !!item.pinned);
+
+                pinnedChats.innerHTML = '';
+                if (pinnedChatsCount) {
+                    const count = items.length;
+                    pinnedChatsCount.textContent = String(count);
+                    pinnedChatsCount.classList.toggle('hidden', count === 0);
+                }
+                if (pinnedEmpty) pinnedEmpty.classList.toggle('hidden', items.length > 0);
+
+                items.slice(0, 8).forEach(item => pinnedChats.appendChild(createSidebarConversationRow(item, { showDelete: false })));
+            }
+
+            function renderRecentSidebar() {
+                if (!recentChats) return;
+                const items = sidebarConversations.filter(item => !item.pinned);
+
+                recentChats.innerHTML = '';
+                items.slice(0, 10).forEach(item => recentChats.appendChild(createSidebarConversationRow(item, { showDelete: true })));
+            }
+
+            async function loadRecentChats() {
+                try {
+                    const chatResponse = await fetch('/api/chat/list', {
+                        credentials: 'include',
+                        cache: 'no-store'
+                    });
+
+                    const chats = chatResponse.ok ? await chatResponse.json().catch(() => []) : [];
+
+                    sidebarConversations = (Array.isArray(chats) ? chats : [])
+                        .map(item => ({ ...item, mode: 'chat' }));
+
+                    sidebarConversations.sort((a, b) => {
+                        const ta = new Date(a.updated_at || a.created_at || 0).getTime();
+                        const tb = new Date(b.updated_at || b.created_at || 0).getTime();
+                        return tb - ta;
+                    });
+
+                    renderPinnedSidebar();
+                    renderRecentSidebar();
+                } catch (error) {
+                    console.warn('Sidebar chat conversations could not be loaded:', error);
+                }
+            }
+
+            async function toggleSidebarPin(id, pinned) {
+                const base = '/api/chat/' + encodeURIComponent(id);
+
+                const response = await fetch(base + (pinned ? '/unpin' : '/pin'), {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Accept': 'application/json' },
+                    cache: 'no-store'
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.detail || 'Could not change pin state.');
+
+                const item = sidebarConversations.find(entry =>
+                    String(entry.id) === String(id)
+                );
+                if (item) item.pinned = !pinned;
+
+                renderPinnedSidebar();
+                renderRecentSidebar();
+            }
+
+            async function openSidebarConversation(id) {
+                const endpoint = '/api/chat/' + encodeURIComponent(id);
+
+                try {
+                    const response = await fetch(endpoint, {
+                        credentials: 'include',
+                        cache: 'no-store'
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.detail || 'Conversation could not be opened.');
+
+                    currentChatId = data.id;
+                    currentChatPinned = !!data.pinned;
+                    renderChat(data.messages || []);
+                    await refreshCurrentChatPin();
+                } catch (error) {
+                    console.error(error);
+                    alert(error.message || 'Conversation could not be opened.');
+                }
+            }
+
+            async function deleteSidebarConversation(id) {
+                const endpoint = '/api/chat/' + encodeURIComponent(id);
+
+                const response = await fetch(endpoint, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.detail || 'Conversation could not be deleted.');
+
+                if (String(currentChatId) === String(id)) {
+                    currentChatId = null;
+                    showWelcome();
+                }
+                await loadRecentChats();
+            }
+
+            document.addEventListener('click', async event => {
+                const pinBtn = event.target.closest('[data-pin-id]');
+                if (pinBtn) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    try {
+                        await toggleSidebarPin(
+                            pinBtn.dataset.pinId,
+                            pinBtn.dataset.pinned === '1'
+                        );
+                    } catch (error) {
+                        alert(error.message || 'Could not change pin state.');
+                    }
+                    return;
+                }
+
+                const deleteBtn = event.target.closest('[data-delete-id]');
+                if (deleteBtn) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (window.openDeleteConfirmModal) {
+                        window.openDeleteConfirmModal(deleteBtn.dataset.deleteId, deleteBtn.dataset.deleteMode || 'chat');
+                    } else {
+                        try {
+                            await deleteSidebarConversation(deleteBtn.dataset.deleteId);
+                        } catch (error) {
+                            alert(error.message || 'Conversation could not be deleted.');
+                        }
+                    }
+                    return;
+                }
+
+                const conversationBtn = event.target.closest('[data-sidebar-id]');
+                if (conversationBtn) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    await openSidebarConversation(conversationBtn.dataset.sidebarId);
+                }
+            });
+
+            // ---------- New conversation modal ----------
+            let selectedNewConversationMode = 'chat';
+
+            window.openNewConversationModal = function() {
+                const modal = document.getElementById('newConversationModal');
+                const input = document.getElementById('conversationNameInput');
+                if (!modal) return;
+
+                selectedNewConversationMode = 'chat';
+                selectNewConversationMode('chat');
+                modal.classList.add('show');
+                modal.setAttribute('aria-hidden', 'false');
+
+                if (input) {
+                    input.value = '';
+                    setTimeout(() => input.focus(), 60);
+                }
+            };
+
+            window.closeNewConversationModal = function() {
+                const modal = document.getElementById('newConversationModal');
+                if (!modal) return;
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden', 'true');
+            };
+
+            window.handleNewConversationBackdrop = function(event) {
+                if (event.target && event.target.id === 'newConversationModal') {
+                    closeNewConversationModal();
+                }
+            };
+
+            window.selectNewConversationMode = function(mode) {
+                selectedNewConversationMode = mode === 'live' ? 'live' : 'chat';
+
+                const chatOption = document.getElementById('conversationModeChat');
+                const liveOption = document.getElementById('conversationModeLive');
+
+                if (chatOption) chatOption.classList.toggle('active', selectedNewConversationMode === 'chat');
+                if (liveOption) liveOption.classList.toggle('active', selectedNewConversationMode === 'live');
+            };
+
+            window.createNewConversation = async function() {
+                const input = document.getElementById('conversationNameInput');
+                const createBtn = document.getElementById('createConversationBtn');
+                const name = (input?.value || '').trim() || 'New Conversation';
+                const mode = selectedNewConversationMode;
+
+                if (createBtn) {
+                    createBtn.disabled = true;
+                    createBtn.classList.add('opacity-60', 'cursor-not-allowed');
+                }
+
+                try {
+                    let response;
+
+                    if (mode === 'live') {
+                        response = await fetch('/api/live/new', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ title: name })
+                        });
+                    } else {
+                        response = await fetch('/api/chat/new', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ title: name })
+                        });
+                    }
+
+                    if (!response.ok) {
+                        const data = await response.json().catch(() => ({}));
+                        throw new Error(data.detail || 'Could not create a new conversation.');
+                    }
+
+                    const created = await response.json();
+                    const savedMode = mode;
+                    const savedName = created.title || name;
+
+                    sessionStorage.setItem('maximusConversationName', savedName);
+                    sessionStorage.setItem('maximusConversationMode', savedMode);
+
+                    closeNewConversationModal();
+                    removeAttachment();
+                    userInput.value = '';
+
+                    if (savedMode === 'live') {
+                        window.location.href = '/speakwithai';
+                        return;
+                    }
+
+                    currentChatId = created.id;
+                    renderChat([]);
+                    await loadRecentChats();
+                    userInput.focus();
+                } catch (error) {
+                    console.error(error);
+                    alert(error.message);
+                } finally {
+                    if (createBtn) {
+                        createBtn.disabled = false;
+                        createBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                    }
+                }
+            };
+
+            if (newChatBtn) {
+                newChatBtn.addEventListener('click', () => {
+                    openNewConversationModal();
+                });
+            }
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') closeNewConversationModal();
+            });
+
+            document.getElementById('conversationNameInput')?.addEventListener('keydown', event => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    createNewConversation();
+                }
+            });
+
+            // ---------- File attachments ----------
+            function getFileIcon(file) {
+                const type = file?.type || '';
+                const name = (file?.name || '').toLowerCase();
+
+                if (type.startsWith('image/')) return 'fa-file-image';
+                if (type.includes('pdf') || name.endsWith('.pdf')) return 'fa-file-pdf';
+                if (type.includes('word') || /\\.(doc|docx)$/.test(name)) return 'fa-file-word';
+                if (type.includes('sheet') || /\\.(xls|xlsx|csv)$/.test(name)) return 'fa-file-excel';
+                if (type.includes('presentation') || /\\.(ppt|pptx)$/.test(name)) return 'fa-file-powerpoint';
+                if (type.includes('zip') || type.includes('compressed') || /\\.(zip|rar|7z|tar|gz)$/.test(name)) return 'fa-file-zipper';
+                if (type.startsWith('text/') || /\\.(txt|md|json|xml|html|css|js|ts|tsx|jsx|py|java|c|cpp|sql)$/.test(name)) return 'fa-file-lines';
+                return 'fa-file';
+            }
+
+            function formatFileSize(bytes) {
+                if (!Number.isFinite(bytes)) return '';
+                if (bytes < 1024) return `${bytes} B`;
+                if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+                if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+                return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+            }
+
+            window.handleFileSelect = function(event) {
+                const file = event.target.files && event.target.files[0];
+                if (!file) return;
+
+                attachedFile = file;
+                attachedImage = null;
+
+                if (attachmentName) attachmentName.textContent = file.name;
+                if (attachmentMeta) {
+                    attachmentMeta.textContent = `${file.type || 'Unknown type'} • ${formatFileSize(file.size)}`;
+                }
+
+                if (previewFileIcon) {
+                    previewFileIcon.className = `fa-solid ${getFileIcon(file)} text-lg text-neutral-400`;
+                }
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+
+                    reader.onload = e => {
+                        const dataUrl = String(e.target.result || '');
+
+                        attachedImage = {
+                            data: dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl,
+                            mime_type: file.type || 'image/png',
+                            file_name: file.name
+                        };
+
+                        previewImg.src = dataUrl;
+                        previewImg.classList.remove('hidden');
+                        previewFileIcon?.classList.add('hidden');
+                        previewBar.classList.remove('hidden');
+                    };
+
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('MAXIMUS Home currently supports image attachments only.');
+                    window.removeAttachment();
+                }
+            };
+
+            window.removeAttachment = function() {
+                attachedImage = null;
+                attachedFile = null;
+
+                if (fileInput) fileInput.value = '';
+
+                if (previewImg) {
+                    previewImg.src = '';
+                    previewImg.classList.add('hidden');
+                }
+
+                previewFileIcon?.classList.remove('hidden');
+
+                if (previewBar) previewBar.classList.add('hidden');
+                if (attachmentName) attachmentName.textContent = 'File attached';
+                if (attachmentMeta) attachmentMeta.textContent = 'Ready to send';
+            };
+
+            window.removeAttachedImage = window.removeAttachment;
+
+            // ---------- Camera ----------
+            window.openCameraModal = async function() {
+                cameraModal.classList.remove('hidden');
+                try {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        throw new Error('Camera is not available in this browser.');
+                    }
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    cameraVideo.srcObject = videoStream;
+                } catch (error) {
+                    alert('Camera access denied or unavailable: ' + error.message);
+                    window.closeCameraModal();
+                }
+            };
+
+            window.closeCameraModal = function() {
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                    videoStream = null;
+                }
+                cameraVideo.srcObject = null;
+                cameraModal.classList.add('hidden');
+            };
+
+            window.captureCameraPhoto = function() {
+                cameraCanvas.width = cameraVideo.videoWidth || 640;
+                cameraCanvas.height = cameraVideo.videoHeight || 480;
+                const context = cameraCanvas.getContext('2d');
+                if (!context) return;
+                context.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
+
+                const dataUrl = cameraCanvas.toDataURL('image/png');
+                attachedImage = { data: dataUrl.split(',')[1], mime_type: 'image/png' };
+                previewImg.src = dataUrl;
+                previewBar.classList.remove('hidden');
+                window.closeCameraModal();
+            };
+
+            // ---------- Send message ----------
+            function setSending(sending) {
+                sendBtn.disabled = sending;
+                sendBtn.classList.toggle('opacity-50', sending);
+
+                sendBtn.innerHTML = sending
+                    ? '<i class="fa-solid fa-spinner fa-spin text-xs"></i>'
+                    : '<i class="fa-solid fa-arrow-up text-xs"></i>';
+            }
+
+            function addThinkingIndicator() {
+                const row = document.createElement('div');
+                row.id = 'jarvisThinkingIndicator';
+                row.className = 'flex items-start gap-3.5 max-w-3xl mr-auto animate-fade-in';
+
+                row.innerHTML = `
+                    <div class="w-8 h-8 rounded-lg overflow-hidden bg-black shrink-0"><img src="/static/logo.jpg" alt="MAXIMUS logo" class="w-full h-full object-cover"></div>
+                    <div class="bg-white border border-neutral-200 rounded-2xl rounded-tl-md px-4 py-3 shadow-sm">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-neutral-400 maximus-thinking-dot"></span>
+                            <span class="w-2 h-2 rounded-full bg-neutral-400 maximus-thinking-dot"></span>
+                            <span class="w-2 h-2 rounded-full bg-neutral-400 maximus-thinking-dot"></span>
+                            <span class="ml-1 text-xs text-neutral-400">MAXIMUS is thinking...</span>
+                        </div>
+                    </div>
+                `;
+
+                chatContainer.appendChild(row);
+                scrollToBottom();
+                return row;
+            }
+
+            function getWebsiteTarget(text) {
+                const value = String(text || '').trim();
+                if (!value) return null;
+                const urlMatch = value.match(/\bhttps?:\/\/[^\s]+/i);
+                if (urlMatch) return urlMatch[0].replace(/[.,!?;:]+$/, '');
+
+                const match = value.match(/^(?:please\s+)?(?:open|go\s+to|visit|launch)\s+(.+)$/i);
+                if (!match) return null;
+                return match[1].trim().replace(/[.,!?;:]+$/, '');
+            }
+
+            async function tryHandleNetworkCommand(text) {
+                const target = getWebsiteTarget(text);
+                if (!target) return false;
+
+                // Only handle obvious website commands; normal questions still go to MAXIMUS.
+                const looksLikeSite = /(?:youtube|google|github|gmail|instagram|facebook|reddit|linkedin|spotify|whatsapp|chatgpt|\.[a-z]{2,})(?:\/|$)/i.test(target);
+                if (!looksLikeSite) return false;
+
+                const popup = window.open('', '_blank');
+                try {
+                    const response = await fetch('/api/network/open', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ target })
+                    });
+                    const data = await response.json().catch(() => ({}));
+
+                    if (!response.ok) {
+                        if (popup && !popup.closed) popup.close();
+                        if (response.status === 403) {
+                            renderMessage('assistant', 'Network access is off. Turn on the Network permission above the chat box if you want MAXIMUS to open websites for you.');
+                            scrollToBottom();
+                            return true;
+                        }
+                        throw new Error(data.detail || 'Could not open that website.');
+                    }
+
+                    if (popup && !popup.closed) {
+                        popup.location.href = data.url;
+                    } else {
+                        window.location.href = data.url;
+                    }
+                    renderMessage('assistant', data.message || `Opening ${target}…`);
+                    scrollToBottom();
+                    return true;
+                } catch (error) {
+                    if (popup && !popup.closed) popup.close();
+                    renderMessage('assistant', `I couldn't open that website: ${error.message}`);
+                    scrollToBottom();
+                    return true;
+                }
+            }
+
+            async function sendMessage() {
+                const text = userInput.value.trim();
+
+                if (!text && !attachedFile && !attachedImage) return;
+
+                const fileForRequest = attachedFile;
+                const imageForRequest = attachedImage;
+                const promptText = text || (
+                    imageForRequest
+                        ? 'Please analyze this image.'
+                        : `Please analyze the attached file: ${fileForRequest?.name || 'file'}.`
+                );
+
+                const displayLabel = fileForRequest
+                    ? `[${fileForRequest.type?.startsWith('image/') ? 'Image' : 'File'}: ${fileForRequest.name}]`
+                    : '';
+
+                renderMessage('user', `${displayLabel} ${text}`.trim());
+                userInput.value = '';
+                setSending(true);
+
+                let thinking = null;
+                try {
+                    if (!fileForRequest && !imageForRequest && await tryHandleNetworkCommand(text)) {
+                        return;
+                    }
+
+                    thinking = addThinkingIndicator();
+                    let response;
+
+                    if (imageForRequest) {
+                        response = await fetch('/ask-image', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                image: imageForRequest.data,
+                                mime_type: imageForRequest.mime_type,
+                                text: text || 'Please analyze this image.',
+                                model: chatModelSelect?.value || 'flash'
+                            })
+                        });
+                    } else if (fileForRequest) {
+                        throw new Error('Only image attachments are supported on Home right now.');
+                    } else {
+                        response = await fetch('/ask', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                text: promptText,
+                                model: chatModelSelect?.value || 'flash'
+                            })
+                        });
+                    }
+
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.detail || 'Request failed.');
+
+                    if (thinking) thinking.remove();
+                    if (data.chat_id) currentChatId = data.chat_id;
+                    renderMessage('assistant', data.reply || 'I could not generate a response.');
+                    await loadRecentChats();
+
+                } catch (error) {
+                    console.error(error);
+                    if (thinking) thinking.remove();
+                    renderMessage('assistant', 'I ran into an error: ' + error.message);
+                } finally {
+                    window.removeAttachment();
+                    setSending(false);
+                    userInput.focus();
+                    scrollToBottom();
+                }
+            }
+
+            sendBtn.addEventListener('click', sendMessage);
+            userInput.addEventListener('keydown', event => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // ---------- Share ----------
+            if (shareBtn) {
+                shareBtn.addEventListener('click', async () => {
+                    try {
+                        if (navigator.share) {
+                            await navigator.share({ title: 'MAXIMUS AI', text: 'Chat with MAXIMUS AI', url: window.location.href });
+                        } else if (navigator.clipboard) {
+                            await navigator.clipboard.writeText(window.location.href);
+                            alert('MAXIMUS link copied to clipboard.');
+                        } else {
+                            alert(window.location.href);
+                        }
+                    } catch (error) {
+                        if (error.name !== 'AbortError') console.warn('Share failed:', error);
+                    }
+                });
+            }
+
+            // ---------- Chat model ----------
+            const chatModelSelect = document.getElementById('chatModelSelect');
+            const chatModelStatus = document.getElementById('chatModelStatus');
+            const HOME_MODEL_STORAGE_KEY = 'maximus_home_model';
+
+            function modelOptionValue(modelId, providerId) {
+                return providerId ? `provider:${providerId}:${modelId}` : modelId;
+            }
+
+            function rebuildChatModelOptions(providers) {
+                if (!chatModelSelect) return;
+
+                const saved = localStorage.getItem(HOME_MODEL_STORAGE_KEY) || 'flash';
+                chatModelSelect.innerHTML = '';
+
+                const flash = document.createElement('option');
+                flash.value = 'flash';
+                flash.dataset.providerId = '';
+                flash.textContent = 'MAXIMUS Flash';
+                chatModelSelect.appendChild(flash);
+
+                (Array.isArray(providers) ? providers : []).forEach(provider => {
+                    if (!provider || !provider.is_active || !provider.is_valid) return;
+                    const models = Array.isArray(provider.models) ? provider.models : [];
+                    const selected = provider.model_id && !models.includes(provider.model_id)
+                        ? [provider.model_id, ...models]
+                        : models;
+
+                    selected.filter(Boolean).forEach(modelId => {
+                        const option = document.createElement('option');
+                        option.value = modelOptionValue(String(modelId), provider.id);
+                        option.dataset.providerId = String(provider.id);
+                        option.dataset.modelId = String(modelId);
+                        option.textContent = `${provider.label || provider.provider || 'Provider'} · ${modelId}`;
+                        chatModelSelect.appendChild(option);
+                    });
+                });
+
+                const hasSaved = [...chatModelSelect.options].some(option => option.value === saved);
+                chatModelSelect.value = hasSaved ? saved : 'flash';
+                chatModelStatus.textContent = chatModelSelect.value === 'flash'
+                    ? 'Active'
+                    : 'Provider model';
+            }
+
+            async function loadChatModel() {
+                if (!chatModelSelect) return;
+                try {
+                    const [settingsResponse, providersResponse] = await Promise.all([
+                        fetch('/api/settings', { credentials: 'include', cache: 'no-store' }),
+                        fetch('/api/providers', { credentials: 'include', cache: 'no-store' })
+                    ]);
+                    const settings = await settingsResponse.json().catch(() => ({}));
+                    const providers = await providersResponse.json().catch(() => []);
+                    if (!settingsResponse.ok) throw new Error(settings.detail || 'Could not load model settings.');
+                    if (!providersResponse.ok) throw new Error(providers.detail || 'Could not load providers.');
+
+                    rebuildChatModelOptions(Array.isArray(providers) ? providers : []);
+                    if (!localStorage.getItem(HOME_MODEL_STORAGE_KEY)) {
+                        chatModelSelect.value = 'flash';
+                    }
+                    chatModelStatus.textContent = chatModelSelect.value === 'flash' ? 'Active' : 'Provider model';
+                } catch (error) {
+                    console.warn('Model settings/providers could not be loaded:', error);
+                    rebuildChatModelOptions([]);
+                    chatModelSelect.value = 'flash';
+                    chatModelStatus.textContent = 'Default';
+                }
+            }
+
+            if (chatModelSelect) {
+                chatModelSelect.addEventListener('change', async () => {
+                    localStorage.setItem(HOME_MODEL_STORAGE_KEY, chatModelSelect.value || 'flash');
+                    chatModelStatus.textContent = chatModelSelect.value === 'flash' ? 'Active' : 'Provider model';
+                });
+            }
+
+            // ---------- Network permission ----------
+            const networkAccessToggle = document.getElementById('networkAccessToggle');
+            const networkAccessStatus = document.getElementById('networkAccessStatus');
+
+            function updateNetworkLabel(enabled) {
+                if (networkAccessToggle) networkAccessToggle.checked = !!enabled;
+                if (networkAccessStatus) networkAccessStatus.textContent = enabled ? 'On' : 'Off';
+            }
+
+            async function loadNetworkAccess() {
+                if (!networkAccessToggle) return;
+                try {
+                    const response = await fetch('/api/network/status', { credentials: 'include', cache: 'no-store' });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.detail || 'Could not load network permission.');
+                    updateNetworkLabel(!!data.network_access);
+                } catch (error) {
+                    console.warn('Network permission could not be loaded:', error);
+                    updateNetworkLabel(false);
+                }
+            }
+
+            if (networkAccessToggle) {
+                networkAccessToggle.addEventListener('change', async () => {
+                    const enabled = networkAccessToggle.checked;
+                    networkAccessToggle.disabled = true;
+                    updateNetworkLabel(enabled);
+                    try {
+                        const response = await fetch('/api/settings', {
+                            method: 'PUT',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ network_access: enabled })
+                        });
+                        const data = await response.json().catch(() => ({}));
+                        if (!response.ok) throw new Error(data.detail || 'Could not save network permission.');
+                        updateNetworkLabel(!!data.settings?.network_access);
+                    } catch (error) {
+                        console.error(error);
+                        updateNetworkLabel(!enabled);
+                        alert(error.message || 'Could not save network permission.');
+                    } finally {
+                        networkAccessToggle.disabled = false;
+                    }
+                });
+            }
+
+            let currentChatPinned = false;
+            async function refreshCurrentChatPin(){
+                const btn=document.getElementById('pinConversationBtn');
+                if(!btn||!currentChatId)return;
+                try{const r=await fetch('/api/chat/'+encodeURIComponent(currentChatId),{credentials:'include',cache:'no-store'});const d=await r.json().catch(()=>({}));currentChatPinned=!!d.pinned;btn.querySelector('span:last-child').textContent=currentChatPinned?'Unpin':'Pin';btn.title=currentChatPinned?'Unpin conversation':'Pin conversation';}catch{}
+            }
+            document.getElementById('pinConversationBtn')?.addEventListener('click',async()=>{
+                if(!currentChatId)return;
+                try{const r=await fetch('/api/chat/'+encodeURIComponent(currentChatId)+(currentChatPinned?'/unpin':'/pin'),{method:'POST',credentials:'include',headers:{'Accept':'application/json'}});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.detail||'Could not change pin state.');currentChatPinned=!currentChatPinned;await refreshCurrentChatPin();await loadRecentChats();}catch(e){alert(e.message||'Could not change pin state.');}
+            });
+
+            // ---------- Start ----------
+            async function initializeHomeConversation() {
+                const params = new URLSearchParams(window.location.search);
+                const requestedId = params.get('chat_id');
+                try {
+                    if (requestedId) {
+                        const response = await fetch('/api/chat/' + encodeURIComponent(requestedId), { credentials: 'include', cache: 'no-store' });
+                        const data = await response.json().catch(() => ({}));
+                        if (!response.ok) throw new Error(data.detail || 'Could not open conversation.');
+                        currentChatId = data.id;
+                        renderChat(data.messages || []);
+                        await refreshCurrentChatPin();
+                        window.history.replaceState({}, document.title, '/home');
+                    } else {
+                        const response = await fetch('/api/chat/open-new', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: { 'Accept': 'application/json' },
+                            cache: 'no-store'
+                        });
+                        const data = await response.json().catch(() => ({}));
+                        if (!response.ok) throw new Error(data.detail || 'Could not start a new conversation.');
+                        currentChatId = data.id;
+                        currentChatPinned = false;
+                        showWelcome();
+                    }
+                } catch (error) {
+                    console.error('Home conversation initialization failed:', error);
+                    showWelcome();
+                    alert(error.message || 'Could not start a new conversation.');
+                }
+            }
+
+            initializeHomeConversation().finally(() => {
+                loadRecentChats();
+                loadChatModel();
+                loadNetworkAccess();
+            });
+        });
+    </script>
+
+</body>
+
+</html>

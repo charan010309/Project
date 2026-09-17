@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full" data-page="login">
+<head>
+    <!-- Public/auth pages are intentionally always light, regardless of the saved app theme. -->
+    <meta name="color-scheme" content="light">
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const forceLight = () => {
+          root.classList.remove('dark');
+          root.setAttribute('data-theme', 'light');
+          if (root.style.colorScheme !== 'light') root.style.colorScheme = 'light';
+        };
+        forceLight();
+        new MutationObserver(forceLight).observe(root, {
+          attributes: true,
+          attributeFilter: ['class', 'data-theme', 'style']
+        });
+      })();
+    </script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authenticate Access | MAXIMUS</title>
+
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      main > :first-child {
+        margin-top: 0 !important;
+      }
+      main > :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .ambient-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(226, 226, 226, 0.5) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(226, 226, 226, 0.5) 1px, transparent 1px);
+    }
+  </style>
+
+  <!-- Tailwind CSS & Custom Design System Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#ffffff",
+            "on-error": "#ffffff",
+            "on-background": "#1a1c1c",
+            "on-primary-fixed-variant": "#474649",
+            "inverse-primary": "#c8c6c8",
+            "on-tertiary-container": "#83838c",
+            "primary-container": "#1c1b1d",
+            "tertiary-fixed-dim": "#c6c5cf",
+            "outline-variant": "#c8c5ca",
+            "inverse-surface": "#2f3131",
+            "on-tertiary-fixed-variant": "#46464e",
+            "background": "#f9f9f9",
+            "outline": "#78767b",
+            "on-primary-fixed": "#1c1b1d",
+            "on-secondary-fixed": "#002113",
+            "on-primary-container": "#858386",
+            "primary-fixed": "#e5e1e4",
+            "secondary-container": "#6cf8bb",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#4edea3",
+            "on-surface": "#1a1c1c",
+            "surface-bright": "#f9f9f9",
+            "primary": "#000000",
+            "primary-fixed-dim": "#c8c6c8",
+            "surface-container-low": "#f3f3f3",
+            "on-tertiary-fixed": "#1a1b22",
+            "surface": "#f9f9f9",
+            "inverse-on-surface": "#f0f1f1",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary-container": "#1a1b22",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "on-error-container": "#93000a",
+            "surface-variant": "#e2e2e2",
+            "surface-container-high": "#e8e8e8",
+            "tertiary": "#000000",
+            "secondary-fixed": "#6ffbbe",
+            "surface-container": "#eeeeee",
+            "on-surface-variant": "#47464a",
+            "on-secondary-container": "#00714d",
+            "secondary": "#006c49",
+            "tertiary-fixed": "#e3e1ec",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#dadada",
+            "surface-tint": "#5f5e60",
+            "surface-container-highest": "#e2e2e2",
+            "error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          spacing: {
+            "space-3xl": "4.5rem",
+            "space-sm": "0.75rem",
+            "space-md": "1rem",
+            "gutter-desktop": "1.5rem",
+            "space-2xs": "0.25rem",
+            "auth-card-max-width": "26.25rem",
+            "space-xl": "2rem",
+            "gutter-mobile": "1rem",
+            "space-xs": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-2xl": "3rem"
+          },
+          fontFamily: {
+            "display-hero": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-ui": ["Plus Jakarta Sans"],
+            "label-mono-xs": ["JetBrains Mono"],
+            "code-field": ["JetBrains Mono"],
+            "body-md": ["Plus Jakarta Sans"],
+            "label-mono-sm": ["JetBrains Mono"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-hero-mobile": ["Plus Jakarta Sans"]
+          },
+          fontSize: {
+            "display-hero": ["40px", { lineHeight: "48px", letterSpacing: "-0.03em", fontWeight: "600" }],
+            "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+            "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.025em", fontWeight: "600" }],
+            "headline-sm": ["18px", { lineHeight: "26px", letterSpacing: "-0.015em", fontWeight: "600" }],
+            "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "400" }],
+            "label-ui": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "500" }],
+            "label-mono-xs": ["10px", { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "500" }],
+            "code-field": ["20px", { lineHeight: "28px", letterSpacing: "0.05em", fontWeight: "500" }],
+            "body-md": ["14px", { lineHeight: "20px", letterSpacing: "-0.005em", fontWeight: "400" }],
+            "label-mono-sm": ["11px", { lineHeight: "16px", letterSpacing: "0.04em", fontWeight: "500" }],
+            "headline-md": ["22px", { lineHeight: "30px", letterSpacing: "-0.02em", fontWeight: "600" }],
+            "display-hero-mobile": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "600" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="min-h-full bg-surface text-on-surface font-body-md text-body-md ambient-grid flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container">
+
+  <!-- Application Header -->
+  <header class="w-full max-w-7xl mx-auto px-gutter-mobile lg:px-gutter-desktop h-16 flex items-center justify-between">
+    <div class="flex items-center gap-space-xs">
+      <div class="flex items-center gap-space-xs">
+        <div class="w-8 h-8 rounded-xl bg-white border border-surface-container-high overflow-hidden flex items-center justify-center shadow-sm">
+          <img src="/static/logo.jpg" alt="MAXIMUS logo" class="w-full h-full object-cover" />
+        </div>
+        <span class="font-headline-sm text-headline-sm tracking-tight text-on-surface font-semibold">MAXIMUS</span>
+      </div>
+      <span class="font-label-mono-xs text-label-mono-xs px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-surface-variant">v2.4</span>
+    </div>
+
+    <div class="flex items-center gap-space-md">
+      <div class="flex items-center gap-space-2xs">
+        <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+        <span class="font-label-mono-xs text-label-mono-xs text-on-surface-variant uppercase tracking-wider">Systems Normal</span>
+      </div>
+      <a href="/m" class="font-label-ui text-label-ui text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs">
+        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+        <span>Back to Intro</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 flex items-center justify-center p-gutter-mobile lg:p-gutter-desktop">
+    <div class="w-full max-w-auth-card-max-width bg-surface-container-lowest/90 backdrop-blur-xl rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.03),0_8px_24px_-4px_rgba(0,0,0,0.04)] p-space-xl">
+      <div class="flex flex-col w-full">
+
+        <!-- Security Status Micro-badge -->
+        <div class="flex items-center justify-between pb-space-md mb-space-md bg-surface-container-low/60 rounded-xl px-space-sm py-1.5">
+          <div class="flex items-center gap-space-xs">
+            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+            <span class="font-label-mono-xs text-label-mono-xs text-on-surface-variant uppercase tracking-wider">TLS 1.3 Active</span>
+          </div>
+          <div class="flex items-center gap-space-2xs text-secondary">
+            <span class="material-symbols-outlined text-[14px]">lock</span>
+            <span class="font-label-mono-xs text-label-mono-xs font-semibold">256-bit AES E2EE</span>
+          </div>
+        </div>
+
+        <!-- Header Block -->
+        <div class="space-y-1 mb-space-lg">
+          <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Authenticate Access</h1>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Deploy credentials to enter MAXIMUS neural core</p>
+        </div>
+
+        <!-- Dynamic Feedback Banner -->
+        <div id="auth-alert" class="hidden items-center gap-space-xs p-space-xs mb-space-md bg-error-container text-on-error-container rounded-lg">
+          <span class="material-symbols-outlined text-[18px] text-error shrink-0">error</span>
+          <span id="auth-alert-text" class="font-body-sm text-body-sm text-error">Invalid security authorization token.</span>
+        </div>
+
+        <!-- Panel: Email Password Form -->
+        <div id="panel-email" class="flex flex-col space-y-space-md">
+          <form class="space-y-space-md" onsubmit="handleEmailSubmit(event)">
+            <!-- Email Address Field -->
+            <div class="space-y-1">
+              <label for="work-email" class="block font-label-ui text-label-ui text-on-surface">Work Email</label>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-space-sm text-outline text-[18px] pointer-events-none">mail</span>
+                <input id="work-email" type="email" placeholder="operator@maximus.ai" required class="w-full h-10 pl-10 pr-space-md bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:bg-surface-container-lowest focus:outline-none transition-all placeholder:text-outline" />
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="work-password" class="font-label-ui text-label-ui text-on-surface">Access Key</label>
+                <a href="/m/forgot-password" class="font-label-ui text-label-ui text-secondary hover:text-on-secondary-container transition-colors">Forgot key?</a>
+              </div>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-space-sm text-outline text-[18px] pointer-events-none">key</span>
+                <input id="work-password" type="password" placeholder="••••••••••••" required class="w-full h-10 pl-10 pr-10 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:bg-surface-container-lowest focus:outline-none transition-all placeholder:text-outline" />
+                <button type="button" aria-label="Toggle password view" onclick="togglePasswordVisibility('work-password', this)" class="absolute right-space-sm text-outline hover:text-on-surface transition-colors p-1">
+                  <span class="material-symbols-outlined text-[18px]">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Device Option -->
+            <div class="flex items-center justify-between pt-space-2xs">
+              <label class="flex items-center gap-space-xs cursor-pointer select-none">
+                <input id="remember-me" type="checkbox" class="w-4 h-4 rounded accent-primary cursor-pointer" />
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Remember authorization</span>
+              </label>
+              <span class="font-label-mono-xs text-label-mono-xs text-outline">30 DAYS</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full h-11 bg-primary text-on-primary hover:bg-primary-container font-label-ui text-label-ui font-semibold rounded-lg flex items-center justify-center gap-space-xs transition-transform active:scale-[0.99] shadow-sm">
+              <span>Initialize Workspace</span>
+              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Divider Breakpoint -->
+        <div class="relative my-space-lg flex items-center justify-center">
+          <div class="w-full h-px bg-surface-container-high"></div>
+          <span class="absolute px-space-sm bg-surface-container-lowest font-label-mono-xs text-label-mono-xs text-outline uppercase tracking-widest">Or Continue With</span>
+        </div>
+
+        <!-- SSO OAuth Integrations -->
+        <div class="space-y-space-xs">
+          <button type="button" onclick="handleGoogleSso()" class="w-full h-11 bg-surface-container-low hover:bg-surface-container text-on-surface font-label-ui text-label-ui font-medium rounded-lg flex items-center justify-center gap-space-sm transition-all shadow-sm active:scale-[0.99]">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"></path>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"></path>
+            </svg>
+            <span>Continue with Google Cloud SSO</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="openQrScanner()"
+            class="w-full h-11 mt-space-xs bg-surface-container-low hover:bg-surface-container text-on-surface font-label-ui text-label-ui font-medium rounded-lg flex items-center justify-center gap-space-sm transition-all shadow-sm active:scale-[0.99]"
+          >
+            <span class="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+            <span>Scan QR from PC</span>
+          </button>
+
+          <p class="mt-2 text-center font-label-mono-xs text-label-mono-xs text-on-surface-variant">
+            Scan the temporary MAXIMUS login QR shown on your signed-in PC.
+          </p>
+        </div>
+
+        <!-- Sign Up Redirect Routing -->
+        <div class="pt-space-lg text-center">
+          <p class="font-body-sm text-body-sm text-on-surface-variant">
+            New to MAXIMUS?
+            <a href="/m/signup" class="text-on-surface font-medium hover:underline inline-flex items-center gap-0.5 ml-1">
+              <span>Sign Up</span>
+              <span class="material-symbols-outlined text-[14px]">north_east</span>
+            </a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile QR Login Scanner -->
+  <div
+    id="qr-scanner-modal"
+    class="hidden fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm px-4 py-6 items-center justify-center"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="qr-scanner-title"
+  >
+    <div class="w-full max-w-sm rounded-2xl bg-white shadow-2xl overflow-hidden border border-surface-container-high">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-surface-container-high">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+          </div>
+          <div>
+            <h2 id="qr-scanner-title" class="font-headline-sm text-headline-sm font-semibold text-on-surface">
+              Scan PC Login QR
+            </h2>
+            <p class="font-label-mono-xs text-label-mono-xs text-on-surface-variant">
+              Secure MAXIMUS sign-in
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onclick="closeQrScanner()"
+          class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container"
+          aria-label="Close QR scanner"
+        >
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <div class="p-4 flex flex-col gap-3">
+        <div class="relative aspect-square w-full overflow-hidden rounded-xl bg-black">
+          <video
+            id="qr-video"
+            class="w-full h-full object-cover"
+            playsinline
+            muted
+            autoplay
+          ></video>
+
+          <canvas id="qr-canvas" class="hidden"></canvas>
+
+          <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <div class="w-[72%] h-[72%] rounded-2xl border-2 border-white/90 shadow-[0_0_0_999px_rgba(0,0,0,0.22)]"></div>
+          </div>
+
+          <div class="absolute left-0 right-0 bottom-0 p-3 bg-gradient-to-t from-black/70 to-transparent">
+            <p class="text-white text-center font-label-ui text-label-ui">
+              Point your camera at the QR code shown on the PC.
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="qr-scanner-status"
+          class="min-h-[38px] px-3 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-ui text-label-ui flex items-center gap-2"
+        >
+          <span class="material-symbols-outlined text-[16px] text-secondary">center_focus_strong</span>
+          <span>Starting camera…</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onclick="startQrCamera()"
+            class="h-10 rounded-lg bg-primary text-on-primary font-label-ui text-label-ui font-semibold flex items-center justify-center gap-1.5"
+          >
+            <span class="material-symbols-outlined text-[17px]">photo_camera</span>
+            <span>Use Camera</span>
+          </button>
+
+          <label
+            class="h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-ui text-label-ui font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-[17px]">image</span>
+            <span>Choose QR Image</span>
+            <input id="qr-image-input" type="file" accept="image/*" class="hidden">
+          </label>
+        </div>
+
+        <p class="font-label-mono-xs text-label-mono-xs text-on-surface-variant text-center leading-relaxed">
+          Camera access normally requires HTTPS on phones. If camera access is blocked, choose a QR screenshot or photo instead.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Footer -->
+  <footer class="w-full max-w-7xl mx-auto px-gutter-mobile lg:px-gutter-desktop h-14 flex items-center justify-between text-on-surface-variant font-label-mono-xs text-label-mono-xs">
+    <span>© 2026 MAXIMUS AI LABS</span>
+    <div class="flex items-center gap-space-md">
+      <span class="hover:text-on-surface transition-colors cursor-pointer">PRIVACY</span>
+      <span class="hover:text-on-surface transition-colors cursor-pointer">SECURITY</span>
+      <span class="hover:text-on-surface transition-colors cursor-pointer">TELEMETRY</span>
+    </div>
+  </footer>
+
+
+
+  <!-- QR decoder fallback for browsers without BarcodeDetector -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+  <!-- Application Interactivity Scripts -->
+  <script>
+
+    function togglePasswordVisibility(fieldId, triggerBtn) {
+      const field = document.getElementById(fieldId);
+      const icon = triggerBtn.querySelector('span');
+      if (field.type === 'password') {
+        field.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        field.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    }
+
+    function triggerAlert(msg) {
+      const alertBox = document.getElementById('auth-alert');
+      const alertText = document.getElementById('auth-alert-text');
+      alertText.textContent = msg;
+      alertBox.classList.remove('hidden');
+      alertBox.classList.add('flex');
+    }
+
+
+    async function handleEmailSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('work-email').value.trim().toLowerCase();
+      const pwd = document.getElementById('work-password').value;
+      const remember = document.getElementById('remember-me')?.checked || false;
+
+      if (!email || !email.includes('@')) {
+        triggerAlert('Please provide a valid email address.');
+        return;
+      }
+      if (pwd.length < 6) {
+        triggerAlert('Password must be at least 6 characters.');
+        return;
+      }
+
+      const button = e.submitter;
+      if (button) {
+        button.disabled = true;
+        button.querySelector('span:first-child').textContent = 'Authenticating…';
+      }
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password: pwd, remember })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.detail || data.message || 'Login failed. Please check your email and password.');
+        }
+        window.location.assign('/m/home');
+      } catch (error) {
+        triggerAlert(error.message || 'Unable to contact the authentication server.');
+        if (button) {
+          button.disabled = false;
+          const label = button.querySelector('span:first-child');
+          if (label) label.textContent = 'Initialize Workspace';
+        }
+      }
+    }
+
+
+    let qrCameraStream = null;
+    let qrScanFrame = null;
+    let qrScanning = false;
+    let qrDetector = null;
+
+    function setQrScannerStatus(message, state = 'info') {
+      const box = document.getElementById('qr-scanner-status');
+      if (!box) return;
+
+      const styles = {
+        info: {
+          box: 'min-h-[38px] px-3 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-ui text-label-ui flex items-center gap-2',
+          icon: 'center_focus_strong',
+          iconClass: 'material-symbols-outlined text-[16px] text-secondary'
+        },
+        success: {
+          box: 'min-h-[38px] px-3 py-2 rounded-lg bg-secondary-container text-on-secondary-container font-label-ui text-label-ui flex items-center gap-2',
+          icon: 'check_circle',
+          iconClass: 'material-symbols-outlined text-[16px] text-on-secondary-container'
+        },
+        error: {
+          box: 'min-h-[38px] px-3 py-2 rounded-lg bg-error-container text-on-error-container font-label-ui text-label-ui flex items-center gap-2',
+          icon: 'error',
+          iconClass: 'material-symbols-outlined text-[16px] text-error'
+        }
+      };
+
+      const style = styles[state] || styles.info;
+      box.className = style.box;
+      box.innerHTML = '';
+
+      const icon = document.createElement('span');
+      icon.className = style.iconClass;
+      icon.textContent = style.icon;
+
+      const label = document.createElement('span');
+      label.textContent = message;
+
+      box.append(icon, label);
+    }
+
+    function openQrScanner() {
+      const modal = document.getElementById('qr-scanner-modal');
+      if (!modal) return;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      setQrScannerStatus('Starting camera…', 'info');
+      startQrCamera();
+    }
+
+    function stopQrCamera() {
+      qrScanning = false;
+
+      if (qrScanFrame) {
+        cancelAnimationFrame(qrScanFrame);
+        qrScanFrame = null;
+      }
+
+      if (qrCameraStream) {
+        qrCameraStream.getTracks().forEach(track => track.stop());
+        qrCameraStream = null;
+      }
+
+      const video = document.getElementById('qr-video');
+      if (video) {
+        video.pause();
+        video.srcObject = null;
+      }
+    }
+
+    function closeQrScanner() {
+      stopQrCamera();
+
+      const modal = document.getElementById('qr-scanner-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      document.body.style.overflow = '';
+    }
+
+    async function startQrCamera() {
+      stopQrCamera();
+
+      const video = document.getElementById('qr-video');
+      if (!video) return;
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setQrScannerStatus(
+          'Camera access is unavailable here. Use HTTPS or choose a QR image below.',
+          'error'
+        );
+        return;
+      }
+
+      try {
+        qrCameraStream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+
+        video.srcObject = qrCameraStream;
+        await video.play();
+
+        if ('BarcodeDetector' in window) {
+          try {
+            qrDetector = new BarcodeDetector({ formats: ['qr_code'] });
+          } catch {
+            qrDetector = null;
+          }
+        }
+
+        qrScanning = true;
+        setQrScannerStatus('Camera ready. Scan the QR shown on your PC.', 'info');
+        scanQrVideoFrame();
+      } catch (error) {
+        console.error('QR camera error:', error);
+
+        const insecure =
+          !window.isSecureContext &&
+          location.hostname !== 'localhost' &&
+          location.hostname !== '127.0.0.1';
+
+        setQrScannerStatus(
+          insecure
+            ? 'Camera access is blocked on HTTP. Open MAXIMUS over HTTPS or choose a QR image.'
+            : 'Camera permission was denied or no camera is available. Choose a QR image instead.',
+          'error'
+        );
+      }
+    }
+
+    async function scanQrVideoFrame() {
+      if (!qrScanning) return;
+
+      const video = document.getElementById('qr-video');
+      const canvas = document.getElementById('qr-canvas');
+
+      if (!video || !canvas) return;
+
+      try {
+        if (video.readyState >= 2 && video.videoWidth && video.videoHeight) {
+          if (qrDetector) {
+            const results = await qrDetector.detect(video);
+            if (results && results.length && results[0].rawValue) {
+              handleScannedQr(results[0].rawValue);
+              return;
+            }
+          } else if (window.jsQR) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const result = window.jsQR(
+              imageData.data,
+              imageData.width,
+              imageData.height,
+              { inversionAttempts: 'dontInvert' }
+            );
+
+            if (result && result.data) {
+              handleScannedQr(result.data);
+              return;
+            }
+          }
+        }
+      } catch (error) {
+        console.warn('QR frame decode warning:', error);
+      }
+
+      qrScanFrame = requestAnimationFrame(scanQrVideoFrame);
+    }
+
+    function validateMaximusQr(rawValue) {
+      try {
+        const url = new URL(String(rawValue || '').trim(), window.location.origin);
+
+        if (!['http:', 'https:'].includes(url.protocol)) return null;
+        if (url.pathname !== '/auth/qr-confirm') return null;
+
+        const token = url.searchParams.get('token');
+        if (!token || token.length < 16) return null;
+
+        return url;
+      } catch {
+        return null;
+      }
+    }
+
+    function handleScannedQr(rawValue) {
+      const url = validateMaximusQr(rawValue);
+
+      if (!url) {
+        setQrScannerStatus(
+          'That is not a valid MAXIMUS PC login QR. Scan the QR shown on the PC.',
+          'error'
+        );
+        return;
+      }
+
+      stopQrCamera();
+      setQrScannerStatus('QR verified. Signing this phone in…', 'success');
+
+      // The backend uses this flag to redirect the phone to /m/home.
+      url.searchParams.set('mobile', '1');
+
+      setTimeout(() => {
+        window.location.assign(url.toString());
+      }, 250);
+    }
+
+    async function decodeQrImageFile(file) {
+      if (!file) return;
+
+      setQrScannerStatus('Reading QR image…', 'info');
+
+      let bitmap = null;
+
+      try {
+        const canvas = document.getElementById('qr-canvas');
+        if (!canvas) throw new Error('QR canvas is unavailable.');
+
+        if ('createImageBitmap' in window) {
+          bitmap = await createImageBitmap(file);
+          canvas.width = bitmap.width;
+          canvas.height = bitmap.height;
+          canvas.getContext('2d', { willReadFrequently: true }).drawImage(bitmap, 0, 0);
+        } else {
+          const imageUrl = URL.createObjectURL(file);
+
+          try {
+            const image = await new Promise((resolve, reject) => {
+              const img = new Image();
+              img.onload = () => resolve(img);
+              img.onerror = reject;
+              img.src = imageUrl;
+            });
+
+            canvas.width = image.naturalWidth || image.width;
+            canvas.height = image.naturalHeight || image.height;
+            canvas.getContext('2d', { willReadFrequently: true })
+              .drawImage(image, 0, 0, canvas.width, canvas.height);
+          } finally {
+            URL.revokeObjectURL(imageUrl);
+          }
+        }
+
+        if ('BarcodeDetector' in window) {
+          try {
+            const detector = new BarcodeDetector({ formats: ['qr_code'] });
+            const codes = await detector.detect(canvas);
+
+            if (codes.length && codes[0].rawValue) {
+              handleScannedQr(codes[0].rawValue);
+              return;
+            }
+          } catch {
+            // Fall through to jsQR.
+          }
+        }
+
+        if (window.jsQR) {
+          const ctx = canvas.getContext('2d', { willReadFrequently: true });
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+          const result = window.jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height,
+            { inversionAttempts: 'attemptBoth' }
+          );
+
+          if (result && result.data) {
+            handleScannedQr(result.data);
+            return;
+          }
+        }
+
+        throw new Error('No QR code was detected in that image.');
+      } catch (error) {
+        console.error('QR image decode error:', error);
+        setQrScannerStatus(error.message || 'Could not read that QR image.', 'error');
+      } finally {
+        if (bitmap && typeof bitmap.close === 'function') {
+          bitmap.close();
+        }
+
+        const input = document.getElementById('qr-image-input');
+        if (input) input.value = '';
+      }
+    }
+
+    function handleGoogleSso() {
+      window.location.assign('/auth/google');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const qrImageInput = document.getElementById('qr-image-input');
+      if (qrImageInput) {
+        qrImageInput.addEventListener('change', event => {
+          const file = event.target.files && event.target.files[0];
+          if (file) decodeQrImageFile(file);
+        });
+      }
+
+      const qrModal = document.getElementById('qr-scanner-modal');
+      if (qrModal) {
+        qrModal.addEventListener('click', event => {
+          if (event.target === qrModal) closeQrScanner();
+        });
+      }
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeQrScanner();
+      });
+    });
+
+  </script>
+
+</body>
+</html>

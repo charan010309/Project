@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#f9f9f9;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#1c1b1d", "tertiary-fixed": "#e3e1ec", "primary-fixed-dim": "#c8c6c8", "error": "#ba1a1a", "on-tertiary-fixed": "#1a1b22", "surface": "#f9f9f9", "background": "#f9f9f9", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#68dba9", "tertiary": "#000000", "surface-dim": "#dadada", "surface-container": "#eeeeee", "surface-tint": "#5f5e60", "inverse-primary": "#c8c6c8", "outline-variant": "#c8c5ca", "error-container": "#ffdad6", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#005137", "surface-container-high": "#e8e8e8", "primary": "#000000", "on-error": "#ffffff", "tertiary-fixed-dim": "#c6c5cf", "on-background": "#1a1c1c", "secondary-fixed": "#85f8c4", "on-secondary-container": "#00714e", "primary-fixed": "#e5e1e4", "on-tertiary-fixed-variant": "#46464e", "surface-container-low": "#f3f3f3", "tertiary-container": "#1a1b22", "primary-container": "#1c1b1d", "surface-variant": "#e2e2e2", "inverse-on-surface": "#f1f1f1", "inverse-surface": "#2f3131", "surface-container-lowest": "#ffffff", "on-primary-fixed-variant": "#474649", "on-surface": "#1a1c1c", "surface-bright": "#f9f9f9", "on-tertiary-container": "#83838c", "on-primary-container": "#858386", "on-error-container": "#93000a", "on-secondary-fixed": "#002114", "secondary-container": "#82f5c1", "surface-container-highest": "#e2e2e2", "on-primary": "#ffffff", "secondary": "#006c4a", "on-surface-variant": "#47464a", "outline": "#78767b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin": "1rem", "space-lg": "1rem", "space-md": "0.75rem", "space-xl": "1.5rem", "gutter": "0.75rem", "space-xs": "0.25rem", "space-sm": "0.5rem" }, "fontFamily": { "label-lg": ["JetBrains Mono"], "body-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["JetBrains Mono"], "label-sm": ["JetBrains Mono"], "headline-md": ["Plus Jakarta Sans"] }, "fontSize": { "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }] } } } }</script></head><body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-14 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm"><button id="nav-drawer-toggle-btn" aria-label="Open Navigation Menu" class="w-10 h-10 -ml-1 flex items-center justify-center rounded-xl text-on-surface hover:bg-surface-container active:scale-95 transition-all"><span class="material-symbols-outlined text-[22px]">menu</span></button><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary">MAXIMUS</span><div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container/30"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm text-secondary font-semibold uppercase">v4.5-LIVE</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="Search or Filter" class="w-11 h-11 flex items-center justify-center rounded-xl text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">tune</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-14 bg-surface px-margin pb-4"><div class="flex flex-col w-full pb-28 select-none relative">
+<!-- Subheader Model & Network Selector Bar -->
+<section class="sticky top-0 z-30 flex items-center justify-between gap-space-xs py-space-sm bg-surface/90 backdrop-blur-md">
+<!-- Model Selector Pill Trigger -->
+<div class="flex items-center gap-space-xs">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors shadow-sm" id="model-toggle-btn">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-headline-sm text-[13px] font-semibold text-on-surface">MAXIMUS Flash</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+</button>
+<!-- Network Access Pill -->
+<button class="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant transition-colors shadow-sm" id="web-toggle-btn">
+<span class="material-symbols-outlined text-[15px] text-secondary">travel_explore</span>
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider text-secondary">Live Web</span>
+</button>
+</div>
+<!-- Quick Action: New Session -->
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-on-primary shadow-sm hover:opacity-90 active:scale-95 transition-all" id="open-drawer-btn">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span class="font-headline-sm text-[12px] font-medium">New</span>
+</button>
+</section>
+<!-- Ambient Grid Background Context -->
+<div class="relative flex flex-col gap-space-lg pt-space-xs">
+<!-- Timestamp Marker -->
+<div class="flex items-center justify-center my-space-xs">
+<div class="px-2.5 py-0.5 rounded-full bg-surface-container-low shadow-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Today • 10:42 AM</span>
+</div>
+</div>
+<!-- User Bubble -->
+<div class="flex flex-col items-end gap-1 pl-10">
+<div class="rounded-2xl rounded-br-xs px-4 py-3 bg-primary text-on-primary shadow-sm">
+<p class="font-body-md text-body-md leading-relaxed">
+          Analyze query latency across our distributed vector clusters and propose caching strategies.
+        </p>
+</div>
+<div class="flex items-center gap-1.5 pr-1">
+<span class="font-label-sm text-[10px] text-on-surface-variant">Max-Cluster-US-East</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Delivered</span>
+</div>
+</div>
+<!-- Assistant Response Card -->
+<div class="flex flex-col gap-space-xs pr-2">
+<!-- Agent Meta Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-[14px]">neurology</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface text-[14px]">MAXIMUS</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container font-label-sm text-[10px] text-on-surface-variant font-medium">4.5-ORCA</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-label-sm text-[10px]">124ms</span>
+<button aria-label="Copy message" class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Agent Message Content Box -->
+<div class="flex flex-col gap-3 rounded-2xl rounded-tl-xs p-4 bg-surface-container-lowest shadow-sm">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          Vector lookups across P99 are bottlenecked by high centroid partition traversal overhead. Here is the architectural analysis and recommended 2-tier caching mitigation:
+        </p>
+<!-- Architectural Key Insights Cards -->
+<div class="grid grid-cols-1 gap-2 pt-1">
+<div class="p-3 rounded-xl bg-surface-container-low flex items-start gap-2.5">
+<div class="w-6 h-6 rounded-lg bg-secondary/15 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-secondary text-[16px]">speed</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-[13px] text-on-surface font-semibold">Tier 1: Approximate Quantization Cache</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cache scalar-quantized top-k centroids at edge proxies to short-circuit 78% of exact cosine distance computations.</span>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-surface-container-low flex items-start gap-2.5">
+<div class="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-primary text-[16px]">layers</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-[13px] text-on-surface font-semibold">Tier 2: Semantic Hash Table</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Implement locality-sensitive hashing (LSH) for sub-5ms exact query matches on repeating context windows.</span>
+</div>
+</div>
+</div>
+<!-- Code Snippet Container -->
+<div class="flex flex-col rounded-xl overflow-hidden bg-primary-container text-on-primary shadow-sm">
+<!-- Code Header -->
+<div class="flex items-center justify-between px-3 py-2 bg-tertiary-container">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-mono ml-1">routing_cache.py</span>
+</div>
+<button class="flex items-center gap-1 text-on-tertiary-container hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span class="font-label-sm text-[10px]">Python</span>
+</button>
+</div>
+<!-- Code Block -->
+<pre class="p-3 font-label-md text-[11px] leading-5 text-inverse-on-surface overflow-x-auto"><code><span class="text-secondary-fixed">async def</span> <span class="text-secondary-fixed-dim">optimize_routing</span>(query_vec, cluster_nodes):
+    <span class="text-outline-variant"># 1. Evaluate semantic hash map</span>
+    cached_hit = <span class="text-secondary-fixed">await</span> lsh_cache.get(query_vec)
+    <span class="text-secondary-fixed">if</span> cached_hit:
+        <span class="text-secondary-fixed">return</span> cached_hit.knn_indices
+        
+    <span class="text-outline-variant"># 2. Parallel fanout to closest partitions</span>
+    top_shards = partition_index.route(query_vec, k=4)
+    <span class="text-secondary-fixed">return await</span> cluster_nodes.scatter_gather(top_shards)</code></pre>
+</div>
+<!-- Metric Inline Badges -->
+<div class="flex flex-wrap items-center gap-1.5 pt-1">
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/20">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">P99 Latency: -42%</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container">
+<span class="material-symbols-outlined text-[13px] text-on-surface-variant">memory</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mem Overhead: 180MB</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container">
+<span class="font-label-sm text-label-sm text-on-surface-variant">1,418 Tokens</span>
+</div>
+</div>
+</div>
+<!-- Quick Action Feedback Row -->
+<div class="flex items-center justify-between px-2 pt-1">
+<div class="flex items-center gap-2">
+<button aria-label="Helpful" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span>
+</button>
+<button aria-label="Not helpful" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">thumb_down</span>
+</button>
+<button aria-label="Regenerate" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+</button>
+</div>
+<button class="flex items-center gap-1 font-label-sm text-label-sm text-secondary hover:underline">
+<span class="">Inspect Trace</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Suggested Follow-ups Carousel/Chips -->
+<div class="flex flex-col gap-2 pt-2">
+<div class="flex items-center justify-between px-1">
+<span class="font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold">Suggested Actions</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">auto_awesome</span>
+</div>
+<div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest text-on-surface shadow-sm shrink-0 hover:bg-surface-container transition-colors text-left">
+<span class="material-symbols-outlined text-[16px] text-secondary">account_tree</span>
+<span class="font-body-sm text-body-sm font-medium whitespace-nowrap">Benchmark cache hits</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest text-on-surface shadow-sm shrink-0 hover:bg-surface-container transition-colors text-left">
+<span class="material-symbols-outlined text-[16px] text-primary">data_object</span>
+<span class="font-body-sm text-body-sm font-medium whitespace-nowrap">Export Go client client spec</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container-lowest text-on-surface shadow-sm shrink-0 hover:bg-surface-container transition-colors text-left">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">summarize</span>
+<span class="font-body-sm text-body-sm font-medium whitespace-nowrap">Summarize trade-offs</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Floating Mobile Composer Input Widget -->
+<div class="fixed left-0 right-0 px-margin z-40 bottom-0 pb-2">
+<div class="w-full flex flex-col gap-1.5 p-2 rounded-2xl bg-surface-container-lowest/95 backdrop-blur-xl shadow-xl">
+<!-- Input Text Area -->
+<div class="flex items-center gap-2 px-2 pt-1">
+<textarea class="w-full bg-transparent resize-none border-none outline-none font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/60 max-h-24" id="chat-textarea" placeholder="Ask MAXIMUS anything..." rows="1"></textarea>
+</div>
+<!-- Action Attachment & Send Row -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1">
+<!-- Attach File -->
+<button aria-label="Attach File" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[19px]">attach_file</span>
+</button>
+<!-- Camera Capture -->
+<button aria-label="Camera" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[19px]">photo_camera</span>
+</button>
+<!-- Voice Mode -->
+<button aria-label="Audio Prompt" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[19px]">mic</span>
+</button>
+</div>
+<!-- Send Pill Button -->
+<button class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md active:scale-95 transition-all" id="send-btn">
+<span class="material-symbols-outlined text-[20px]">arrow_upward</span>
+</button>
+</div>
+</div>
+<!-- Micro Privacy & Safety Disclaimer -->
+<div class="flex items-center justify-center gap-1 mt-1 text-center">
+<span class="material-symbols-outlined text-[11px] text-on-surface-variant">shield_lock</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">MAXIMUS may hallucinate. Verify mission-critical computations.</span>
+</div>
+</div>
+<!-- Off-Canvas Sidebar / Drawer (Slide Over) -->
+<aside id="main-nav-drawer" class="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-surface-container-lowest z-50 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col justify-between overflow-y-auto no-scrollbar"><div class="flex flex-col"><div class="flex items-center justify-between p-4 pb-3"><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary">MAXIMUS</span><div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container/30"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-[10px] text-secondary font-semibold uppercase">v2.4 Core</span></div></div><button id="close-nav-drawer-btn" aria-label="Close Menu" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">close</span></button></div><div class="px-4 py-2"><div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-[14px] font-bold shadow-sm">OP</div><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-body-sm text-[13px] font-semibold text-on-surface">Operator</span><span class="px-1.5 py-0.2 rounded bg-primary text-on-primary font-label-sm text-[9px] font-semibold uppercase tracking-wider">PRO</span></div><span class="font-label-sm text-[11px] text-on-surface-variant">ops@maximus.ai</span></div></div><button aria-label="Account Settings" class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">manage_accounts</span></button></div></div><nav class="flex flex-col gap-1 px-3 pt-2"><a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-xl bg-surface-container font-headline-sm text-[13px] font-semibold text-primary transition-colors"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-primary">chat_bubble</span><span class="">Chat</span></div><span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-[10px] font-medium">Live</span></a><a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-[13px] font-medium transition-colors"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px]">graphic_eq</span><span class="">Live AI</span></div><span class="w-2 h-2 rounded-full bg-secondary animate-pulse mr-1"></span></a><a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-[13px] font-medium transition-colors"><span class="material-symbols-outlined text-[20px]">key</span><span class="">BYOK &amp; Providers</span></a><a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-[13px] font-medium transition-colors"><span class="material-symbols-outlined text-[20px]">history</span><span class="">History &amp; Archive</span></a><a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-[13px] font-medium transition-colors"><span class="material-symbols-outlined text-[20px]">tune</span><span class="">Settings</span></a></nav><div class="flex flex-col gap-1 px-4 pt-4"><div class="flex items-center justify-between px-1 text-on-surface-variant font-label-sm text-[10px] uppercase font-semibold tracking-wider"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[13px]">push_pin</span><span class="">Pinned &amp; Recent</span></div><span class="text-[10px] text-outline-variant font-mono">3 Active</span></div><div class="flex flex-col gap-1 mt-1.5"><button class="flex items-start justify-between p-2 rounded-lg bg-surface-container-low text-left hover:bg-surface-container transition-colors group"><div class="flex flex-col gap-0.5"><span class="font-body-sm text-[12px] font-semibold text-on-surface line-clamp-1">Vector Cache Benchmarks</span><span class="font-label-sm text-[10px] text-on-surface-variant">24 msgs • Redis vs Valkey</span></div><span class="material-symbols-outlined text-[15px] text-primary shrink-0">chevron_right</span></button><button class="flex items-start justify-between p-2 rounded-lg hover:bg-surface-container transition-colors text-left group"><div class="flex flex-col gap-0.5"><span class="font-body-sm text-[12px] font-medium text-on-surface line-clamp-1">Duplex WebRTC Spec v3</span><span class="font-label-sm text-[10px] text-on-surface-variant">61 msgs • Audio sync</span></div><span class="material-symbols-outlined text-[15px] text-on-surface-variant group-hover:text-primary shrink-0">chevron_right</span></button></div></div></div><div class="p-4 pt-3"><div class="flex flex-col gap-1.5 p-3 rounded-xl bg-surface-container-low"><div class="flex items-center justify-between"><span class="font-label-sm text-[10px] uppercase font-semibold text-on-surface-variant tracking-wider">System Status</span><div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-sm text-[10px] text-secondary font-semibold">Duplex Ready</span></div></div><div class="flex items-center justify-between text-on-surface-variant pt-1"><div class="flex items-center gap-1 font-label-sm text-[10px]"><span class="material-symbols-outlined text-[12px]">speed</span><span class="">Latency: 32ms</span></div><div class="flex items-center gap-1 font-label-sm text-[10px]"><span class="material-symbols-outlined text-[12px]">lock</span><span class="">E2E Encrypted</span></div></div></div></div></aside>
+<!-- Drawer Backdrop Overlay -->
+<div class="fixed inset-0 bg-primary/25 backdrop-blur-xs z-40 hidden opacity-0 transition-opacity duration-300" id="drawer-backdrop"></div>
+</div>
+<script>
+  (function() {
+    const openBtn = document.getElementById('open-drawer-btn');
+    const closeBtn = document.getElementById('close-drawer-btn');
+    const drawer = document.getElementById('history-drawer');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const modelBtn = document.getElementById('model-toggle-btn');
+    const webBtn = document.getElementById('web-toggle-btn');
+    const sendBtn = document.getElementById('send-btn');
+    const chatInput = document.getElementById('chat-textarea');
+
+    function openHistory() {
+      drawer.classList.remove('-translate-x-full');
+      backdrop.classList.remove('hidden');
+      setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+    }
+
+    function closeHistory() {
+      drawer.classList.add('-translate-x-full');
+      backdrop.classList.add('opacity-0');
+      setTimeout(() => backdrop.classList.add('hidden'), 300);
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openHistory);
+    if (closeBtn) closeBtn.addEventListener('click', closeHistory);
+    if (backdrop) backdrop.addEventListener('click', closeHistory);
+
+    // Dynamic Micro-interactions
+    if (webBtn) {
+      webBtn.addEventListener('click', () => {
+        webBtn.classList.toggle('bg-secondary-container/30');
+      });
+    }
+
+    if (sendBtn && chatInput) {
+      sendBtn.addEventListener('click', () => {
+        if (chatInput.value.trim().length > 0) {
+          chatInput.value = '';
+          sendBtn.classList.add('scale-90');
+          setTimeout(() => sendBtn.classList.remove('scale-90'), 150);
+        }
+      });
+    }
+  })();
+</script></main>
+
+</body></html>

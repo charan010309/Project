@@ -1,0 +1,2635 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full" data-page="signup">
+
+<head>
+    <!-- Public/auth pages are intentionally always light, regardless of the saved app theme. -->
+    <meta name="color-scheme" content="light">
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const forceLight = () => {
+          root.classList.remove('dark');
+          root.setAttribute('data-theme', 'light');
+          if (root.style.colorScheme !== 'light') root.style.colorScheme = 'light';
+        };
+        forceLight();
+        new MutationObserver(forceLight).observe(root, {
+          attributes: true,
+          attributeFilter: ['class', 'data-theme', 'style']
+        });
+      })();
+    </script>
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <!-- Material Symbols -->
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    >
+
+    <!-- Google Fonts -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+      
+            theme: {
+                extend: {
+
+                    colors: {
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-primary-fixed-variant": "#474649",
+                        "inverse-primary": "#c8c6c8",
+                        "on-tertiary-container": "#83838c",
+                        "primary-container": "#1c1b1d",
+                        "tertiary-fixed-dim": "#c6c5cf",
+                        "outline-variant": "#c8c5ca",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary-fixed-variant": "#46464e",
+                        "background": "#f9f9f9",
+                        "outline": "#78767b",
+                        "on-primary-fixed": "#1c1b1d",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-container": "#858386",
+                        "primary-fixed": "#e5e1e4",
+                        "secondary-container": "#6cf8bb",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-surface": "#1a1c1c",
+                        "surface-bright": "#f9f9f9",
+                        "primary": "#000000",
+                        "primary-fixed-dim": "#c8c6c8",
+                        "surface-container-low": "#f3f3f3",
+                        "on-tertiary-fixed": "#1a1b22",
+                        "surface": "#f9f9f9",
+                        "inverse-on-surface": "#f0f1f1",
+                        "on-secondary-fixed-variant": "#005236",
+                        "tertiary-container": "#1a1b22",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary": "#000000",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-container": "#eeeeee",
+                        "on-surface-variant": "#47464a",
+                        "on-secondary-container": "#00714d",
+                        "secondary": "#006c49",
+                        "tertiary-fixed": "#e3e1ec",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "surface-tint": "#5f5e60",
+                        "surface-container-highest": "#e2e2e2",
+                        "error-container": "#ffdad6"
+                    },
+
+                    borderRadius: {
+                        DEFAULT: "0.125rem",
+                        lg: "0.25rem",
+                        xl: "0.5rem",
+                        full: "0.75rem"
+                    },
+
+                    spacing: {
+                        "space-3xl": "4.5rem",
+                        "space-sm": "0.75rem",
+                        "space-md": "1rem",
+                        "gutter-desktop": "1.5rem",
+                        "space-2xs": "0.25rem",
+                        "auth-card-max-width": "26.25rem",
+                        "space-xl": "2rem",
+                        "gutter-mobile": "1rem",
+                        "space-xs": "0.5rem",
+                        "space-lg": "1.5rem",
+                        "space-2xl": "3rem"
+                    },
+
+                    fontFamily: {
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-ui": ["Plus Jakarta Sans"],
+                        "label-mono-xs": ["JetBrains Mono"],
+                        "code-field": ["JetBrains Mono"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-mono-sm": ["JetBrains Mono"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-hero-mobile": ["Plus Jakarta Sans"]
+                    },
+
+                    fontSize: {
+                        "display-hero": [
+                            "40px",
+                            {
+                                lineHeight: "48px",
+                                letterSpacing: "-0.03em",
+                                fontWeight: "600"
+                            }
+                        ],
+
+                        "body-sm": [
+                            "13px",
+                            {
+                                lineHeight: "18px",
+                                fontWeight: "400"
+                            }
+                        ],
+
+                        "headline-lg": [
+                            "28px",
+                            {
+                                lineHeight: "36px",
+                                letterSpacing: "-0.025em",
+                                fontWeight: "600"
+                            }
+                        ],
+
+                        "headline-sm": [
+                            "18px",
+                            {
+                                lineHeight: "26px",
+                                letterSpacing: "-0.015em",
+                                fontWeight: "600"
+                            }
+                        ],
+
+                        "body-lg": [
+                            "16px",
+                            {
+                                lineHeight: "24px",
+                                letterSpacing: "-0.01em",
+                                fontWeight: "400"
+                            }
+                        ],
+
+                        "label-ui": [
+                            "12px",
+                            {
+                                lineHeight: "16px",
+                                letterSpacing: "0.01em",
+                                fontWeight: "500"
+                            }
+                        ],
+
+                        "label-mono-xs": [
+                            "10px",
+                            {
+                                lineHeight: "14px",
+                                letterSpacing: "0.06em",
+                                fontWeight: "500"
+                            }
+                        ],
+
+                        "code-field": [
+                            "20px",
+                            {
+                                lineHeight: "28px",
+                                letterSpacing: "0.05em",
+                                fontWeight: "500"
+                            }
+                        ],
+
+                        "body-md": [
+                            "14px",
+                            {
+                                lineHeight: "20px",
+                                letterSpacing: "-0.005em",
+                                fontWeight: "400"
+                            }
+                        ],
+
+                        "label-mono-sm": [
+                            "11px",
+                            {
+                                lineHeight: "16px",
+                                letterSpacing: "0.04em",
+                                fontWeight: "500"
+                            }
+                        ],
+
+                        "headline-md": [
+                            "22px",
+                            {
+                                lineHeight: "30px",
+                                letterSpacing: "-0.02em",
+                                fontWeight: "600"
+                            }
+                        ],
+
+                        "display-hero-mobile": [
+                            "30px",
+                            {
+                                lineHeight: "38px",
+                                letterSpacing: "-0.02em",
+                                fontWeight: "600"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Custom CSS -->
+    <style>
+        @layer base {
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                overscroll-behavior: none;
+            }
+
+            main > :first-child {
+                margin-top: 0 !important;
+            }
+
+            main > :last-child {
+                margin-bottom: 0 !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ambient-grid {
+            background-size: 24px 24px;
+
+            background-image:
+                linear-gradient(
+                    to right,
+                    rgba(226, 226, 226, 0.5) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    to bottom,
+                    rgba(226, 226, 226, 0.5) 1px,
+                    transparent 1px
+                );
+        }
+    </style>
+</head>
+
+
+<body
+    class="
+        min-h-full
+        bg-surface
+        text-on-surface
+        font-body-md
+        text-body-md
+        ambient-grid
+        flex
+        flex-col
+        justify-between
+        selection:bg-secondary-container
+        selection:text-on-secondary-container
+    "
+>
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header
+        class="
+            w-full
+            max-w-7xl
+            mx-auto
+            px-gutter-mobile
+            lg:px-gutter-desktop
+            h-16
+            flex
+            items-center
+            justify-between
+        "
+    >
+
+        <!-- Logo -->
+        <a
+                href="#"
+                class="flex items-center gap-3 group"
+            >
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-black overflow-hidden flex items-center justify-center shadow-sm group-hover:scale-95 transition-transform"
+                >
+                    <img
+                        src="/static/logo.jpg"
+                        alt="MAXIMUS"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                    <span
+                        class="font-extrabold text-base tracking-tight text-brandDark"
+                    >
+                        MAXIMUS
+                    </span>
+
+                    
+
+                </div>
+
+            </a>
+
+
+
+
+        </div>
+
+
+        <!-- Right Side -->
+        <div class="flex items-center gap-space-md">
+
+
+
+            <!-- Back to Home -->
+            <a
+                href="/"
+                data-path="overview"
+                class="
+                    font-label-ui
+                    text-label-ui
+                    text-on-surface-variant
+                    hover:text-on-surface
+                    transition-colors
+                    flex
+                    items-center
+                    gap-space-2xs
+                "
+            >
+
+                <span class="material-symbols-outlined text-[16px]">
+                    arrow_back
+                </span>
+
+                <span>
+                    Back to Intro
+                </span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main
+        class="
+            flex-1
+            flex
+            items-center
+            justify-center
+            p-gutter-mobile
+            lg:p-gutter-desktop
+        "
+    >
+
+        <!-- Signup Card -->
+        <div
+            class="
+                w-full
+                max-w-auth-card-max-width
+                bg-surface-container-lowest/90
+                backdrop-blur-xl
+                rounded-xl
+                shadow-[0_1px_2px_rgba(0,0,0,0.03),0_8px_24px_-4px_rgba(0,0,0,0.04)]
+                p-space-xl
+            "
+        >
+
+            <div class="flex flex-col w-full">
+
+
+                <!-- =================================================
+                     STEPPER
+                ================================================== -->
+
+                <div
+                    class="
+                        flex
+                        items-center
+                        justify-between
+                        mb-space-lg
+                    "
+                >
+
+                    <div class="flex items-center gap-space-xs">
+
+                        <span
+                            id="step-badge"
+                            class="
+                                font-label-mono-xs
+                                text-label-mono-xs
+                                uppercase
+                                px-space-xs
+                                py-0.5
+                                rounded-full
+                                bg-surface-container-high
+                                text-on-surface-variant
+                                font-medium
+                            "
+                        >
+                            Step 01 / 03
+                        </span>
+
+                        <span
+                            id="step-name"
+                            class="
+                                font-label-ui
+                                text-label-ui
+                                text-on-surface
+                                font-medium
+                            "
+                        >
+                            Account Credentials
+                        </span>
+
+                    </div>
+
+
+                    <!-- Step Dots -->
+                    <div class="flex items-center gap-1.5">
+
+                        <div
+                            id="dot-1"
+                            class="
+                                w-5
+                                h-1
+                                rounded-full
+                                bg-primary
+                                transition-all
+                                duration-300
+                            "
+                        ></div>
+
+                        <div
+                            id="dot-2"
+                            class="
+                                w-1.5
+                                h-1
+                                rounded-full
+                                bg-surface-container-highest
+                                transition-all
+                                duration-300
+                            "
+                        ></div>
+
+                        <div
+                            id="dot-3"
+                            class="
+                                w-1.5
+                                h-1
+                                rounded-full
+                                bg-surface-container-highest
+                                transition-all
+                                duration-300
+                            "
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 1 — ACCOUNT CREATION
+                ================================================== -->
+
+                <div
+                    id="step-panel-1"
+                    class="
+                        flex
+                        flex-col
+                        transition-all
+                        duration-300
+                    "
+                >
+
+                    <!-- Heading -->
+                    <div class="mb-space-lg">
+
+                        <h1
+                            class="
+                                font-headline-md
+                                text-headline-md
+                                text-on-surface
+                                tracking-tight
+                                font-semibold
+                            "
+                        >
+                            Create Account
+                        </h1>
+
+                        <p
+                            class="
+                                font-body-sm
+                                text-body-sm
+                                text-on-surface-variant
+                                mt-1
+                            "
+                        >
+                            Join MAXIMUS to coordinate reasoning,
+                            voice, and vision intelligence.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Error -->
+                    <div
+                        id="step-1-error"
+                        class="
+                            hidden
+                            mb-space-sm
+                            p-space-xs
+                            rounded-lg
+                            bg-error-container
+                            text-on-error-container
+                            font-label-ui
+                            text-label-ui
+                            flex
+                            items-center
+                            gap-space-xs
+                        "
+                    >
+
+                        <span class="material-symbols-outlined text-[16px]">
+                            error
+                        </span>
+
+                        <span id="step-1-error-msg">
+                            Please check all required fields.
+                        </span>
+
+                    </div>
+
+
+                    <!-- Form -->
+                    <form
+                        id="signup-form"
+                        novalidate
+                        onsubmit="handleStep1Submit(event)"
+                        class="flex flex-col gap-space-sm"
+                    >
+
+                        <!-- Full Name -->
+                        <div class="flex flex-col gap-1">
+
+                            <label
+                                for="full-name"
+                                class="
+                                    font-label-ui
+                                    text-label-ui
+                                    text-on-surface-variant
+                                "
+                            >
+                                Full Name
+                            </label>
+
+                            <input
+                                id="full-name"
+                                type="text"
+                                placeholder="Ada Lovelace"
+                                required
+                                class="
+                                    w-full
+                                    h-10
+                                    px-3
+                                    bg-surface-container-lowest
+                                    text-on-surface
+                                    rounded-lg
+                                    text-body-md
+                                    font-body-md
+                                    placeholder:text-outline
+                                    focus:outline-none
+                                    focus:ring-1
+                                    focus:ring-primary
+                                    shadow-sm
+                                    transition-all
+                                "
+                            >
+
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="flex flex-col gap-1">
+
+                            <label
+                                for="email"
+                                class="
+                                    font-label-ui
+                                    text-label-ui
+                                    text-on-surface-variant
+                                "
+                            >
+                                Work Email
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                placeholder="ada@maximus.ai"
+                                required
+                                class="
+                                    w-full
+                                    h-10
+                                    px-3
+                                    bg-surface-container-lowest
+                                    text-on-surface
+                                    rounded-lg
+                                    text-body-md
+                                    font-body-md
+                                    placeholder:text-outline
+                                    focus:outline-none
+                                    focus:ring-1
+                                    focus:ring-primary
+                                    shadow-sm
+                                    transition-all
+                                "
+                            >
+
+                        </div>
+
+
+                        <!-- Phone -->
+                        <div class="flex flex-col gap-1">
+                            <label
+                                for="phone"
+                                class="
+                                    font-label-ui
+                                    text-label-ui
+                                    text-on-surface-variant
+                                "
+                            >
+                                Phone Number
+                            </label>
+
+                            <input
+                                id="phone"
+                                type="tel"
+                                inputmode="tel"
+                                autocomplete="tel"
+                                placeholder="+91 98765 43210"
+                                required
+                                class="
+                                    w-full
+                                    h-10
+                                    px-3
+                                    bg-surface-container-lowest
+                                    text-on-surface
+                                    rounded-lg
+                                    text-body-md
+                                    font-body-md
+                                    placeholder:text-outline
+                                    focus:outline-none
+                                    focus:ring-1
+                                    focus:ring-primary
+                                    shadow-sm
+                                    transition-all
+                                "
+                            >
+                        </div>
+
+
+                        <!-- Password -->
+                        <div
+                            class="
+                                grid
+                                grid-cols-1
+                                sm:grid-cols-2
+                                gap-space-sm
+                            "
+                        >
+
+                            <div class="flex flex-col gap-1">
+
+                                <label
+                                    for="password"
+                                    class="
+                                        font-label-ui
+                                        text-label-ui
+                                        text-on-surface-variant
+                                    "
+                                >
+                                    Password
+                                </label>
+
+                                <input
+                                    id="password"
+                                    type="password"
+                                    minlength="6"
+                                    placeholder="••••••••"
+                                    required
+                                    class="
+                                        w-full
+                                        h-10
+                                        px-3
+                                        bg-surface-container-lowest
+                                        text-on-surface
+                                        rounded-lg
+                                        text-body-md
+                                        font-body-md
+                                        placeholder:text-outline
+                                        focus:outline-none
+                                        focus:ring-1
+                                        focus:ring-primary
+                                        shadow-sm
+                                        transition-all
+                                    "
+                                >
+
+                            </div>
+
+
+                            <!-- Confirm Password -->
+                            <div class="flex flex-col gap-1">
+
+                                <label
+                                    for="confirm-password"
+                                    class="
+                                        font-label-ui
+                                        text-label-ui
+                                        text-on-surface-variant
+                                    "
+                                >
+                                    Confirm
+                                </label>
+
+                                <input
+                                    id="confirm-password"
+                                    type="password"
+                                    minlength="6"
+                                    placeholder="••••••••"
+                                    required
+                                    class="
+                                        w-full
+                                        h-10
+                                        px-3
+                                        bg-surface-container-lowest
+                                        text-on-surface
+                                        rounded-lg
+                                        text-body-md
+                                        font-body-md
+                                        placeholder:text-outline
+                                        focus:outline-none
+                                        focus:ring-1
+                                        focus:ring-primary
+                                        shadow-sm
+                                        transition-all
+                                    "
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Password Requirement -->
+                        <p
+                            class="
+                                font-label-mono-xs
+                                text-label-mono-xs
+                                text-on-surface-variant
+                                -mt-1
+                                flex
+                                items-center
+                                gap-1
+                            "
+                        >
+
+                            <span
+                                class="
+                                    material-symbols-outlined
+                                    text-[12px]
+                                    text-secondary
+                                "
+                            >
+                                verified
+                            </span>
+
+                            Minimum 6 characters, mixed alphanumeric
+
+                        </p>
+
+
+                        <!-- Terms -->
+                        <label
+                            class="
+                                flex
+                                items-start
+                                gap-space-xs
+                                mt-1
+                                cursor-pointer
+                                select-none
+                            "
+                        >
+
+                            <input
+                                id="terms-check"
+                                type="checkbox"
+                                required
+                                class="
+                                    mt-0.5
+                                    rounded
+                                    text-primary
+                                    focus:ring-0
+                                    accent-primary
+                                    cursor-pointer
+                                "
+                            >
+
+                            <span
+                                class="
+                                    font-body-sm
+                                    text-body-sm
+                                    text-on-surface-variant
+                                "
+                            >
+                                I agree to the
+
+                                <a
+                                    href="#"
+                                    class="
+                                        text-on-surface
+                                        font-medium
+                                        hover:underline
+                                    "
+                                >
+                                    Terms of Service
+                                </a>
+
+                                and
+
+                                <a
+                                    href="#"
+                                    class="
+                                        text-on-surface
+                                        font-medium
+                                        hover:underline
+                                    "
+                                >
+                                    Privacy Policy
+                                </a>.
+                            </span>
+
+                        </label>
+
+
+                        <!-- Continue Button -->
+                        <button
+                            type="submit"
+                            class="
+                                w-full
+                                h-11
+                                mt-2
+                                bg-primary
+                                hover:bg-inverse-surface
+                                active:scale-[0.99]
+                                text-on-primary
+                                font-headline-sm
+                                text-headline-sm
+                                rounded-lg
+                                shadow-sm
+                                flex
+                                items-center
+                                justify-center
+                                gap-space-xs
+                                transition-all
+                                cursor-pointer
+                            "
+                        >
+
+                            <span>
+                                Continue
+                            </span>
+
+                            <span class="material-symbols-outlined text-[18px]">
+                                arrow_forward
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- Divider -->
+                    <div
+                        class="
+                            flex
+                            items-center
+                            gap-3
+                            my-space-md
+                        "
+                    >
+
+                        <div class="flex-1 h-px bg-surface-container-high"></div>
+
+                        <span
+                            class="
+                                font-label-mono-xs
+                                text-label-mono-xs
+                                text-on-surface-variant
+                                tracking-wider
+                                uppercase
+                            "
+                        >
+                            Or Continue With
+                        </span>
+
+                        <div class="flex-1 h-px bg-surface-container-high"></div>
+
+                    </div>
+
+
+                    <!-- Google -->
+                    <button
+                        type="button"
+                        onclick="handleGoogleSignUp()"
+                        class="
+                            w-full
+                            h-10
+                            bg-surface-container-lowest
+                            hover:bg-surface-container-low
+                            text-on-surface
+                            font-label-ui
+                            text-label-ui
+                            rounded-lg
+                            shadow-sm
+                            flex
+                            items-center
+                            justify-center
+                            gap-space-xs
+                            transition-all
+                            cursor-pointer
+                        "
+                    >
+
+                        <svg
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path
+                                d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.3 8.9 5 12 5z"
+                                fill="#EA4335"
+                            />
+
+                            <path
+                                d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"
+                                fill="#4285F4"
+                            />
+
+                            <path
+                                d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.6 7.2C.6 9.2 0 10.5 0 12.4s.6 3.2 1.6 5.2l3.7-2.9z"
+                                fill="#FBBC05"
+                            />
+
+                            <path
+                                d="M12 23.8c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.3-6.7-5.3L1.6 16.7C3.5 20.5 7.4 23.8 12 23.8z"
+                                fill="#34A853"
+                            />
+
+                        </svg>
+
+                        <span>
+                            Sign up with Google Workspace
+                        </span>
+
+                    </button>
+
+                    <!-- Scan PC QR Login -->
+                    <button
+                        type="button"
+                        onclick="openQrScanner()"
+                        class="
+                            w-full
+                            h-10
+                            mt-space-xs
+                            bg-surface-container-low
+                            hover:bg-surface-container
+                            text-on-surface
+                            font-label-ui
+                            text-label-ui
+                            rounded-lg
+                            shadow-sm
+                            flex
+                            items-center
+                            justify-center
+                            gap-space-xs
+                            transition-all
+                            cursor-pointer
+                            active:scale-[0.99]
+                        "
+                    >
+                        <span class="material-symbols-outlined text-[18px]">
+                            qr_code_scanner
+                        </span>
+
+                        <span>
+                            Scan QR from PC
+                        </span>
+                    </button>
+
+                    <p class="mt-2 text-center font-label-mono-xs text-label-mono-xs text-on-surface-variant">
+                        Scan the temporary MAXIMUS QR shown on your signed-in PC to log in on this phone.
+                    </p>
+
+
+                    <!-- Login Link -->
+                    <div class="text-center mt-space-md">
+
+                        <span
+                            class="
+                                font-body-sm
+                                text-body-sm
+                                text-on-surface-variant
+                            "
+                        >
+                            Already have an account?
+                        </span>
+
+                        <a
+                            href="/login"
+                            data-path="login"
+                            class="
+                                font-body-sm
+                                text-body-sm
+                                text-on-surface
+                                font-semibold
+                                hover:underline
+                                ml-1
+                            "
+                        >
+                            Log in
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 2 — EMAIL VERIFICATION
+                ================================================== -->
+
+                <div
+                    id="step-panel-2"
+                    class="
+                        hidden
+                        flex
+                        flex-col
+                        transition-all
+                        duration-300
+                    "
+                >
+
+                    <!-- Heading -->
+                    <div class="mb-space-lg">
+
+                        <div
+                            class="
+                                w-8
+                                h-8
+                                rounded-full
+                                bg-secondary-container
+                                text-on-secondary-container
+                                flex
+                                items-center
+                                justify-center
+                                mb-space-xs
+                            "
+                        >
+
+                            <span class="material-symbols-outlined text-[18px]">
+                                mark_email_read
+                            </span>
+
+                        </div>
+
+
+                        <h1
+                            class="
+                                font-headline-md
+                                text-headline-md
+                                text-on-surface
+                                tracking-tight
+                                font-semibold
+                            "
+                        >
+                            Verify Your Email
+                        </h1>
+
+
+                        <p
+                            class="
+                                font-body-sm
+                                text-body-sm
+                                text-on-surface-variant
+                                mt-1
+                            "
+                        >
+
+                            We sent an authorization code to
+
+                            <span
+                                id="display-target-email"
+                                class="
+                                    font-label-mono-xs
+                                    text-label-mono-xs
+                                    text-on-surface
+                                    font-medium
+                                    bg-surface-container-high
+                                    px-1.5
+                                    py-0.5
+                                    rounded
+                                "
+                            >
+                                ada@maximus.ai
+                            </span>.
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- OTP Error -->
+                    <div
+                        id="step-2-error"
+                        class="
+                            hidden
+                            mb-space-sm
+                            p-space-xs
+                            rounded-lg
+                            bg-error-container
+                            text-on-error-container
+                            font-label-ui
+                            text-label-ui
+                            flex
+                            items-center
+                            gap-space-xs
+                        "
+                    >
+
+                        <span class="material-symbols-outlined text-[16px]">
+                            error
+                        </span>
+
+                        <span id="step-2-error-msg">
+                            Invalid 6-digit passcode.
+                        </span>
+
+                    </div>
+
+
+                    <!-- OTP Inputs -->
+                    <div
+                        id="otp-container"
+                        class="
+                            flex
+                            items-center
+                            justify-between
+                            gap-2
+                            my-space-sm
+                        "
+                    >
+
+                        <input
+                            class="otp-digit w-10 sm:w-11 h-12 text-center bg-surface-container-lowest text-on-surface rounded-lg font-code-field text-code-field focus:outline-none focus:ring-1 focus:ring-primary shadow-sm transition-all"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="1"
+                            pattern="[0-9]"
+                        >
+
+                        <input
+                            class="otp-digit w-10 sm:w-11 h-12 text-center bg-surface-container-lowest text-on-surface rounded-lg font-code-field text-code-field focus:outline-none focus:ring-1 focus:ring-primary shadow-sm transition-all"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="1"
+                            pattern="[0-9]"
+                        >
+
+                        <input
+                            class="otp-digit w-10 sm:w-11 h-12 text-center bg-surface-container-lowest text-on-surface rounded-lg font-code-field text-code-field focus:outline-none focus:ring-1 focus:ring-primary shadow-sm transition-all"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="1"
+                            pattern="[0-9]"
+                        >
+
+                        <input
+                            class="otp-digit w-10 sm:w-11 h-12 text-center bg-surface-container-lowest text-on-surface rounded-lg font-code-field text-code-field focus:outline-none focus:ring-1 focus:ring-primary shadow-sm transition-all"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="1"
+                            pattern="[0-9]"
+                        >
+
+                        <input
+                            class="otp-digit w-10 sm:w-11 h-12 text-center bg-surface-container-lowest text-on-surface rounded-lg font-code-field text-code-field focus:outline-none focus:ring-1 focus:ring-primary shadow-sm transition-all"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="1"
+                            pattern="[0-9]"
+                        >
+
+                        <input
+                            class="otp-digit w-10 sm:w-11 h-12 text-center bg-surface-container-lowest text-on-surface rounded-lg font-code-field text-code-field focus:outline-none focus:ring-1 focus:ring-primary shadow-sm transition-all"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="1"
+                            pattern="[0-9]"
+                        >
+
+                    </div>
+
+
+                    <!-- Verify Button -->
+                    <button
+                        type="button"
+                        onclick="handleStep2Submit()"
+                        class="
+                            w-full
+                            h-11
+                            mt-space-sm
+                            bg-primary
+                            hover:bg-inverse-surface
+                            active:scale-[0.99]
+                            text-on-primary
+                            font-headline-sm
+                            text-headline-sm
+                            rounded-lg
+                            shadow-sm
+                            flex
+                            items-center
+                            justify-center
+                            gap-space-xs
+                            transition-all
+                            cursor-pointer
+                        "
+                    >
+
+                        <span>
+                            Verify Email &amp; Create Account
+                        </span>
+
+                        <span class="material-symbols-outlined text-[18px]">
+                            verified_user
+                        </span>
+
+                    </button>
+
+
+                    <!-- Resend -->
+                    <div
+                        class="
+                            flex
+                            items-center
+                            justify-between
+                            mt-space-md
+                            pt-space-xs
+                        "
+                    >
+
+                        <button
+                            type="button"
+                            onclick="goToStep(1)"
+                            class="
+                                font-label-ui
+                                text-label-ui
+                                text-on-surface-variant
+                                hover:text-on-surface
+                                transition-colors
+                                flex
+                                items-center
+                                gap-1
+                            "
+                        >
+
+                            <span class="material-symbols-outlined text-[14px]">
+                                arrow_back
+                            </span>
+
+                            <span>
+                                Edit Email
+                            </span>
+
+                        </button>
+
+
+                        <!-- Countdown -->
+                        <div
+                            id="resend-wrapper"
+                            class="
+                                font-label-mono-xs
+                                text-label-mono-xs
+                                text-on-surface-variant
+                            "
+                        >
+
+                            <span>
+                                Resend code in
+                            </span>
+
+                            <span
+                                id="resend-timer"
+                                class="
+                                    font-semibold
+                                    text-on-surface
+                                "
+                            >
+                                30s
+                            </span>
+
+                        </div>
+
+
+                        <!-- Resend Button -->
+                        <button
+                            id="resend-btn"
+                            type="button"
+                            onclick="triggerResend()"
+                            class="
+                                hidden
+                                font-label-mono-xs
+                                text-label-mono-xs
+                                text-secondary
+                                hover:underline
+                                font-semibold
+                                cursor-pointer
+                            "
+                        >
+                            Resend Code
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 3 — SUCCESS
+                ================================================== -->
+
+                <div
+                    id="step-panel-3"
+                    class="
+                        hidden
+                        flex
+                        flex-col
+                        items-center
+                        text-center
+                        transition-all
+                        duration-300
+                        py-space-sm
+                    "
+                >
+
+                    <!-- Success Icon -->
+                    <div
+                        class="
+                            relative
+                            w-16
+                            h-16
+                            rounded-full
+                            bg-secondary-container
+                            flex
+                            items-center
+                            justify-center
+                            mb-space-md
+                        "
+                    >
+
+                        <span
+                            class="
+                                material-symbols-outlined
+                                text-[32px]
+                                text-on-secondary-container
+                            "
+                            style="font-variation-settings: 'FILL' 1;"
+                        >
+                            check_circle
+                        </span>
+
+                        <div
+                            class="
+                                absolute
+                                inset-0
+                                rounded-full
+                                animate-ping
+                                opacity-20
+                                bg-secondary
+                            "
+                        ></div>
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <span
+                        class="
+                            font-label-mono-xs
+                            text-label-mono-xs
+                            uppercase
+                            px-space-xs
+                            py-0.5
+                            rounded-full
+                            bg-secondary-container
+                            text-on-secondary-container
+                            font-medium
+                            mb-space-xs
+                        "
+                    >
+                        Identity Synchronized
+                    </span>
+
+
+                    <h1
+                        class="
+                            font-headline-lg
+                            text-headline-lg
+                            text-on-surface
+                            tracking-tight
+                            font-semibold
+                            mb-1
+                        "
+                    >
+                        Account Created!
+                    </h1>
+
+
+                    <p
+                        class="
+                            font-body-md
+                            text-body-md
+                            text-on-surface-variant
+                            max-w-xs
+                            mb-space-xl
+                        "
+                    >
+                        Your MAXIMUS account is verified and ready.
+                        Start neural orchestration now.
+                    </p>
+
+
+                    <!-- Buttons -->
+                    <div class="w-full flex flex-col gap-space-xs">
+
+                        <!-- Launch -->
+                        <a
+                            href="/home"
+                            data-path="home"
+                            class="
+                                w-full
+                                h-11
+                                bg-primary
+                                hover:bg-inverse-surface
+                                active:scale-[0.99]
+                                text-on-primary
+                                font-headline-sm
+                                text-headline-sm
+                                rounded-lg
+                                shadow-sm
+                                flex
+                                items-center
+                                justify-center
+                                gap-space-xs
+                                transition-all
+                                cursor-pointer
+                            "
+                        >
+
+                            <span>
+                                Launch MAXIMUS Console
+                            </span>
+
+                            <span class="material-symbols-outlined text-[18px]">
+                                rocket_launch
+                            </span>
+
+                        </a>
+
+
+                        <!-- Login -->
+                        <a
+                            href="/login"
+                            data-path="login"
+                            class="
+                                w-full
+                                h-10
+                                bg-surface-container-lowest
+                                hover:bg-surface-container-low
+                                text-on-surface-variant
+                                hover:text-on-surface
+                                font-label-ui
+                                text-label-ui
+                                rounded-lg
+                                shadow-sm
+                                flex
+                                items-center
+                                justify-center
+                                transition-all
+                            "
+                        >
+                            Proceed to Login
+                        </a>
+
+                    </div>
+
+
+                    <!-- Security -->
+                    <div
+                        class="
+                            flex
+                            items-center
+                            gap-space-xs
+                            mt-space-xl
+                            text-on-surface-variant
+                            font-label-mono-xs
+                            text-label-mono-xs
+                        "
+                    >
+
+                        <span
+                            class="
+                                material-symbols-outlined
+                                text-[14px]
+                                text-secondary
+                            "
+                        >
+                            lock
+                        </span>
+
+                        <span>
+                            256-bit Key Encrypted Identity
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         MOBILE QR LOGIN SCANNER
+    ====================================================== -->
+    <div
+        id="qr-scanner-modal"
+        class="hidden fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm px-4 py-6 items-center justify-center"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="qr-scanner-title"
+    >
+        <div class="w-full max-w-sm rounded-2xl bg-white shadow-2xl overflow-hidden border border-surface-container-high">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-surface-container-high">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+                    </div>
+                    <div>
+                        <h2 id="qr-scanner-title" class="font-headline-sm text-headline-sm font-semibold text-on-surface">
+                            Scan PC Login QR
+                        </h2>
+                        <p class="font-label-mono-xs text-label-mono-xs text-on-surface-variant">
+                            MAXIMUS secure account transfer
+                        </p>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    onclick="closeQrScanner()"
+                    class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container"
+                    aria-label="Close QR scanner"
+                >
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            <div class="p-4 flex flex-col gap-3">
+                <div class="relative aspect-square w-full overflow-hidden rounded-xl bg-black">
+                    <video
+                        id="qr-video"
+                        class="w-full h-full object-cover"
+                        playsinline
+                        muted
+                        autoplay
+                    ></video>
+
+                    <canvas id="qr-canvas" class="hidden"></canvas>
+
+                    <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                        <div class="w-[72%] h-[72%] rounded-2xl border-2 border-white/90 shadow-[0_0_0_999px_rgba(0,0,0,0.22)]"></div>
+                    </div>
+
+                    <div class="absolute left-0 right-0 bottom-0 p-3 bg-gradient-to-t from-black/70 to-transparent">
+                        <p class="text-white text-center font-label-ui text-label-ui">
+                            Point your camera at the QR code shown on the PC.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    id="qr-scanner-status"
+                    class="min-h-[38px] px-3 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-ui text-label-ui flex items-center gap-2"
+                >
+                    <span class="material-symbols-outlined text-[16px] text-secondary">center_focus_strong</span>
+                    <span>Starting camera…</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button
+                        type="button"
+                        onclick="startQrCamera()"
+                        class="h-10 rounded-lg bg-primary text-on-primary font-label-ui text-label-ui font-semibold flex items-center justify-center gap-1.5"
+                    >
+                        <span class="material-symbols-outlined text-[17px]">photo_camera</span>
+                        <span>Use Camera</span>
+                    </button>
+
+                    <label
+                        class="h-10 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-ui text-label-ui font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                        <span class="material-symbols-outlined text-[17px]">image</span>
+                        <span>Choose QR Image</span>
+                        <input id="qr-image-input" type="file" accept="image/*" class="hidden">
+                    </label>
+                </div>
+
+                <p class="font-label-mono-xs text-label-mono-xs text-on-surface-variant text-center leading-relaxed">
+                    Camera scanning requires HTTPS on most phones. If camera access is unavailable, choose a QR screenshot or photo instead.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer
+        class="
+            w-full
+            max-w-7xl
+            mx-auto
+            px-gutter-mobile
+            lg:px-gutter-desktop
+            h-14
+            flex
+            items-center
+            justify-between
+            text-on-surface-variant
+            font-label-mono-xs
+            text-label-mono-xs
+        "
+    >
+
+        <span>
+            © 2026 MAXIMUS 
+        </span>
+
+
+        <div class="flex items-center gap-space-md">
+           <span>
+            Powered By Gemini 3.6 Flash
+        </span>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+    <script>
+
+        /* =====================================================
+           GLOBAL VARIABLES
+        ===================================================== */
+
+        let currentStep = 1;
+        let resendCountdown = 30;
+        let countdownInterval = null;
+
+
+        /* =====================================================
+           UPDATE STEP INDICATORS
+        ===================================================== */
+
+        function updateIndicators(step) {
+
+            const badge =
+                document.getElementById("step-badge");
+
+            const name =
+                document.getElementById("step-name");
+
+            const dot1 =
+                document.getElementById("dot-1");
+
+            const dot2 =
+                document.getElementById("dot-2");
+
+            const dot3 =
+                document.getElementById("dot-3");
+
+
+            // Reset dots
+            [dot1, dot2, dot3].forEach(dot => {
+
+                dot.className =
+                    "w-1.5 h-1 rounded-full " +
+                    "bg-surface-container-highest " +
+                    "transition-all duration-300";
+
+            });
+
+
+            // Step 1
+            if (step === 1) {
+
+                badge.textContent = "Step 01 / 03";
+                name.textContent = "Account Credentials";
+
+                dot1.className =
+                    "w-5 h-1 rounded-full " +
+                    "bg-primary transition-all duration-300";
+
+            }
+
+
+            // Step 2
+            else if (step === 2) {
+
+                badge.textContent = "Step 02 / 03";
+                name.textContent = "Email OTP Verification";
+
+                dot1.className =
+                    "w-1.5 h-1 rounded-full " +
+                    "bg-secondary transition-all duration-300";
+
+                dot2.className =
+                    "w-5 h-1 rounded-full " +
+                    "bg-primary transition-all duration-300";
+
+            }
+
+
+            // Step 3
+            else if (step === 3) {
+
+                badge.textContent = "Step 03 / 03";
+                name.textContent = "Setup Complete";
+
+                dot1.className =
+                    "w-1.5 h-1 rounded-full " +
+                    "bg-secondary transition-all duration-300";
+
+                dot2.className =
+                    "w-1.5 h-1 rounded-full " +
+                    "bg-secondary transition-all duration-300";
+
+                dot3.className =
+                    "w-5 h-1 rounded-full " +
+                    "bg-secondary transition-all duration-300";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CHANGE STEP
+        ===================================================== */
+
+        function goToStep(step) {
+
+            currentStep = step;
+
+
+            document
+                .getElementById("step-panel-1")
+                .classList.add("hidden");
+
+            document
+                .getElementById("step-panel-2")
+                .classList.add("hidden");
+
+            document
+                .getElementById("step-panel-3")
+                .classList.add("hidden");
+
+
+            const activePanel =
+                document.getElementById(
+                    `step-panel-${step}`
+                );
+
+
+            if (activePanel) {
+
+                activePanel.classList.remove("hidden");
+
+            }
+
+
+            updateIndicators(step);
+
+
+            // Start OTP timer
+            if (step === 2) {
+
+                startResendTimer();
+
+
+                const firstInput =
+                    document.querySelector(".otp-digit");
+
+
+                if (firstInput) {
+
+                    setTimeout(() => {
+                        firstInput.focus();
+                    }, 100);
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           STEP 1 FORM SUBMISSION
+        ===================================================== */
+
+        async function handleStep1Submit(event) {
+
+            event.preventDefault();
+
+            const name = document.getElementById("full-name").value.trim();
+            const email = document.getElementById("email").value.trim().toLowerCase();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const agreed = document.getElementById("terms-check").checked;
+
+            const errorBox = document.getElementById("step-1-error");
+            const errorMessage = document.getElementById("step-1-error-msg");
+            const submitButton = event.submitter;
+
+            const showError = (message) => {
+                errorMessage.textContent = message;
+                errorBox.classList.remove("hidden");
+            };
+
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                showError("Please fill out all required fields.");
+                return;
+            }
+            if (!email.includes("@")) {
+                showError("Please enter a valid email address.");
+                return;
+            }
+            const normalizedPhone = phone.replace(/[\s()-]/g, "");
+            if (!/^\+?\d{10,15}$/.test(normalizedPhone)) {
+                showError("Please enter a valid phone number.");
+                return;
+            }
+            if (password.length < 6) {
+                showError("Password must be at least 6 characters.");
+                return;
+            }
+            if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+                showError("Password must contain letters and numbers.");
+                return;
+            }
+            if (password !== confirmPassword) {
+                showError("Passwords do not match.");
+                return;
+            }
+            if (!agreed) {
+                showError("Please agree to the Terms & Privacy Policy.");
+                return;
+            }
+
+            errorBox.classList.add("hidden");
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.querySelector("span:first-child").textContent = "Sending verification code…";
+            }
+
+            try {
+                const response = await fetch("/signup/send-email-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ name, email })
+                });
+
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(Array.isArray(data.detail) ? data.detail.map(e => e.msg || "Validation error").join(" ") : (data.detail || data.message || "Could not send the verification code."));
+                }
+
+                document.getElementById("display-target-email").textContent = email;
+                goToStep(2);
+            } catch (error) {
+                showError(error.message || "Could not send the verification code.");
+            } finally {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.querySelector("span:first-child").textContent = "Continue";
+                }
+            }
+        }
+
+        /* =====================================================
+           OTP INPUT SETUP
+        ===================================================== */
+
+        function setupOtpInputs() {
+
+            const inputs =
+                document.querySelectorAll(
+                    ".otp-digit"
+                );
+
+
+            inputs.forEach((input, index) => {
+
+                /* Input */
+                input.addEventListener(
+                    "input",
+                    event => {
+
+                        const value =
+                            event.target.value;
+
+
+                        if (
+                            value.length > 0 &&
+                            index < inputs.length - 1
+                        ) {
+
+                            inputs[index + 1].focus();
+
+                        }
+
+                    }
+                );
+
+
+                /* Backspace */
+                input.addEventListener(
+                    "keydown",
+                    event => {
+
+                        if (
+                            event.key === "Backspace" &&
+                            !event.target.value &&
+                            index > 0
+                        ) {
+
+                            inputs[index - 1].focus();
+
+                        }
+
+                    }
+                );
+
+
+                /* Paste OTP */
+                input.addEventListener(
+                    "paste",
+                    event => {
+
+                        event.preventDefault();
+
+
+                        const pasted =
+                            (
+                                event.clipboardData ||
+                                window.clipboardData
+                            )
+                                .getData("text")
+                                .trim()
+                                .slice(0, 6);
+
+
+                        pasted
+                            .split("")
+                            .forEach((character, i) => {
+
+                                if (inputs[i]) {
+
+                                    inputs[i].value =
+                                        character;
+
+                                }
+
+                            });
+
+
+                        const nextIndex =
+                            Math.min(
+                                pasted.length,
+                                inputs.length - 1
+                            );
+
+
+                        if (inputs[nextIndex]) {
+
+                            inputs[nextIndex].focus();
+
+                        }
+
+                    }
+                );
+
+            });
+
+        }
+
+
+        /* =====================================================
+           STEP 2 — VERIFY OTP
+        ===================================================== */
+
+        async function handleStep2Submit() {
+
+            const inputs = document.querySelectorAll(".otp-digit");
+            let code = "";
+            inputs.forEach(input => code += input.value.trim());
+
+            const errorBox = document.getElementById("step-2-error");
+            const errorMessage = document.getElementById("step-2-error-msg");
+            const verifyButton = document.querySelector('#step-panel-2 button[onclick="handleStep2Submit()"]');
+
+            if (!/^\d{6}$/.test(code)) {
+                errorMessage.textContent = "Please enter the full 6-digit confirmation code.";
+                errorBox.classList.remove("hidden");
+                return;
+            }
+
+            const name = document.getElementById("full-name").value.trim();
+            const email = document.getElementById("email").value.trim().toLowerCase();
+            const password = document.getElementById("password").value;
+
+            errorBox.classList.add("hidden");
+            if (verifyButton) {
+                verifyButton.disabled = true;
+                verifyButton.querySelector("span:first-child").textContent = "Verifying…";
+            }
+
+            try {
+                const response = await fetch("/signup/complete", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        phone: document.getElementById("phone").value.trim(),
+                        password,
+                        otp: code
+                    })
+                });
+
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(Array.isArray(data.detail) ? data.detail.map(e => e.msg || "Validation error").join(" ") : (data.detail || data.message || "Invalid or expired verification code."));
+                }
+
+                goToStep(3);
+            } catch (error) {
+                errorMessage.textContent = error.message || "Verification failed. Please try again.";
+                errorBox.classList.remove("hidden");
+            } finally {
+                if (verifyButton) {
+                    verifyButton.disabled = false;
+                    verifyButton.querySelector("span:first-child").textContent = "Verify Email & Create Account";
+                }
+            }
+        }
+
+        /* =====================================================
+           RESEND TIMER
+        ===================================================== */
+
+        function startResendTimer() {
+
+            clearInterval(countdownInterval);
+
+            resendCountdown = 30;
+
+
+            const resendWrapper =
+                document.getElementById(
+                    "resend-wrapper"
+                );
+
+            const resendButton =
+                document.getElementById(
+                    "resend-btn"
+                );
+
+            const timer =
+                document.getElementById(
+                    "resend-timer"
+                );
+
+
+            resendWrapper.classList.remove("hidden");
+
+            resendButton.classList.add("hidden");
+
+
+            timer.textContent =
+                `${resendCountdown}s`;
+
+
+            countdownInterval =
+                setInterval(() => {
+
+                    resendCountdown--;
+
+
+                    if (resendCountdown <= 0) {
+
+                        clearInterval(
+                            countdownInterval
+                        );
+
+                        resendWrapper.classList.add(
+                            "hidden"
+                        );
+
+                        resendButton.classList.remove(
+                            "hidden"
+                        );
+
+                    } else {
+
+                        timer.textContent =
+                            `${resendCountdown}s`;
+
+                    }
+
+                }, 1000);
+
+        }
+
+
+        /* =====================================================
+           RESEND OTP
+        ===================================================== */
+
+        async function triggerResend() {
+            const name = document.getElementById("full-name").value.trim();
+            const email = document.getElementById("email").value.trim().toLowerCase();
+            const errorBox = document.getElementById("step-2-error");
+            const errorMessage = document.getElementById("step-2-error-msg");
+            const inputs = document.querySelectorAll(".otp-digit");
+
+            inputs.forEach(input => input.value = "");
+            if (inputs[0]) inputs[0].focus();
+
+            try {
+                const response = await fetch("/signup/send-email-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ name, email })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(Array.isArray(data.detail) ? data.detail.map(e => e.msg || "Validation error").join(" ") : (data.detail || data.message || "Could not resend the verification code."));
+                }
+                errorBox.classList.add("hidden");
+                startResendTimer();
+            } catch (error) {
+                errorMessage.textContent = error.message || "Could not resend the verification code.";
+                errorBox.classList.remove("hidden");
+            }
+        }
+
+        /* =====================================================
+           MOBILE QR LOGIN SCANNER
+        ===================================================== */
+
+        let qrCameraStream = null;
+        let qrScanFrame = null;
+        let qrScanning = false;
+        let qrDetector = null;
+
+        function setQrScannerStatus(message, state = "info") {
+            const box = document.getElementById("qr-scanner-status");
+            if (!box) return;
+
+            const styles = {
+                info: {
+                    box: "min-h-[38px] px-3 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-ui text-label-ui flex items-center gap-2",
+                    icon: "center_focus_strong",
+                    iconClass: "material-symbols-outlined text-[16px] text-secondary"
+                },
+                success: {
+                    box: "min-h-[38px] px-3 py-2 rounded-lg bg-secondary-container text-on-secondary-container font-label-ui text-label-ui flex items-center gap-2",
+                    icon: "check_circle",
+                    iconClass: "material-symbols-outlined text-[16px] text-on-secondary-container"
+                },
+                error: {
+                    box: "min-h-[38px] px-3 py-2 rounded-lg bg-error-container text-on-error-container font-label-ui text-label-ui flex items-center gap-2",
+                    icon: "error",
+                    iconClass: "material-symbols-outlined text-[16px] text-error"
+                }
+            };
+
+            const style = styles[state] || styles.info;
+            box.className = style.box;
+            box.innerHTML = "";
+
+            const icon = document.createElement("span");
+            icon.className = style.iconClass;
+            icon.textContent = style.icon;
+
+            const text = document.createElement("span");
+            text.textContent = message;
+
+            box.append(icon, text);
+        }
+
+        function openQrScanner() {
+            const modal = document.getElementById("qr-scanner-modal");
+            if (!modal) return;
+
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            document.body.style.overflow = "hidden";
+            setQrScannerStatus("Starting camera…", "info");
+            startQrCamera();
+        }
+
+        function stopQrCamera() {
+            qrScanning = false;
+
+            if (qrScanFrame) {
+                cancelAnimationFrame(qrScanFrame);
+                qrScanFrame = null;
+            }
+
+            if (qrCameraStream) {
+                qrCameraStream.getTracks().forEach(track => track.stop());
+                qrCameraStream = null;
+            }
+
+            const video = document.getElementById("qr-video");
+            if (video) {
+                video.pause();
+                video.srcObject = null;
+            }
+        }
+
+        function closeQrScanner() {
+            stopQrCamera();
+
+            const modal = document.getElementById("qr-scanner-modal");
+            if (modal) {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+            }
+
+            document.body.style.overflow = "";
+        }
+
+        async function startQrCamera() {
+            stopQrCamera();
+
+            const video = document.getElementById("qr-video");
+            if (!video) return;
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                setQrScannerStatus(
+                    "Camera access is unavailable here. Use HTTPS or choose a QR image below.",
+                    "error"
+                );
+                return;
+            }
+
+            try {
+                qrCameraStream = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                        facingMode: { ideal: "environment" },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
+
+                video.srcObject = qrCameraStream;
+                await video.play();
+
+                if ("BarcodeDetector" in window) {
+                    try {
+                        qrDetector = new BarcodeDetector({ formats: ["qr_code"] });
+                    } catch {
+                        qrDetector = null;
+                    }
+                }
+
+                qrScanning = true;
+                setQrScannerStatus("Camera ready. Scan the QR shown on your PC.", "info");
+                scanQrVideoFrame();
+            } catch (error) {
+                console.error("QR camera error:", error);
+
+                const insecure =
+                    !window.isSecureContext &&
+                    location.hostname !== "localhost" &&
+                    location.hostname !== "127.0.0.1";
+
+                setQrScannerStatus(
+                    insecure
+                        ? "Browser camera access is blocked on HTTP. Open MAXIMUS over HTTPS or choose a QR image."
+                        : "Camera permission was denied or no camera is available. You can choose a QR image instead.",
+                    "error"
+                );
+            }
+        }
+
+        async function scanQrVideoFrame() {
+            if (!qrScanning) return;
+
+            const video = document.getElementById("qr-video");
+            const canvas = document.getElementById("qr-canvas");
+
+            if (!video || !canvas) return;
+
+            try {
+                if (video.readyState >= 2 && video.videoWidth && video.videoHeight) {
+                    if (qrDetector) {
+                        const results = await qrDetector.detect(video);
+                        if (results && results.length && results[0].rawValue) {
+                            handleScannedQr(results[0].rawValue);
+                            return;
+                        }
+                    } else if (window.jsQR) {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const result = window.jsQR(
+                            imageData.data,
+                            imageData.width,
+                            imageData.height,
+                            { inversionAttempts: "dontInvert" }
+                        );
+
+                        if (result && result.data) {
+                            handleScannedQr(result.data);
+                            return;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn("QR frame decode warning:", error);
+            }
+
+            qrScanFrame = requestAnimationFrame(scanQrVideoFrame);
+        }
+
+        function validateMaximusQr(rawValue) {
+            try {
+                const url = new URL(String(rawValue || "").trim(), window.location.origin);
+
+                if (!["http:", "https:"].includes(url.protocol)) {
+                    return null;
+                }
+
+                if (url.pathname !== "/auth/qr-confirm") {
+                    return null;
+                }
+
+                const token = url.searchParams.get("token");
+                if (!token || token.length < 16) {
+                    return null;
+                }
+
+                return url;
+            } catch {
+                return null;
+            }
+        }
+
+        function handleScannedQr(rawValue) {
+            const url = validateMaximusQr(rawValue);
+
+            if (!url) {
+                setQrScannerStatus(
+                    "That is not a valid MAXIMUS PC login QR. Try the QR shown on the PC login screen.",
+                    "error"
+                );
+                return;
+            }
+
+            stopQrCamera();
+            setQrScannerStatus("QR verified. Signing this phone in…", "success");
+
+            // Tell the backend this scan came from the mobile UI.
+            url.searchParams.set("mobile", "1");
+
+            setTimeout(() => {
+                window.location.assign(url.toString());
+            }, 250);
+        }
+
+        async function decodeQrImageFile(file) {
+            if (!file) return;
+
+            setQrScannerStatus("Reading QR image…", "info");
+
+            try {
+                const canvas = document.getElementById("qr-canvas");
+                if (!canvas) throw new Error("QR canvas is unavailable.");
+
+                let bitmap = null;
+
+                if ("createImageBitmap" in window) {
+                    bitmap = await createImageBitmap(file);
+                    canvas.width = bitmap.width;
+                    canvas.height = bitmap.height;
+                    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+                    ctx.drawImage(bitmap, 0, 0);
+                } else {
+                    const imageUrl = URL.createObjectURL(file);
+                    try {
+                        const image = await new Promise((resolve, reject) => {
+                            const img = new Image();
+                            img.onload = () => resolve(img);
+                            img.onerror = reject;
+                            img.src = imageUrl;
+                        });
+
+                        canvas.width = image.naturalWidth || image.width;
+                        canvas.height = image.naturalHeight || image.height;
+                        canvas.getContext("2d", { willReadFrequently: true })
+                            .drawImage(image, 0, 0, canvas.width, canvas.height);
+                    } finally {
+                        URL.revokeObjectURL(imageUrl);
+                    }
+                }
+
+                const ctx = canvas.getContext("2d", { willReadFrequently: true });
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                if ("BarcodeDetector" in window) {
+                    try {
+                        const detector = new BarcodeDetector({ formats: ["qr_code"] });
+                        const codes = await detector.detect(canvas);
+                        if (codes.length && codes[0].rawValue) {
+                            handleScannedQr(codes[0].rawValue);
+                            return;
+                        }
+                    } catch {
+                        // Fall through to jsQR.
+                    }
+                }
+
+                if (window.jsQR) {
+                    const result = window.jsQR(
+                        imageData.data,
+                        imageData.width,
+                        imageData.height,
+                        { inversionAttempts: "attemptBoth" }
+                    );
+
+                    if (result && result.data) {
+                        handleScannedQr(result.data);
+                        return;
+                    }
+                }
+
+                throw new Error("No QR code was detected in that image.");
+            } catch (error) {
+                console.error("QR image decode error:", error);
+                setQrScannerStatus(
+                    error.message || "Could not read that QR image.",
+                    "error"
+                );
+            } finally {
+                if (bitmap && typeof bitmap.close === "function") {
+                    bitmap.close();
+                }
+
+                const input = document.getElementById("qr-image-input");
+                if (input) input.value = "";
+            }
+        }
+
+
+        /* =====================================================
+           GOOGLE SIGN-UP
+        ===================================================== */
+
+        function handleGoogleSignUp() {
+            window.location.assign('/auth/google');
+        }
+
+
+        /* =====================================================
+           PAGE INITIALIZATION
+        ===================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                setupOtpInputs();
+
+                const qrImageInput = document.getElementById("qr-image-input");
+                if (qrImageInput) {
+                    qrImageInput.addEventListener("change", event => {
+                        const file = event.target.files && event.target.files[0];
+                        if (file) decodeQrImageFile(file);
+                    });
+                }
+
+                const qrModal = document.getElementById("qr-scanner-modal");
+                if (qrModal) {
+                    qrModal.addEventListener("click", event => {
+                        if (event.target === qrModal) closeQrScanner();
+                    });
+                }
+
+                document.addEventListener("keydown", event => {
+                    if (event.key === "Escape") closeQrScanner();
+                });
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,2996 @@
+<!DOCTYPE html>
+<html lang="en" data-page="speakWithAI">
+<head>
+<script src="/static/theme.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAXIMUS Live AI</title>
+  
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      overscroll-behavior: none;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.96); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 0.15; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+    .wave-bar {
+      transition: height 0.15s ease-in-out;
+    }
+    .pulse-layer-1 {
+      animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    .pulse-layer-2 {
+      animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) 1.5s infinite;
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: scale(0.96) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-animate {
+      animation: modal-in 0.16s ease-out;
+    }
+    .recent-item {
+      transition: all 0.15s ease;
+    }
+    .recent-item:hover .delete-btn {
+      opacity: 1;
+      visibility: visible;
+    }
+
+  
+    @media (max-width: 767px) {
+      #recentSidebar {
+        min-height: auto;
+        max-height: 360px;
+      }
+    }
+
+        /* New Conversation Modal */
+        .new-conversation-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .new-conversation-backdrop.show {
+            display: flex;
+        }
+
+        .new-conversation-card {
+            width: min(100%, 440px);
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.14);
+            padding: 24px;
+            animation: newConversationIn 0.18s ease-out;
+        }
+
+        @keyframes newConversationIn {
+            from { opacity: 0; transform: translateY(8px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .conversation-mode-option {
+            transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .conversation-mode-option.active {
+            border-color: #171717 !important;
+            background: #fafafa;
+            box-shadow: inset 0 0 0 1px #171717;
+        }
+
+        .conversation-mode-radio {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid #cfcfcf;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .conversation-mode-option.active .conversation-mode-radio {
+            border-color: #171717;
+        }
+
+        .conversation-mode-option.active .conversation-mode-radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #171717;
+        }
+
+    
+
+    /* ==============================
+       MAXIMUS Live AI — professional mobile layout
+       ============================== */
+    body {
+      background: #f7f7f4 !important;
+      color: #1f241f !important;
+    }
+
+    .live-workspace {
+      align-items: flex-start;
+    }
+
+    main {
+      padding-top: 6px !important;
+      gap: 24px !important;
+    }
+
+    /* Compact session settings — intentionally quieter than the voice stage. */
+    .live-settings-shell {
+      width: 100%;
+      max-width: 760px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid #e4e8e1;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(31,36,31,.05);
+      overflow: hidden;
+    }
+
+    .live-settings-toggle {
+      width: 100%;
+      min-height: 58px;
+      padding: 10px 13px;
+      border: 0;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .live-settings-toggle:hover { background: #fafbf9; }
+
+    .live-settings-leading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .live-settings-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #eef3ec;
+      color: #384c37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .live-settings-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #263025;
+      line-height: 1.15;
+    }
+
+    .live-settings-summary {
+      margin-top: 3px;
+      font-size: 10px;
+      color: #899187;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .live-settings-trailing {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .live-controls-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #eff7ee;
+      border: 1px solid #dcebd9;
+      color: #52734f;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    #live-settings-chevron {
+      color: #969e94;
+      transition: transform .18s ease;
+    }
+
+    .live-settings-shell.open #live-settings-chevron { transform: rotate(180deg); }
+
+    .live-settings-body {
+      display: none;
+      border-top: 1px solid #edf0eb;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .live-settings-shell.open .live-settings-body { display: block; }
+
+    .live-settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .live-control-group {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .live-control-group label {
+      margin: 0 !important;
+      color: #879085 !important;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px !important;
+      font-weight: 700;
+      letter-spacing: .11em;
+    }
+
+    .live-control-group select {
+      width: 100% !important;
+      height: 40px;
+      margin: 0 !important;
+      padding: 0 10px !important;
+      border: 1px solid #dde3da !important;
+      border-radius: 10px !important;
+      background: #fafbf9 !important;
+      color: #293028 !important;
+      font-size: 11px !important;
+      font-weight: 500;
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .live-control-group select:focus {
+      border-color: #7d9b79 !important;
+      box-shadow: 0 0 0 3px rgba(56,76,55,.08);
+      background: #fff !important;
+    }
+
+    .live-network-control {
+      min-height: 40px;
+      padding: 7px 9px;
+      border: 1px solid #dde3da;
+      border-radius: 10px;
+      background: #fafbf9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .live-network-title {
+      font-size: 10px;
+      font-weight: 600;
+      color: #394238;
+      line-height: 1.1;
+    }
+
+    .live-network-status {
+      margin-top: 3px;
+      font-size: 8px !important;
+      color: #929b91;
+      line-height: 1.1;
+    }
+
+    #live-network-toggle {
+      position: relative;
+      flex: 0 0 auto;
+      width: 38px !important;
+      height: 22px !important;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: #d8ddd6;
+      cursor: pointer;
+      transition: background .15s ease;
+    }
+
+    #live-network-knob {
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.16);
+      transition: transform .15s ease;
+    }
+
+    #live-network-toggle.bg-emerald-500 { background: #6f9d69 !important; }
+    #live-network-knob.translate-x-5 { transform: translateX(16px); }
+    #live-network-knob.translate-x-0 { transform: translateX(0); }
+
+    .live-settings-footer {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #edf0eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .live-controls-status {
+      color: #8d968b !important;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px !important;
+      line-height: 1.35;
+    }
+
+    #live-model-status {
+      margin-top: 1px;
+      min-height: 11px;
+    }
+
+    #live-voice-confirm-btn {
+      min-width: 118px;
+      height: 38px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #384c37 !important;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s ease, transform .15s ease;
+      flex: 0 0 auto;
+    }
+
+    #live-voice-confirm-btn:hover { background: #2f402e !important; }
+    #live-voice-confirm-btn:active { transform: translateY(1px); }
+
+    #central-mic-btn {
+      background: #384c37 !important;
+      box-shadow: 0 16px 40px rgba(56,76,55,.18) !important;
+    }
+
+    #central-mic-btn:hover { background: #2f402e !important; }
+    #voice-state-label { color: #384c37 !important; }
+    #mute-btn { border-color: #dfe5dc !important; background: #fff !important; }
+    #end-btn { background: #fff7f6 !important; }
+    #transcript-feed { min-height: 90px; }
+
+    #quick-input {
+      height: 44px;
+      border-radius: 12px !important;
+    }
+
+    #send-input-btn {
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 12px !important;
+      background: #384c37 !important;
+    }
+
+    @media (max-width: 767px) {
+      body { background: #f8f8f5 !important; }
+
+      header > div {
+        height: 58px !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+      }
+
+      header .gap-6 { gap: 10px !important; }
+      header .h-4.w-px { display: none; }
+
+      .live-workspace {
+        padding: 12px !important;
+        gap: 12px !important;
+      }
+
+      #recentSidebar {
+        min-height: auto !important;
+        max-height: 255px !important;
+        border-radius: 14px !important;
+        padding: 12px !important;
+        order: 2;
+      }
+
+      main {
+        order: 1;
+        width: 100%;
+        padding: 0 !important;
+        gap: 18px !important;
+      }
+
+      .live-settings-shell {
+        border-radius: 14px;
+        box-shadow: none;
+      }
+
+      .live-settings-toggle {
+        min-height: 54px;
+        padding: 9px 11px;
+      }
+
+      .live-settings-grid { grid-template-columns: 1fr; }
+      .live-settings-body { padding: 12px; }
+
+      .live-settings-footer {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 9px;
+      }
+
+      #live-voice-confirm-btn {
+        width: 100%;
+        min-width: 0;
+      }
+
+      #central-mic-btn {
+        width: 86px !important;
+        height: 86px !important;
+      }
+
+      .pulse-layer-1 { width: 168px !important; height: 168px !important; }
+      .pulse-layer-2 { width: 142px !important; height: 142px !important; }
+
+      #voice-state-label { font-size: 16px !important; }
+
+      .live-action-row {
+        width: 100%;
+        max-width: 320px;
+        gap: 10px !important;
+      }
+
+      .live-action-row > button {
+        flex: 1 1 0;
+        justify-content: center;
+        height: 42px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+
+      .live-transcript-card {
+        border-radius: 14px !important;
+        padding: 16px !important;
+        gap: 16px !important;
+      }
+
+      .live-transcript-meta { display: none; }
+
+      .live-suggestions {
+        width: 100%;
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        justify-content: flex-start !important;
+        padding: 0 2px 4px;
+        scrollbar-width: none;
+      }
+
+      .live-suggestions > * { flex: 0 0 auto; }
+
+      footer { display: none; }
+    }
+
+  
+
+    /* MAXIMUS LIVE AI DARK MODE */
+    :is(html.dark, html[data-theme="dark"]) body {
+      background: #101310 !important;
+      color: #edf2eb !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) header {
+      background: rgba(16, 19, 16, 0.88) !important;
+      border-color: #2a3029 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) footer {
+      background: #101310 !important;
+      border-color: #2a3029 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #recentSidebar,
+    :is(html.dark, html[data-theme="dark"]) .live-transcript-card,
+    :is(html.dark, html[data-theme="dark"]) .live-settings-shell,
+    :is(html.dark, html[data-theme="dark"]) #liveProfileDropdown,
+    :is(html.dark, html[data-theme="dark"]) .new-conversation-card,
+    :is(html.dark, html[data-theme="dark"]) #confirmModal > div {
+      background: #171b17 !important;
+      border-color: #2d352c !important;
+      color: #edf2eb !important;
+      box-shadow: 0 16px 42px rgba(0,0,0,.28) !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-settings-toggle:hover,
+    :is(html.dark, html[data-theme="dark"]) .recent-item:hover,
+    :is(html.dark, html[data-theme="dark"]) #liveProfileDropdown a:hover,
+    :is(html.dark, html[data-theme="dark"]) .voice-preset:hover {
+      background: #202620 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-settings-body {
+      background: #151915 !important;
+      border-color: #2b322a !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-settings-icon {
+      background: #263126 !important;
+      color: #b9d4b2 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-settings-title,
+    :is(html.dark, html[data-theme="dark"]) .live-network-title {
+      color: #eef3ec !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-settings-summary,
+    :is(html.dark, html[data-theme="dark"]) .live-controls-status,
+    :is(html.dark, html[data-theme="dark"]) .live-network-status {
+      color: #97a295 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-controls-badge {
+      background: #223022 !important;
+      border-color: #334432 !important;
+      color: #b9d4b2 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-control-group select,
+    :is(html.dark, html[data-theme="dark"]) .live-network-control,
+    :is(html.dark, html[data-theme="dark"]) #quick-input,
+    :is(html.dark, html[data-theme="dark"]) #conversationNameInput {
+      background: #111511 !important;
+      border-color: #313a30 !important;
+      color: #edf2eb !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .live-control-group select:focus,
+    :is(html.dark, html[data-theme="dark"]) #quick-input:focus,
+    :is(html.dark, html[data-theme="dark"]) #conversationNameInput:focus {
+      background: #171c17 !important;
+      border-color: #6f8b6b !important;
+      box-shadow: 0 0 0 3px rgba(111,139,107,.14) !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #live-network-toggle {
+      background: #394139 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #live-network-toggle.bg-emerald-500 {
+      background: #668b62 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #live-network-knob {
+      background: #eef2ec !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #central-mic-btn,
+    :is(html.dark, html[data-theme="dark"]) #send-input-btn,
+    :is(html.dark, html[data-theme="dark"]) #live-voice-confirm-btn {
+      background: #789574 !important;
+      color: #fff !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #central-mic-btn:hover,
+    :is(html.dark, html[data-theme="dark"]) #send-input-btn:hover,
+    :is(html.dark, html[data-theme="dark"]) #live-voice-confirm-btn:hover {
+      background: #87a582 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #voice-state-label {
+      color: #b7d1b1 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #mute-btn,
+    :is(html.dark, html[data-theme="dark"]) .voice-preset,
+    :is(html.dark, html[data-theme="dark"]) #liveProfileTrigger,
+    :is(html.dark, html[data-theme="dark"]) #liveNewConversationBtn {
+      background: #171b17 !important;
+      border-color: #30372f !important;
+      color: #dce5da !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #end-btn {
+      background: #291c1c !important;
+      border-color: #503030 !important;
+      color: #f2aaaa !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .conversation-mode-option {
+      background: #171b17 !important;
+      border-color: #30372f !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .conversation-mode-option.active {
+      background: #202720 !important;
+      border-color: #7f9d79 !important;
+      box-shadow: inset 0 0 0 1px #7f9d79 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .conversation-mode-radio {
+      border-color: #657064 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .conversation-mode-option.active .conversation-mode-radio {
+      border-color: #a8c5a2 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .conversation-mode-option.active .conversation-mode-radio::after {
+      background: #a8c5a2 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .bg-white,
+    :is(html.dark, html[data-theme="dark"]) .bg-zinc-50,
+    :is(html.dark, html[data-theme="dark"]) .bg-neutral-50,
+    :is(html.dark, html[data-theme="dark"]) .bg-zinc-100\/70 {
+      background-color: #171b17 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .bg-zinc-100,
+    :is(html.dark, html[data-theme="dark"]) .bg-neutral-100 {
+      background-color: #222822 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .border-zinc-100,
+    :is(html.dark, html[data-theme="dark"]) .border-neutral-100,
+    :is(html.dark, html[data-theme="dark"]) .border-zinc-200,
+    :is(html.dark, html[data-theme="dark"]) .border-neutral-200 {
+      border-color: #2d352c !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .text-zinc-900,
+    :is(html.dark, html[data-theme="dark"]) .text-neutral-900,
+    :is(html.dark, html[data-theme="dark"]) .text-black {
+      color: #f1f4ef !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .text-zinc-700,
+    :is(html.dark, html[data-theme="dark"]) .text-neutral-700,
+    :is(html.dark, html[data-theme="dark"]) .text-zinc-600,
+    :is(html.dark, html[data-theme="dark"]) .text-neutral-600 {
+      color: #cbd4c9 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .text-zinc-500,
+    :is(html.dark, html[data-theme="dark"]) .text-neutral-500 {
+      color: #9ba69a !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .text-zinc-400,
+    :is(html.dark, html[data-theme="dark"]) .text-neutral-400,
+    :is(html.dark, html[data-theme="dark"]) .text-outline {
+      color: #7f8b7e !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .recent-item.bg-zinc-100\/80 {
+      background: #242b23 !important;
+      border-color: #394238 !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) #transcript-feed [data-transcript-user-avatar="true"] {
+      background: #283027 !important;
+      color: #dfe7dd !important;
+    }
+
+    :is(html.dark, html[data-theme="dark"]) .new-conversation-backdrop,
+    :is(html.dark, html[data-theme="dark"]) #confirmModal {
+      background: rgba(0,0,0,.62) !important;
+    }
+
+    @media (max-width: 767px) {
+      :is(html.dark, html[data-theme="dark"]) body {
+        background: #101310 !important;
+      }
+    }
+    /* END MAXIMUS LIVE AI DARK MODE */
+</style>
+<link rel="stylesheet" href="/static/theme.css">
+</head>
+<body class="bg-[#fafafa] font-sans text-zinc-900 antialiased min-h-screen flex flex-col justify-between selection:bg-black selection:text-white">
+
+  <!-- Header -->
+  <header class="w-full bg-[#fafafa]/80 backdrop-blur-md border-b border-zinc-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-black overflow-hidden flex items-center justify-center shadow-sm">
+            <img src="/static/logo.jpg" alt="MAXIMUS logo" class="w-full h-full object-cover" />
+          </div>
+          <span class="font-semibold tracking-tight text-black text-lg">MAXIMUS</span>
+        </div>
+        <div class="h-4 w-px bg-zinc-200"></div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="font-mono text-xs font-medium text-emerald-800 tracking-wide">Live AI</span>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-6">
+        <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+          <a class="px-3.5 py-1.5 rounded-full bg-black text-white shadow-sm font-medium" href="#">Live</a>
+          <a class="px-3.5 py-1.5 rounded-full text-zinc-600 hover:text-black hover:bg-zinc-100 transition-all" href="/home">Home</a>
+          <a class="px-3.5 py-1.5 rounded-full text-zinc-600 hover:text-black hover:bg-zinc-100 transition-all" href="/history">History</a>
+          <a class="px-3.5 py-1.5 rounded-full text-zinc-600 hover:text-black hover:bg-zinc-100 transition-all" href="/settings">Settings</a>
+        </nav>
+        <div class="relative" id="profileMenuWrap">
+          <button
+            id="liveProfileTrigger"
+            class="w-9 h-9 rounded-full border border-zinc-200 bg-white hover:border-zinc-300 flex items-center justify-center text-zinc-700 transition-all shadow-sm overflow-hidden"
+            title="Account profile"
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded="false"
+          >
+            <span id="liveProfileAvatar" class="w-full h-full rounded-full flex items-center justify-center text-xs font-semibold bg-zinc-900 text-white">U</span>
+          </button>
+
+          <div id="liveProfileDropdown" class="hidden absolute right-0 top-11 w-56 bg-white border border-zinc-200 rounded-xl shadow-lg p-1.5 z-[100] text-xs" role="menu">
+            <div class="px-3 py-2.5 border-b border-zinc-100 mb-1">
+              <div id="liveProfileName" class="font-semibold text-zinc-900 truncate">User</div>
+              <div id="liveProfileEmail" class="text-[11px] text-zinc-400 truncate mt-0.5">Loading...</div>
+            </div>
+            <a href="/profile-settings" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900" role="menuitem">
+              <span class="material-symbols-outlined text-[16px] text-zinc-400">person</span>
+              Profile Settings
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace: Sidebar + Live AI -->
+  <div class="live-workspace w-full max-w-7xl mx-auto px-4 md:px-6 py-6 flex-1 flex flex-col md:flex-row gap-6 items-start">
+    
+    <!-- LEFT SIDEBAR: RECENT SESSIONS -->
+    <aside class="w-full md:w-72 shrink-0 bg-white rounded-2xl border border-zinc-200 shadow-sm p-4 flex flex-col self-stretch md:min-h-[720px] transition-all" id="recentSidebar">
+      <!-- Header -->
+       
+      <div class="flex items-center justify-between pb-3.5 border-b border-zinc-100">
+        
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-zinc-500 text-lg">history</span>
+          <span class="text-xs font-semibold text-zinc-900 tracking-tight uppercase">Recent Sessions</span>
+        </div>
+        <button id="clearAllBtn" onclick="confirmClearAll()" class="text-[11px] text-zinc-400 hover:text-red-600 transition-colors font-medium cursor-pointer" title="Clear all recent sessions">
+          Clear All
+        </button>
+      </div>
+
+      <!-- New Conversation -->
+      <button
+        id="liveNewConversationBtn"
+        type="button"
+        class="w-full flex items-center gap-3 px-3.5 py-2.5 mt-3 rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50 shadow-sm transition-all group"
+      >
+        <span class="w-7 h-7 rounded-lg bg-zinc-100 text-zinc-700 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[16px]">add</span>
+        </span>
+        <span class="text-xs font-semibold text-zinc-700 group-hover:text-zinc-900">New Conversation</span>
+      </button>
+
+      <!-- Recents List -->
+      <div class="mt-3 flex-1 overflow-y-auto flex flex-col gap-1.5 pr-0.5" id="recentSessionsList">
+      </div>
+        
+        
+
+      <!-- Empty state container (hidden by default) -->
+      <div id="emptyRecentsState" class="hidden flex-1 flex flex-col items-center justify-center text-center p-4 text-zinc-400">
+        <span class="material-symbols-outlined text-3xl mb-2 text-zinc-300">chat_bubble_outline</span>
+        <span class="text-xs font-medium text-zinc-600">No recent sessions</span>
+        <p class="text-[11px] text-zinc-400 mt-1">Voice and duplex conversations will appear here.</p>
+      </div>
+
+      <!-- Footer indicator -->
+      <div class="pt-3 border-t border-zinc-100 flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+        <span id="sessionCountLabel">Loading sessions…</span>
+        <span class="inline-flex items-center gap-1 text-emerald-600">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Auto-saved
+        </span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="relative flex-1 w-full max-w-4xl mx-auto px-2 md:px-6 py-4 md:py-10 flex flex-col items-center justify-start gap-10">
+
+    <!-- Central Voice Stage -->
+    <div class="flex flex-col items-center justify-center text-center pt-2 w-full md:-translate-x-20 lg:-translate-x-28">
+      <div class="relative flex items-center justify-center mb-6">
+        <div class="pulse-layer-1 absolute w-48 h-48 rounded-full bg-emerald-400/20 pointer-events-none"></div>
+        <div class="pulse-layer-2 absolute w-40 h-40 rounded-full bg-emerald-500/15 pointer-events-none"></div>
+        <button class="relative z-10 w-24 h-24 rounded-full bg-black hover:scale-105 active:scale-95 text-white shadow-[0_12px_36px_rgba(0,0,0,0.18)] transition-all duration-300 flex items-center justify-center group focus:outline-none focus:ring-4 focus:ring-emerald-500/20" id="central-mic-btn" title="Tap to speak or pause">
+          <span class="material-symbols-outlined text-4xl text-white group-hover:scale-110 transition-transform" id="mic-icon">mic</span>
+        </button>
+      </div>
+
+      <div class="flex flex-col items-center gap-1.5">
+        <div class="inline-flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="status-pulse-dot"></span>
+          <span class="font-medium text-zinc-900 text-lg tracking-tight" id="voice-state-label">Listening to you...</span>
+        </div>
+        <p class="text-xs text-zinc-500 max-w-xs">
+          Speak naturally or interrupt anytime. MAXIMUS is synthesizing contextual audio from your live session.
+        </p>
+      </div>
+
+      <!-- Waveform Visualizer -->
+      <div class="flex items-center justify-center gap-1.5 h-8 mt-5" id="waveform-container">
+        <span class="wave-bar w-1 bg-zinc-800 rounded-full h-3"></span>
+        <span class="wave-bar w-1 bg-zinc-800 rounded-full h-5"></span>
+        <span class="wave-bar w-1 bg-zinc-800 rounded-full h-7"></span>
+        <span class="wave-bar w-1 bg-emerald-500 rounded-full h-6"></span>
+        <span class="wave-bar w-1 bg-emerald-500 rounded-full h-8"></span>
+        <span class="wave-bar w-1 bg-zinc-800 rounded-full h-5"></span>
+        <span class="wave-bar w-1 bg-zinc-800 rounded-full h-7"></span>
+        <span class="wave-bar w-1 bg-zinc-800 rounded-full h-4"></span>
+        <span class="wave-bar w-1 bg-zinc-800 rounded-full h-2"></span>
+      </div>
+
+      <!-- Control Actions -->
+      <div class="live-action-row flex items-center gap-3 mt-7">
+        <button class="h-10 px-4 rounded-full bg-white border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:text-black text-xs font-medium inline-flex items-center gap-2 transition-all shadow-sm" id="mute-btn" type="button">
+          <span class="material-symbols-outlined text-[17px]">mic_off</span>
+          <span>Mute</span>
+        </button>
+        <button class="h-10 px-4 rounded-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 text-xs font-medium inline-flex items-center gap-1.5 transition-all" id="end-btn" type="button">
+          <span class="material-symbols-outlined text-[17px]">call_end</span>
+          <span>End Session</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Transcript -->
+    <div class="live-transcript-card w-full bg-white rounded-2xl border border-zinc-200 shadow-sm p-6 md:p-8 flex flex-col gap-6">
+      <div class="flex items-center justify-between border-b border-zinc-100 pb-4">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-zinc-400 text-lg">forum</span>
+          <span class="font-semibold text-zinc-900 text-sm tracking-tight" id="currentSessionTitle">Live Transcript</span>
+          <button id="pinLiveConversationBtn" type="button" class="text-[11px] text-zinc-400 hover:text-zinc-900 flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-zinc-50" title="Pin conversation">
+            <span class="material-symbols-outlined text-[15px]">push_pin</span><span>Pin</span>
+          </button>
+        </div>
+        <span class="live-transcript-meta text-[11px] font-mono text-zinc-400">Low-latency audio sync</span>
+      </div>
+
+      <div class="flex flex-col gap-5 max-h-[380px] overflow-y-auto pr-1" id="transcript-feed"></div>
+
+      <!-- Text Command Input -->
+      <div class="pt-2 border-t border-zinc-100 flex items-center gap-2">
+        <input class="flex-1 bg-zinc-50 hover:bg-zinc-100/70 focus:bg-white text-zinc-900 text-sm px-4 py-2.5 rounded-xl border border-zinc-200 focus:border-zinc-400 focus:outline-none transition-all placeholder:text-zinc-400" id="quick-input" placeholder="Type a command or speak into your mic..." type="text" />
+        <button class="w-10 h-10 rounded-xl bg-black text-white hover:bg-zinc-800 flex items-center justify-center transition-all shadow-sm" id="send-input-btn" title="Send message" type="button">
+          <span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Compact Live Settings -->
+    <section class="live-settings-shell" id="liveSettingsShell" aria-label="Live AI preferences">
+      <button id="liveSettingsToggle" class="live-settings-toggle" type="button" aria-expanded="false" aria-controls="liveSettingsBody">
+        <span class="live-settings-leading">
+          <span class="live-settings-icon"><span class="material-symbols-outlined text-[18px]">tune</span></span>
+          <span class="min-w-0">
+            <span class="live-settings-title block">Live setup</span>
+            <span id="live-settings-summary" class="live-settings-summary block">Model · voice · language · network</span>
+          </span>
+        </span>
+        <span class="live-settings-trailing">
+          <span id="live-voice-status" class="live-controls-badge">READY</span>
+          <span id="live-settings-chevron" class="material-symbols-outlined text-[18px]">expand_more</span>
+        </span>
+      </button>
+
+      <div id="liveSettingsBody" class="live-settings-body">
+        <div class="live-settings-grid">
+          <div class="live-control-group">
+            <label for="live-model-select">AI MODEL</label>
+            <select id="live-model-select">
+              <option value="flash">MAXIMUS Flash</option>
+            </select>
+            <div id="live-model-status" class="live-controls-status">Loading available BYOK models…</div>
+          </div>
+
+          <div class="live-control-group live-network-group">
+            <label>NETWORK ACCESS</label>
+            <div class="live-network-control">
+              <div>
+                <div class="live-network-title">Website access</div>
+                <div id="live-network-status" class="live-network-status">Checking…</div>
+              </div>
+              <button id="live-network-toggle" type="button" role="switch" aria-checked="false" title="Toggle network access">
+                <span id="live-network-knob"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="live-control-group">
+            <label for="live-input-language-select">INPUT LANGUAGE</label>
+            <select id="live-input-language-select">
+              <option value="en-IN">🇮🇳 English (India)</option>
+              <option value="ru-RU">🇷🇺 Русский (Russian)</option>
+              <option value="fr-FR">🇫🇷 Français (French)</option>
+              <option value="ja-JP">🇯🇵 日本語 (Japanese)</option>
+              <option value="hi-IN">🇮🇳 हिन्दी (Hindi)</option>
+              <option value="te-IN">🇮🇳 తెలుగు (Telugu)</option>
+              <option value="ta-IN">🇮🇳 தமிழ் (Tamil)</option>
+              <option value="kn-IN">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+              <option value="ml-IN">🇮🇳 മലയാളം (Malayalam)</option>
+            </select>
+          </div>
+
+          <div class="live-control-group">
+            <label for="live-output-text-select">OUTPUT TEXT LANGUAGE</label>
+            <select id="live-output-text-select">
+              <option value="en-IN">🇮🇳 English (India)</option>
+              <option value="ru-RU">🇷🇺 Русский (Russian)</option>
+              <option value="fr-FR">🇫🇷 Français (French)</option>
+              <option value="ja-JP">🇯🇵 日本語 (Japanese)</option>
+              <option value="hi-IN">🇮🇳 हिन्दी (Hindi)</option>
+              <option value="te-IN">🇮🇳 తెలుగు (Telugu)</option>
+              <option value="ta-IN">🇮🇳 தமிழ் (Tamil)</option>
+              <option value="kn-IN">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+              <option value="ml-IN">🇮🇳 മലയാളം (Malayalam)</option>
+            </select>
+          </div>
+
+
+          <div class="live-control-group">
+            <label for="live-output-speech-select">OUTPUT SPEECH LANGUAGE</label>
+            <select id="live-output-speech-select">
+              <option value="en-IN">🇮🇳 English (India)</option>
+              <option value="ru-RU">🇷🇺 Русский (Russian)</option>
+              <option value="fr-FR">🇫🇷 Français (French)</option>
+              <option value="ja-JP">🇯🇵 日本語 (Japanese)</option>
+              <option value="hi-IN">🇮🇳 हिन्दी (Hindi)</option>
+              <option value="te-IN">🇮🇳 తెలుగు (Telugu)</option>
+              <option value="ta-IN">🇮🇳 தமிழ் (Tamil)</option>
+              <option value="kn-IN">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+              <option value="ml-IN">🇮🇳 മലയാളം (Malayalam)</option>
+            </select>
+          </div>
+
+          <div class="live-control-group" style="grid-column: 1 / -1;">
+            <label for="live-output-voice-select">OUTPUT VOICE</label>
+            <select id="live-output-voice-select">
+              <option value="en-IN-NeerjaNeural">Neerja — Female — English (India)</option>
+              <option value="en-IN-PrabhatNeural">Prabhat — Male — English (India)</option>
+              <option value="ru-RU-SvetlanaNeural">Svetlana — Female — Русский (Russian)</option>
+              <option value="ru-RU-DmitryNeural">Dmitry — Male — Русский (Russian)</option>
+              <option value="fr-FR-DeniseNeural">Denise — Female — Français (French)</option>
+              <option value="fr-FR-HenriNeural">Henri — Male — Français (French)</option>
+              <option value="ja-JP-NanamiNeural">Nanami — Female — 日本語 (Japanese)</option>
+              <option value="ja-JP-KeitaNeural">Keita — Male — 日本語 (Japanese)</option>
+              <option value="hi-IN-SwaraNeural">Swara — Female — हिन्दी (Hindi)</option>
+              <option value="hi-IN-MadhurNeural">Madhur — Male — हिन्दी (Hindi)</option>
+              <option value="te-IN-ShrutiNeural">Shruti — Female — తెలుగు (Telugu)</option>
+              <option value="te-IN-MohanNeural">Mohan — Male — తెలుగు (Telugu)</option>
+              <option value="ta-IN-PallaviNeural">Pallavi — Female — தமிழ் (Tamil)</option>
+              <option value="ta-IN-ValluvarNeural">Valluvar — Male — தமிழ் (Tamil)</option>
+              <option value="kn-IN-SapnaNeural">Sapna — Female — ಕನ್ನಡ (Kannada)</option>
+              <option value="kn-IN-GaganNeural">Gagan — Male — ಕನ್ನಡ (Kannada)</option>
+              <option value="ml-IN-SobhanaNeural">Sobhana — Female — മലയാളം (Malayalam)</option>
+              <option value="ml-IN-MidhunNeural">Midhun — Male — മലയാളം (Malayalam)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="live-settings-footer">
+          <div id="live-voice-settings-status" class="live-controls-status">Changes apply after saving.</div>
+          <button id="live-voice-confirm-btn" type="button">Save changes</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Suggested Actions -->
+    <div class="live-suggestions flex flex-wrap items-center justify-center gap-2 text-xs text-zinc-500 pb-2">
+      <span class="text-zinc-400">Try saying:</span>
+      <button class="voice-preset px-3 py-1.5 rounded-full bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 transition-all" type="button">"Summarize our conversation"</button>
+      <button class="voice-preset px-3 py-1.5 rounded-full bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 transition-all" type="button">"Explain this simply"</button>
+      <button class="voice-preset px-3 py-1.5 rounded-full bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 transition-all" type="button">"Help me debug this"</button>
+    </div>
+    </main>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-zinc-200 py-4 bg-[#fafafa]">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 font-mono gap-2">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <span>MAXIMUS Live Audio Core 4.2</span>
+      </div>
+      <div>End-to-End Encrypted Session</div>
+    </div>
+  </footer>
+
+
+  <!-- ==================== NEW CONVERSATION MODAL ==================== -->
+  <div
+        id="newConversationModal"
+        class="new-conversation-backdrop"
+        onclick="handleNewConversationBackdrop(event)"
+        aria-hidden="true"
+    >
+        <div
+            class="new-conversation-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="newConversationTitle"
+            onclick="event.stopPropagation()"
+        >
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h3 id="newConversationTitle" class="text-base font-semibold text-neutral-900 tracking-tight">Create New Conversation</h3>
+                    <p class="text-xs text-neutral-400 mt-1">Choose how you want to interact with MAXIMUS.</p>
+                </div>
+                <button
+                    type="button"
+                    onclick="closeNewConversationModal()"
+                    class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-800 hover:bg-neutral-100 transition-colors"
+                    aria-label="Close"
+                >
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="mt-5">
+                <label for="conversationNameInput" class="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">Conversation name</label>
+                <input
+                    id="conversationNameInput"
+                    type="text"
+                    maxlength="80"
+                    placeholder="e.g. Python Project, Evening AI Session"
+                    class="w-full h-11 px-3.5 rounded-xl border border-neutral-200 bg-neutral-50 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:bg-white focus:border-neutral-900 transition-colors"
+                >
+            </div>
+
+            <div class="mt-5">
+                <div class="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">Choose mode</div>
+
+                <div class="space-y-2.5">
+                    <button
+                        id="conversationModeChat"
+                        type="button"
+                        onclick="selectNewConversationMode('chat')"
+                        class="conversation-mode-option active w-full text-left flex items-center gap-3 p-3.5 rounded-xl border border-neutral-200 bg-white"
+                    >
+                        <div class="w-9 h-9 rounded-lg bg-neutral-100 flex items-center justify-center text-neutral-700 shrink-0">
+                            <i class="fa-regular fa-comment text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-semibold text-neutral-900">Chat</div>
+                            <div class="text-[11px] text-neutral-500 mt-0.5">Text, code, images and normal MAXIMUS conversation.</div>
+                        </div>
+                        <span class="conversation-mode-radio"></span>
+                    </button>
+
+                    <button
+                        id="conversationModeLive"
+                        type="button"
+                        onclick="selectNewConversationMode('live')"
+                        class="conversation-mode-option w-full text-left flex items-center gap-3 p-3.5 rounded-xl border border-neutral-200 bg-white"
+                    >
+                        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                            <i class="fa-solid fa-microphone text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-semibold text-neutral-900">Live AI</span>
+                                <span class="text-[9px] font-semibold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded">Live</span>
+                            </div>
+                            <div class="text-[11px] text-neutral-500 mt-0.5">Real-time voice interaction with MAXIMUS.</div>
+                        </div>
+                        <span class="conversation-mode-radio"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 mt-6 pt-4 border-t border-neutral-100">
+                <button
+                    type="button"
+                    onclick="closeNewConversationModal()"
+                    class="px-4 py-2.5 rounded-xl text-xs font-semibold text-neutral-600 hover:bg-neutral-100 transition-colors"
+                >
+                    Cancel
+                </button>
+                <button
+                    id="createConversationBtn"
+                    type="button"
+                    onclick="createNewConversation()"
+                    class="px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold transition-colors flex items-center gap-2"
+                >
+                    Create Conversation
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+  <!-- ==================== CONFIRM MODAL ==================== -->
+  <div id="confirmModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl modal-animate flex flex-col border border-zinc-200">
+      <div class="w-full flex justify-between items-center pb-3 border-b border-zinc-100">
+        <h3 class="text-sm font-semibold text-zinc-900" id="confirmModalTitle">Please Confirm</h3>
+        <button onclick="closeConfirmModal()" class="text-zinc-400 hover:text-zinc-700 text-sm">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+
+      <p class="text-xs text-zinc-500 mt-4" id="confirmModalMessage">Are you sure?</p>
+
+      <div class="flex items-center justify-end gap-2 mt-6">
+        <button onclick="closeConfirmModal()" class="px-3.5 py-2 rounded-lg text-xs font-semibold text-zinc-600 hover:bg-zinc-100 transition-colors">
+          Cancel
+        </button>
+        <button id="confirmModalActionBtn" class="px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-black hover:bg-zinc-800 transition-colors">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastNotification" class="fixed left-1/2 bottom-6 -translate-x-1/2 translate-y-2 opacity-0 pointer-events-none z-[100] transition-all duration-200 bg-black text-white text-[12px] px-4 py-2.5 rounded-xl shadow-xl"><span id="toastMessage"></span></div>
+
+  <!-- Sidebar Interactivity -->
+  <script>
+    let sessionPendingDelete = null;
+    let isClearAllAction = false;
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        if (typeof closeConfirmModal === "function") closeConfirmModal();
+      }
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastNotification");
+      const toastMsg = document.getElementById("toastMessage");
+      if (!toast || !toastMsg) return;
+      toastMsg.textContent = msg;
+      toast.classList.remove("opacity-0", "pointer-events-none", "translate-y-2");
+      toast.classList.add("opacity-100", "translate-y-0");
+      setTimeout(() => {
+        toast.classList.add("opacity-0", "pointer-events-none", "translate-y-2");
+        toast.classList.remove("opacity-100", "translate-y-0");
+      }, 2500);
+    }
+
+    function confirmDelete(e, id, title) {
+      e.stopPropagation();
+      sessionPendingDelete = id;
+      isClearAllAction = false;
+      document.getElementById("confirmModalTitle").textContent = "Delete Voice Session";
+      document.getElementById("confirmModalMessage").textContent = `Are you sure you want to delete "${title}"? This transcript and audio telemetry will be permanently removed.`;
+      document.getElementById("confirmModalActionBtn").textContent = "Delete Session";
+      document.getElementById("confirmModalActionBtn").className = "px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors";
+      document.getElementById("confirmModal").classList.remove("hidden");
+    }
+
+    function confirmClearAll() {
+      const items = document.querySelectorAll(".recent-item");
+      if (items.length === 0) return;
+      isClearAllAction = true;
+      document.getElementById("confirmModalTitle").textContent = "Clear All Recents";
+      document.getElementById("confirmModalMessage").textContent = "Are you sure you want to clear all recent sessions? This will remove all local conversation histories.";
+      document.getElementById("confirmModalActionBtn").textContent = "Clear All";
+      document.getElementById("confirmModalActionBtn").className = "px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors";
+      document.getElementById("confirmModal").classList.remove("hidden");
+    }
+
+    function closeConfirmModal() {
+      document.getElementById("confirmModal").classList.add("hidden");
+      sessionPendingDelete = null;
+      isClearAllAction = false;
+    }
+
+    document.getElementById("confirmModalActionBtn").addEventListener("click", async () => {
+      const actionBtn = document.getElementById("confirmModalActionBtn");
+      actionBtn.disabled = true;
+
+      try {
+        if (isClearAllAction) {
+          const response = await fetch('/api/live/history', { method: 'DELETE', credentials: 'include', headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(data.detail || 'Could not clear Live AI history.');
+
+          closeConfirmModal();
+          await loadLiveRecentSessions(false);
+          document.getElementById("currentSessionTitle").textContent = "Live Transcript";
+          document.getElementById("transcript-feed").innerHTML = "";
+          showToast("All Live AI sessions cleared");
+          return;
+        }
+
+        if (sessionPendingDelete) {
+          const deletingId = sessionPendingDelete;
+          const response = await fetch('/api/live/' + encodeURIComponent(deletingId), { method: 'DELETE', credentials: 'include', headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(data.detail || 'Could not delete Live AI session.');
+
+          closeConfirmModal();
+          await loadLiveRecentSessions(true);
+          showToast("Session deleted");
+        }
+      } catch (error) {
+        console.error(error);
+        showToast(error.message || 'Live AI session action failed.');
+      } finally {
+        actionBtn.disabled = false;
+      }
+    });
+
+    function checkEmptyRecents() {
+      const list = document.getElementById("recentSessionsList");
+      const emptyState = document.getElementById("emptyRecentsState");
+      const label = document.getElementById("sessionCountLabel");
+      const clearBtn = document.getElementById("clearAllBtn");
+      const count = list.querySelectorAll(".recent-item").length;
+
+      label.textContent = `${count} Saved Session${count === 1 ? '' : 's'}`;
+      if (count === 0) {
+        list.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        clearBtn.classList.add("opacity-40", "pointer-events-none");
+      } else {
+        list.classList.remove("hidden");
+        emptyState.classList.add("hidden");
+        clearBtn.classList.remove("opacity-40", "pointer-events-none");
+      }
+    }
+
+    async function switchSession(id) {
+      document.querySelectorAll(".recent-item").forEach(item => {
+        item.classList.remove("bg-zinc-100/80", "border-zinc-200", "font-semibold");
+        item.classList.add("hover:bg-zinc-50", "border-transparent", "text-zinc-700");
+        const dot = item.querySelector(".w-2.h-2");
+        if (dot) dot.className = "w-2 h-2 rounded-full bg-zinc-300 shrink-0";
+      });
+
+      try {
+        const response = await fetch('/api/live/' + encodeURIComponent(id), { credentials: 'include', cache: 'no-store' });
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(data.detail || 'Could not load Live AI conversation.');
+        }
+
+        const current = document.querySelector(`.recent-item[data-id="${id}"]`);
+        if (current) {
+          current.classList.add("bg-zinc-100/80", "border-zinc-200");
+          current.classList.remove("border-transparent", "hover:bg-zinc-50");
+          const dot = current.querySelector(".w-2.h-2");
+          if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-500 shrink-0";
+        }
+
+        document.getElementById("currentSessionTitle").textContent =
+          `Live Transcript: ${data.title || 'Live Conversation'}`;
+
+        if (typeof window.activateLiveSession === 'function') {
+          window.activateLiveSession(data);
+        }
+        sessionStorage.setItem('maximusLiveSessionId', String(data.id));
+        sessionStorage.setItem('maximusConversationName', data.title || '');
+        sessionStorage.setItem('maximusConversationMode', 'live');
+
+        showToast(`Loaded "${data.title || 'Live Conversation'}"`);
+      } catch (error) {
+        console.error(error);
+        showToast(error.message || 'Could not load Live AI conversation.');
+      }
+    }
+
+    async function loadLiveRecentSessions(autoSelect = true) {
+      const list = document.getElementById("recentSessionsList");
+      if (!list) return;
+
+      try {
+        const response = await fetch('/api/live/list', { credentials: 'include', cache: 'no-store' });
+        const sessions = await response.json().catch(() => []);
+
+        if (!response.ok) {
+          throw new Error(sessions.detail || 'Could not load Live AI sessions.');
+        }
+
+        const liveSessions = (Array.isArray(sessions) ? sessions : []).slice(0, 20);
+        list.innerHTML = '';
+
+        liveSessions.forEach(session => {
+          const item = document.createElement('div');
+          const title = String(session.title || 'New Live Conversation');
+
+          item.className = 'recent-item group relative flex items-center justify-between p-2.5 rounded-xl hover:bg-zinc-50 border border-transparent hover:border-zinc-200 text-zinc-700 cursor-pointer';
+          item.dataset.id = String(session.id);
+          item.onclick = () => switchSession(String(session.id));
+
+          const left = document.createElement('div');
+          left.className = 'flex items-center gap-2.5 min-w-0 pr-2';
+
+          const dot = document.createElement('span');
+          dot.className = 'w-2 h-2 rounded-full bg-zinc-300 shrink-0';
+
+          const textWrap = document.createElement('div');
+          textWrap.className = 'flex flex-col min-w-0';
+
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'text-xs font-medium truncate leading-tight';
+          titleSpan.textContent = title;
+
+          const meta = document.createElement('span');
+          meta.className = 'text-[10px] text-zinc-400 font-mono mt-0.5';
+          meta.textContent = `${session.message_count || 0} messages • Live`;
+
+          textWrap.appendChild(titleSpan);
+          textWrap.appendChild(meta);
+          left.appendChild(dot);
+          left.appendChild(textWrap);
+
+          const pinButton = document.createElement('button');
+          pinButton.className = `w-7 h-7 rounded-lg hover:bg-zinc-50 flex items-center justify-center shrink-0 ${session.pinned ? 'text-[#384c37] bg-[#eef4ec]' : 'text-zinc-400 hover:text-zinc-900'}`;
+          pinButton.title = session.pinned ? 'Unpin conversation' : 'Pin conversation';
+          pinButton.type = 'button';
+          pinButton.innerHTML = `<span class="material-symbols-outlined text-[17px]">${'push_pin'}</span>`;
+          pinButton.onclick = async (event) => {
+            event.stopPropagation();
+            try {
+              const response = await fetch(`/api/live/${encodeURIComponent(session.id)}/${session.pinned ? 'unpin' : 'pin'}`, {method:'POST',credentials:'include',headers:{'Accept':'application/json'}});
+              const data = await response.json().catch(()=>({}));
+              if (!response.ok) throw new Error(data.detail || 'Could not change pin state.');
+              await loadLiveRecentSessions(false);
+              showToast(session.pinned ? 'Conversation unpinned' : 'Conversation pinned');
+            } catch(error) { showToast(error.message || 'Could not change pin state.'); }
+          };
+
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'delete-btn opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-lg hover:bg-red-50 text-zinc-400 hover:text-red-600 flex items-center justify-center shrink-0';
+          deleteButton.title = 'Delete session';
+          deleteButton.type = 'button';
+          deleteButton.innerHTML = '<span class="material-symbols-outlined text-base">delete</span>';
+          deleteButton.onclick = (event) => {
+            event.stopPropagation();
+            confirmDelete(event, String(session.id), title);
+          };
+
+          item.appendChild(left);
+          item.appendChild(pinButton);
+          item.appendChild(deleteButton);
+          list.appendChild(item);
+        });
+
+        checkEmptyRecents();
+
+        if (autoSelect && liveSessions.length > 0) {
+          const requestedTitle = sessionStorage.getItem('maximusConversationName') || '';
+          const requestedId = sessionStorage.getItem('maximusLiveSessionId') || '';
+          const preferred = requestedId
+            ? liveSessions.find(s => String(s.id) === String(requestedId))
+            : (requestedTitle ? liveSessions.find(s => String(s.title || '') === requestedTitle) : null);
+          await switchSession(String((preferred || liveSessions[0]).id));
+
+          sessionStorage.removeItem('maximusConversationName');
+          sessionStorage.removeItem('maximusConversationMode');
+          sessionStorage.removeItem('maximusLiveSessionId');
+        } else if (liveSessions.length === 0) {
+          document.getElementById('currentSessionTitle').textContent = 'Live Transcript';
+          document.getElementById('transcript-feed').innerHTML = '';
+        }
+      } catch (error) {
+        console.warn('Live sessions could not be loaded:', error);
+      }
+    }
+
+
+    // ---------- New Conversation (same flow as Home) ----------
+    let selectedNewConversationMode = 'live';
+
+    window.openNewConversationModal = function() {
+      const modal = document.getElementById('newConversationModal');
+      const input = document.getElementById('conversationNameInput');
+      if (!modal) return;
+      selectedNewConversationMode = 'live';
+      selectNewConversationMode('live');
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 60);
+      }
+    };
+
+    window.closeNewConversationModal = function() {
+      const modal = document.getElementById('newConversationModal');
+      if (!modal) return;
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+    };
+
+    window.handleNewConversationBackdrop = function(event) {
+      if (event.target && event.target.id === 'newConversationModal') closeNewConversationModal();
+    };
+
+    window.selectNewConversationMode = function(mode) {
+      selectedNewConversationMode = mode === 'chat' ? 'chat' : 'live';
+      document.getElementById('conversationModeChat')?.classList.toggle('active', selectedNewConversationMode === 'chat');
+      document.getElementById('conversationModeLive')?.classList.toggle('active', selectedNewConversationMode === 'live');
+    };
+
+    window.createNewConversation = async function() {
+      const input = document.getElementById('conversationNameInput');
+      const createBtn = document.getElementById('createConversationBtn');
+      const name = (input?.value || '').trim() || 'New Conversation';
+      const mode = selectedNewConversationMode;
+      if (createBtn) { createBtn.disabled = true; createBtn.classList.add('opacity-60', 'cursor-not-allowed'); }
+
+      try {
+        const response = await fetch(mode === 'live' ? '/api/live/new' : '/api/chat/new', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          cache: 'no-store',
+          body: JSON.stringify({ title: name })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.detail || 'Could not create a new conversation.');
+
+        sessionStorage.setItem('maximusConversationName', data.title || name);
+        sessionStorage.setItem('maximusConversationMode', mode);
+
+        closeNewConversationModal();
+
+        if (mode === 'chat') {
+          sessionStorage.setItem('maximusChatId', String(data.id));
+          window.location.href = '/home';
+          return;
+        }
+
+        sessionStorage.setItem('maximusLiveSessionId', String(data.id));
+        await switchSession(String(data.id));
+        await loadLiveRecentSessions(false);
+      } catch (error) {
+        console.error(error);
+        showToast(error.message || 'Could not create a new conversation.');
+      } finally {
+        if (createBtn) { createBtn.disabled = false; createBtn.classList.remove('opacity-60', 'cursor-not-allowed'); }
+      }
+    };
+
+    document.getElementById('liveNewConversationBtn')?.addEventListener('click', openNewConversationModal);
+    document.getElementById('conversationNameInput')?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') { event.preventDefault(); createNewConversation(); }
+      if (event.key === 'Escape') closeNewConversationModal();
+    });
+
+  </script>
+
+  <!-- Interactivity Script -->
+  <script>
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // Compact Live Setup panel: collapsed by default so voice stays the visual focus.
+  const liveSettingsShell = document.getElementById('liveSettingsShell');
+  const liveSettingsToggle = document.getElementById('liveSettingsToggle');
+  const liveSettingsSummary = document.getElementById('live-settings-summary');
+
+  function setLiveSettingsOpen(open) {
+    if (!liveSettingsShell || !liveSettingsToggle) return;
+    liveSettingsShell.classList.toggle('open', !!open);
+    liveSettingsToggle.setAttribute('aria-expanded', String(!!open));
+  }
+
+  liveSettingsToggle?.addEventListener('click', () => {
+    setLiveSettingsOpen(!liveSettingsShell?.classList.contains('open'));
+  });
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function updateLiveSettingsSummary() {
+    if (!liveSettingsSummary) return;
+    const model = document.getElementById('live-model-select')?.selectedOptions?.[0]?.textContent?.trim() || 'MAXIMUS';
+    const input = document.getElementById('live-input-language-select')?.selectedOptions?.[0]?.textContent?.replace(/^\S+\s*/, '').trim() || 'Language';
+    const textOut = document.getElementById('live-output-text-select')?.selectedOptions?.[0]?.textContent?.replace(/^\S+\s*/, '').trim() || 'Text';
+    const speechOut = document.getElementById('live-output-speech-select')?.selectedOptions?.[0]?.textContent?.replace(/^\S+\s*/, '').trim() || 'Speech';
+    const networkOn = document.getElementById('live-network-toggle')?.getAttribute('aria-checked') === 'true';
+    liveSettingsSummary.textContent = `${model} · ${input} · Text ${textOut} · Voice ${speechOut} · Web ${networkOn ? 'on' : 'off'}`;
+  }
+
+  ['live-model-select','live-input-language-select','live-output-text-select','live-output-speech-select','live-output-voice-select'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', updateLiveSettingsSummary);
+  });
+  document.getElementById('live-network-toggle')?.addEventListener('click', () => setTimeout(updateLiveSettingsSummary, 0));
+
+  // ==============================
+  // PROFILE MENU — same real profile source as Home
+  // ==============================
+  const liveProfileTrigger = document.getElementById("liveProfileTrigger");
+  const liveProfileDropdown = document.getElementById("liveProfileDropdown");
+  const liveProfileAvatar = document.getElementById("liveProfileAvatar");
+  const liveProfileName = document.getElementById("liveProfileName");
+  const liveProfileEmail = document.getElementById("liveProfileEmail");
+
+  let liveCurrentProfile = { name: "", email: "", icon_url: null };
+
+  function liveProfileInitials(name, email) {
+    const source = (name || email || "U").trim();
+    const parts = source.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return source.charAt(0).toUpperCase() || "U";
+  }
+
+  function renderLiveProfileAvatar() {
+    if (!liveProfileAvatar) return;
+    if (liveCurrentProfile.icon_url) {
+      const img = document.createElement("img");
+      img.src = liveCurrentProfile.icon_url;
+      img.alt = "Profile";
+      img.className = "w-full h-full object-cover";
+      liveProfileAvatar.replaceChildren(img);
+    } else {
+      liveProfileAvatar.textContent = liveProfileInitials(liveCurrentProfile.name, liveCurrentProfile.email);
+    }
+  }
+
+  // Keep every user message avatar in the transcript synced with the real profile.
+  function renderTranscriptUserAvatars() {
+    const avatars = document.querySelectorAll('[data-transcript-user-avatar="true"]');
+    avatars.forEach((avatar) => {
+      if (liveCurrentProfile.icon_url) {
+        const img = document.createElement("img");
+        img.src = liveCurrentProfile.icon_url;
+        img.alt = liveCurrentProfile.name || "Profile";
+        img.className = "w-full h-full object-cover";
+        avatar.replaceChildren(img);
+      } else {
+        avatar.textContent = liveProfileInitials(liveCurrentProfile.name, liveCurrentProfile.email);
+      }
+    });
+  }
+
+  async function loadLiveProfile(force = false) {
+    if (!force && liveProfileTrigger?.dataset.loaded === 'true') return;
+    try {
+      const response = await fetch('/api/user/profile', {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'no-store'
+      });
+      if (!response.ok) throw new Error(`Profile request failed: ${response.status}`);
+      const profile = await response.json();
+      liveCurrentProfile = {
+        name: (profile.name || '').trim(),
+        email: (profile.email || '').trim(),
+        icon_url: profile.icon_url || null
+      };
+      if (liveProfileName) liveProfileName.textContent = liveCurrentProfile.name || 'User';
+      if (liveProfileEmail) liveProfileEmail.textContent = liveCurrentProfile.email || '';
+      renderLiveProfileAvatar();
+      renderTranscriptUserAvatars();
+      if (liveProfileTrigger) liveProfileTrigger.dataset.loaded = 'true';
+    } catch (error) {
+      console.warn('Live AI profile could not be loaded:', error);
+      if (liveProfileEmail) liveProfileEmail.textContent = '';
+      renderLiveProfileAvatar();
+    }
+  }
+
+  if (liveProfileTrigger && liveProfileDropdown) {
+    loadLiveProfile();
+    liveProfileTrigger.addEventListener('click', async (event) => {
+      event.stopPropagation();
+      const isOpen = liveProfileDropdown.classList.toggle('hidden') === false;
+      liveProfileTrigger.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen && liveProfileTrigger.dataset.loaded !== 'true') {
+        await loadLiveProfile();
+      }
+    });
+    liveProfileDropdown.addEventListener('click', (event) => event.stopPropagation());
+    document.addEventListener('click', () => {
+      liveProfileDropdown.classList.add('hidden');
+      liveProfileTrigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  // ==============================
+  // ELEMENTS
+  // ==============================
+  const micBtn = document.getElementById("central-mic-btn");
+  const micIcon = document.getElementById("mic-icon");
+  const voiceStateLabel = document.getElementById("voice-state-label");
+  const pulseDot = document.getElementById("status-pulse-dot");
+  const liveInputLanguageSelect = document.getElementById("live-input-language-select");
+  const liveOutputVoiceSelect = document.getElementById("live-output-voice-select");
+  const liveOutputTextSelect = document.getElementById("live-output-text-select");
+  const liveOutputSpeechSelect = document.getElementById("live-output-speech-select");
+  const liveModelSelect = document.getElementById("live-model-select");
+  const liveModelStatus = document.getElementById("live-model-status");
+  const liveNetworkToggle = document.getElementById("live-network-toggle");
+  const liveNetworkKnob = document.getElementById("live-network-knob");
+  const liveNetworkStatus = document.getElementById("live-network-status");
+  const liveVoiceConfirmBtn = document.getElementById("live-voice-confirm-btn");
+  const liveVoiceSettingsStatus = document.getElementById("live-voice-settings-status");
+  const liveVoiceStatus = document.getElementById("live-voice-status");
+
+  const muteBtn = document.getElementById("mute-btn");
+  const endBtn = document.getElementById("end-btn");
+
+  const quickInput = document.getElementById("quick-input");
+  const sendBtn = document.getElementById("send-input-btn");
+  const transcriptFeed = document.getElementById("transcript-feed");
+  const waveBars = document.querySelectorAll(".wave-bar");
+
+  // ==============================
+  // VOICE VARIABLES
+  // ==============================
+  let recognition = null;
+  let isListening = false;
+  let isMuted = false;
+  let sessionEnded = false;
+  let isSpeaking = false;
+  let keepListening = false; // Keeps the mic active between questions
+  let isProcessing = false;
+  let restartTimer = null;
+  let activeLiveSessionId = null;
+
+  // Voice settings loaded from MAXIMUS Settings (/api/settings)
+  let liveVoiceSettings = {
+    model: "flash",
+    voice: "en-IN-NeerjaNeural",
+    input_language: "en-IN",
+    output_language: "en-IN",      // displayed transcript text
+    speech_language: "en-IN",      // spoken/TTS language
+    voice_gender: "female",
+    network_access: false
+  };
+
+  const LIVE_LANGUAGES = {
+    "en-IN": "English (India)",
+    "ru-RU": "Russian",
+    "fr-FR": "French",
+    "ja-JP": "Japanese",
+    "hi-IN": "Hindi",
+    "te-IN": "Telugu",
+    "ta-IN": "Tamil",
+    "kn-IN": "Kannada",
+    "ml-IN": "Malayalam"
+  };
+
+  // Every Edge TTS voice is tied to one language. The selected voice follows
+  // OUTPUT SPEECH LANGUAGE, while OUTPUT TEXT LANGUAGE stays independent.
+  function voiceLanguageFromId(voiceId) {
+    const id = String(voiceId || "");
+    const match = id.match(/^([a-z]{2}-[A-Z]{2})-/);
+    return match ? match[1] : "en-IN";
+  }
+
+  function syncVoiceToSpeechLanguage(language, preferredGender = null) {
+    if (!liveOutputVoiceSelect || !language) return;
+    const options = Array.from(liveOutputVoiceSelect.options);
+    const matching = options.filter(option => voiceLanguageFromId(option.value) === language);
+    if (!matching.length) return;
+
+    const gender = preferredGender || voiceGenderFromId(liveVoiceSettings.voice);
+    const genderMatch = matching.find(option => voiceGenderFromId(option.value) === gender);
+    liveOutputVoiceSelect.value = (genderMatch || matching[0]).value;
+  }
+
+  function voiceGenderFromId(voiceId) {
+    const id = String(voiceId || "").toLowerCase();
+    if (/(aria|jenny|sonia|natasha|neerja|shruti|swara|pallavi|sobhana)/i.test(id)) return "female";
+    if (/(guy|christopher|ryan|william|prabhat|mohan|madhur|valluvar|midhun)/i.test(id)) return "male";
+    return "female";
+  }
+
+  function updateLiveVoicePanel() {
+    if (liveModelSelect) liveModelSelect.value = liveVoiceSettings.model || "flash";
+    if (liveInputLanguageSelect) liveInputLanguageSelect.value = liveVoiceSettings.input_language;
+    if (liveOutputVoiceSelect) liveOutputVoiceSelect.value = liveVoiceSettings.voice;
+    if (liveOutputTextSelect) liveOutputTextSelect.value = liveVoiceSettings.output_language;
+    if (liveOutputSpeechSelect) liveOutputSpeechSelect.value =
+      liveVoiceSettings.speech_language || voiceLanguageFromId(liveVoiceSettings.voice);
+    if (liveNetworkToggle) {
+      const enabled = !!liveVoiceSettings.network_access;
+      liveNetworkToggle.setAttribute("aria-checked", String(enabled));
+      liveNetworkToggle.classList.toggle("bg-emerald-500", enabled);
+      liveNetworkToggle.classList.toggle("bg-zinc-300", !enabled);
+      liveNetworkKnob?.classList.toggle("translate-x-5", enabled);
+      liveNetworkKnob?.classList.toggle("translate-x-0", !enabled);
+    }
+    if (liveNetworkStatus) {
+      liveNetworkStatus.textContent = liveVoiceSettings.network_access ? "Enabled • website access available" : "Disabled";
+      liveNetworkStatus.className = liveVoiceSettings.network_access
+        ? "text-[9px] text-emerald-600 mt-0.5"
+        : "text-[9px] text-zinc-400 mt-0.5";
+    }
+    if (liveVoiceStatus) liveVoiceStatus.textContent = "MAXIMUS";
+    if (liveVoiceSettingsStatus) {
+      const inputName = LIVE_LANGUAGES[liveVoiceSettings.input_language] || liveVoiceSettings.input_language;
+      const textName = LIVE_LANGUAGES[liveVoiceSettings.output_language] || liveVoiceSettings.output_language;
+      const speechCode = liveVoiceSettings.speech_language || voiceLanguageFromId(liveVoiceSettings.voice);
+      const speechName = LIVE_LANGUAGES[speechCode] || speechCode;
+      liveVoiceSettingsStatus.textContent = `${inputName} → Text: ${textName} · Speech: ${speechName}`;
+    }
+  }
+
+  async function loadLiveModels(selectedModel = null) {
+    if (!liveModelSelect) return;
+    const previous = selectedModel || liveVoiceSettings.model || "flash";
+    try {
+      const response = await fetch("/api/providers", { credentials: "include", cache: "no-store" });
+      const providers = await response.json().catch(() => []);
+      if (!response.ok) throw new Error(providers.detail || "Could not load BYOK providers.");
+
+      liveModelSelect.innerHTML = "";
+      const maximus = document.createElement("option");
+      maximus.value = "flash";
+      maximus.textContent = "MAXIMUS Flash";
+      liveModelSelect.appendChild(maximus);
+
+      let byokCount = 0;
+      for (const provider of (Array.isArray(providers) ? providers : [])) {
+        if (!provider.is_active || !provider.is_valid) continue;
+        const models = Array.isArray(provider.models) ? provider.models : [];
+        if (!models.length) continue;
+
+        const group = document.createElement("optgroup");
+        group.label = `${provider.label || provider.provider} • BYOK`;
+        for (const model of models) {
+          const modelId = String(model);
+          const option = document.createElement("option");
+          option.value = `provider:${provider.id}:${modelId}`;
+          option.textContent = modelId;
+          group.appendChild(option);
+          byokCount++;
+        }
+        liveModelSelect.appendChild(group);
+      }
+
+      const exists = Array.from(liveModelSelect.options).some(o => o.value === previous);
+      liveModelSelect.value = exists ? previous : "flash";
+      liveVoiceSettings.model = liveModelSelect.value;
+      if (liveModelStatus) {
+        liveModelStatus.textContent = byokCount
+          ? `${byokCount} BYOK model${byokCount === 1 ? "" : "s"} available.`
+          : "No active BYOK models. Add/refresh providers in Models & Providers.";
+      }
+    } catch (error) {
+      console.warn("Live BYOK model load failed:", error);
+      if (liveModelStatus) liveModelStatus.textContent = "Could not load BYOK models.";
+    }
+  }
+
+  async function loadLiveVoiceSettings() {
+    try {
+      const r = await fetch("/api/settings", { credentials: "include", cache: "no-store" });
+      const result = await r.json().catch(() => ({}));
+      if (r.status === 401) throw new Error("Not authenticated");
+      if (!r.ok) throw new Error(result.detail || "Could not load voice settings");
+      const settings = result.settings || result;
+
+      liveVoiceSettings.model = settings.model || "flash";
+      liveVoiceSettings.vision_fidelity = settings.vision_fidelity;
+      liveVoiceSettings.network_access = !!settings.network_access;
+      liveVoiceSettings.voice = settings.voice || liveVoiceSettings.voice;
+      liveVoiceSettings.input_language = LIVE_LANGUAGES[settings.input_language] ? settings.input_language : "en-IN";
+      liveVoiceSettings.output_language = LIVE_LANGUAGES[settings.output_language] ? settings.output_language : "en-IN";
+      liveVoiceSettings.voice_gender = settings.voice_gender || voiceGenderFromId(liveVoiceSettings.voice);
+      liveVoiceSettings.speech_language = voiceLanguageFromId(liveVoiceSettings.voice);
+
+      if (recognition) recognition.lang = liveVoiceSettings.input_language;
+      await loadLiveModels(liveVoiceSettings.model);
+      updateLiveVoicePanel();
+    } catch (error) {
+      console.warn("Live voice settings load failed:", error);
+      if (liveVoiceSettingsStatus) liveVoiceSettingsStatus.textContent = "Using local defaults.";
+    }
+  }
+
+  async function confirmLiveVoiceSettings() {
+    const inputLanguage = liveInputLanguageSelect?.value || "en-IN";
+    const outputTextLanguage = liveOutputTextSelect?.value || "en-IN";
+    const speechLanguage = liveOutputSpeechSelect?.value || voiceLanguageFromId(liveOutputVoiceSelect?.value || liveVoiceSettings.voice);
+    syncVoiceToSpeechLanguage(speechLanguage, voiceGenderFromId(liveOutputVoiceSelect?.value || liveVoiceSettings.voice));
+    const outputVoice = liveOutputVoiceSelect?.value || liveVoiceSettings.voice;
+    const voiceGender = voiceGenderFromId(outputVoice);
+
+    try {
+      if (liveVoiceConfirmBtn) {
+        liveVoiceConfirmBtn.disabled = true;
+        liveVoiceConfirmBtn.textContent = "Saving…";
+      }
+
+      const r = await fetch("/api/settings", { credentials: "include", cache: "no-store" });
+      const currentResult = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(currentResult.detail || "Could not read current settings.");
+      const current = currentResult.settings || currentResult;
+
+      const payload = {
+        model: liveModelSelect?.value || current.model || "flash",
+        temperature: Number(current.temperature ?? 0.25),
+        context_limit: Number(current.context_limit ?? 128),
+        system_prompt: current.system_prompt || "",
+        voice: outputVoice,
+        input_language: inputLanguage,
+        output_language: outputTextLanguage,
+        voice_gender: voiceGender,
+        duplex: !!current.duplex,
+        auto_mute: !!current.auto_mute,
+        zdr: !!current.zdr,
+        vision_sampling: current.vision_sampling || "1 Frame / Sec (Standard Duplex)",
+        vision_fidelity: current.vision_fidelity || "Native 4K (High Precision)",
+        auto_ocr: !!current.auto_ocr,
+        spatial_grounding: !!current.spatial_grounding,
+        network_access: !!liveVoiceSettings.network_access
+      };
+
+      const save = await fetch("/api/settings", {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await save.json().catch(() => ({}));
+      if (!save.ok) throw new Error(result.detail || "Could not save voice settings.");
+
+      liveVoiceSettings = {
+        ...liveVoiceSettings,
+        model: payload.model,
+        network_access: payload.network_access,
+        voice: outputVoice,
+        input_language: inputLanguage,
+        output_language: outputTextLanguage,
+        speech_language: speechLanguage,
+        voice_gender: voiceGender
+      };
+      if (recognition) recognition.lang = inputLanguage;
+      updateLiveVoicePanel();
+      if (liveVoiceSettingsStatus) liveVoiceSettingsStatus.textContent = "Saved to Settings ✓";
+      if (!sessionEnded && !isSpeaking && !isProcessing) {
+        voiceStateLabel.textContent = `Ready • ${LIVE_LANGUAGES[inputLanguage] || inputLanguage}`;
+      }
+    } catch (error) {
+      console.error("Live voice settings save failed:", error);
+      if (liveVoiceSettingsStatus) liveVoiceSettingsStatus.textContent = error.message || "Save failed.";
+    } finally {
+      if (liveVoiceConfirmBtn) {
+        liveVoiceConfirmBtn.disabled = false;
+        liveVoiceConfirmBtn.textContent = "Save changes";
+      }
+    }
+  }
+
+  liveModelSelect?.addEventListener("change", async () => {
+    liveVoiceSettings.model = liveModelSelect.value || "flash";
+    if (liveVoiceSettingsStatus) liveVoiceSettingsStatus.textContent = "Model changed. Press Confirm to save.";
+    try {
+      const r = await fetch("/api/settings", {
+        method: "PUT", credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ model: liveVoiceSettings.model })
+      });
+      if (!r.ok) console.warn("Model auto-save failed", await r.text());
+    } catch (e) { console.warn("Model auto-save failed", e); }
+  });
+
+  liveNetworkToggle?.addEventListener("click", async () => {
+    const previous = !!liveVoiceSettings.network_access;
+    const enabled = !previous;
+    liveVoiceSettings.network_access = enabled;
+    updateLiveVoicePanel();
+    liveNetworkToggle.disabled = true;
+    if (liveVoiceSettingsStatus) {
+      liveVoiceSettingsStatus.textContent = enabled
+        ? "Enabling website access…"
+        : "Disabling website access…";
+    }
+
+    try {
+      const r = await fetch("/api/settings", {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ network_access: enabled })
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.detail || "Could not save network access.");
+      liveVoiceSettings.network_access = !!((data.settings || data).network_access);
+      updateLiveVoicePanel();
+      if (liveVoiceSettingsStatus) {
+        liveVoiceSettingsStatus.textContent = liveVoiceSettings.network_access
+          ? "Website access enabled ✓"
+          : "Website access disabled ✓";
+      }
+    } catch (error) {
+      liveVoiceSettings.network_access = previous;
+      updateLiveVoicePanel();
+      if (liveVoiceSettingsStatus) liveVoiceSettingsStatus.textContent = error.message || "Network save failed.";
+      showToast(error.message || "Could not save network access.");
+    } finally {
+      liveNetworkToggle.disabled = false;
+      updateLiveSettingsSummary();
+    }
+  });
+
+  // OUTPUT TEXT LANGUAGE controls only what appears in the transcript.
+  liveOutputTextSelect?.addEventListener("change", async () => {
+    const language = liveOutputTextSelect.value || "en-IN";
+    liveVoiceSettings.output_language = language;
+    if (liveVoiceSettingsStatus) {
+      const speechName = LIVE_LANGUAGES[liveVoiceSettings.speech_language] || liveVoiceSettings.speech_language;
+      liveVoiceSettingsStatus.textContent =
+        `Displayed text: ${LIVE_LANGUAGES[language] || language} · Spoken audio: ${speechName}`;
+    }
+    try {
+      const r = await fetch("/api/settings", {
+        method: "PUT", credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ output_language: language })
+      });
+      if (!r.ok) console.warn("Output text language auto-save failed", await r.text());
+    } catch (e) { console.warn("Output text language auto-save failed", e); }
+  });
+
+  // OUTPUT SPEECH LANGUAGE chooses the language used for TTS. The visible
+  // transcript can remain in another language.
+  liveOutputSpeechSelect?.addEventListener("change", async () => {
+    const language = liveOutputSpeechSelect.value || "en-IN";
+    liveVoiceSettings.speech_language = language;
+    syncVoiceToSpeechLanguage(language, liveVoiceSettings.voice_gender);
+    liveVoiceSettings.voice = liveOutputVoiceSelect?.value || liveVoiceSettings.voice;
+    liveVoiceSettings.voice_gender = voiceGenderFromId(liveVoiceSettings.voice);
+
+    if (liveVoiceSettingsStatus) {
+      const textName = LIVE_LANGUAGES[liveVoiceSettings.output_language] || liveVoiceSettings.output_language;
+      liveVoiceSettingsStatus.textContent =
+        `Displayed text: ${textName} · Spoken audio: ${LIVE_LANGUAGES[language] || language}`;
+    }
+
+    try {
+      const r = await fetch("/api/settings", {
+        method: "PUT", credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          voice: liveVoiceSettings.voice,
+          voice_gender: liveVoiceSettings.voice_gender
+        })
+      });
+      if (!r.ok) console.warn("Speech language auto-save failed", await r.text());
+    } catch (e) { console.warn("Speech language auto-save failed", e); }
+  });
+
+  liveOutputVoiceSelect?.addEventListener("change", async () => {
+    const voice = liveOutputVoiceSelect.value;
+    const language = voiceLanguageFromId(voice);
+    liveVoiceSettings.voice = voice;
+    liveVoiceSettings.voice_gender = voiceGenderFromId(voice);
+    liveVoiceSettings.speech_language = language;
+    if (liveOutputSpeechSelect && LIVE_LANGUAGES[language]) {
+      liveOutputSpeechSelect.value = language;
+    }
+
+    if (liveVoiceSettingsStatus) {
+      const textName = LIVE_LANGUAGES[liveVoiceSettings.output_language] || liveVoiceSettings.output_language;
+      liveVoiceSettingsStatus.textContent =
+        `Displayed text: ${textName} · Spoken audio: ${LIVE_LANGUAGES[language] || language}`;
+    }
+
+    try {
+      const r = await fetch("/api/settings", {
+        method: "PUT", credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          voice,
+          voice_gender: liveVoiceSettings.voice_gender
+        })
+      });
+      if (!r.ok) console.warn("Voice auto-save failed", await r.text());
+    } catch (e) { console.warn("Voice auto-save failed", e); }
+  });
+
+  // ==============================
+  // SPEECH RECOGNITION
+  // ==============================
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = liveVoiceSettings.input_language || "en-IN";
+    // One user utterance per turn. MAXIMUS pauses recognition while it is
+    // thinking/speaking and restarts only when the user left the mic active.
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+  } else {
+    // IMPORTANT: do not return here. Typed Live AI must continue to work even
+    // in browsers that do not implement the Web Speech Recognition API.
+    micBtn.disabled = true;
+    micBtn.classList.add("opacity-50", "cursor-not-allowed");
+    micIcon.textContent = "mic_off";
+    voiceStateLabel.textContent = "Voice input unavailable • Type below";
+    pulseDot.className = "w-2 h-2 rounded-full bg-amber-500";
+    console.warn("Speech Recognition is not supported in this browser. Text Live AI remains available.");
+  }
+
+
+  // ==============================
+  // TRANSCRIPT
+  // ==============================
+  function appendTranscript(role, text) {
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className =
+      role === "You"
+        ? "flex items-start gap-3.5"
+        : "flex items-start gap-3.5 pl-0 md:pl-2";
+
+    const avatar = document.createElement("div");
+
+    avatar.className =
+      role === "You"
+        ? "w-7 h-7 rounded-full bg-zinc-100 text-zinc-700 flex items-center justify-center shrink-0 text-xs font-semibold overflow-hidden"
+        : "w-7 h-7 rounded-lg bg-black overflow-hidden flex items-center justify-center shrink-0 shadow-sm";
+
+    if (role === "You") {
+      avatar.dataset.transcriptUserAvatar = "true";
+      if (liveCurrentProfile.icon_url) {
+        const img = document.createElement("img");
+        img.src = liveCurrentProfile.icon_url;
+        img.alt = liveCurrentProfile.name || "Profile";
+        img.className = "w-full h-full object-cover";
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = liveProfileInitials(liveCurrentProfile.name, liveCurrentProfile.email);
+      }
+    } else {
+      avatar.innerHTML = `<img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover">`;
+    }
+
+    const content = document.createElement("div");
+
+    content.className =
+      "flex flex-col gap-1 flex-1";
+
+    const header = document.createElement("div");
+
+    header.className =
+      "flex items-center gap-2";
+
+    const nameSpan = document.createElement("span");
+
+    nameSpan.className =
+      "text-xs font-semibold text-zinc-900";
+
+    nameSpan.textContent = role;
+
+    const timeSpan = document.createElement("span");
+
+    timeSpan.className =
+      "text-[11px] font-mono text-zinc-400";
+
+    timeSpan.textContent =
+      new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+    header.appendChild(nameSpan);
+    header.appendChild(timeSpan);
+
+    const p = document.createElement("p");
+
+    p.className =
+      "text-sm text-zinc-700 leading-relaxed";
+
+    p.textContent = text;
+
+    content.appendChild(header);
+    content.appendChild(p);
+
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(content);
+
+    transcriptFeed.appendChild(wrapper);
+
+    transcriptFeed.scrollTop =
+      transcriptFeed.scrollHeight;
+  }
+
+
+  // ==============================
+  // MAXIMUS VOICE
+  // ==============================
+  let activeTtsAudio = null;
+  let activeTtsUrl = null;
+  let activeTtsFinish = null;
+
+  function stopSpeaking() {
+    if (activeTtsAudio) {
+      try {
+        activeTtsAudio.pause();
+        activeTtsAudio.currentTime = 0;
+      } catch (_) {}
+      activeTtsAudio = null;
+    }
+    if (activeTtsUrl) {
+      try { URL.revokeObjectURL(activeTtsUrl); } catch (_) {}
+      activeTtsUrl = null;
+    }
+    if ("speechSynthesis" in window) {
+      try { window.speechSynthesis.cancel(); } catch (_) {}
+    }
+    isSpeaking = false;
+    const finish = activeTtsFinish;
+    activeTtsFinish = null;
+    if (finish) finish();
+  }
+
+  function speak(text) {
+    return new Promise(async (resolve) => {
+      if (!text || sessionEnded) {
+        resolve();
+        return;
+      }
+
+      stopSpeaking();
+
+      const outputLanguage = liveVoiceSettings.speech_language || voiceLanguageFromId(liveVoiceSettings.voice) || "en-IN";
+      const selectedVoice = liveVoiceSettings.voice || "en-IN-NeerjaNeural";
+
+      isSpeaking = true;
+      voiceStateLabel.textContent =
+        `MAXIMUS is speaking • ${LIVE_LANGUAGES[outputLanguage] || outputLanguage}`;
+      pulseDot.className =
+        "w-2 h-2 rounded-full bg-blue-500 animate-pulse";
+
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        activeTtsFinish = null;
+        if (activeTtsUrl) {
+          try { URL.revokeObjectURL(activeTtsUrl); } catch (_) {}
+          activeTtsUrl = null;
+        }
+        activeTtsAudio = null;
+        isSpeaking = false;
+        if (!sessionEnded && !isMuted && keepListening) {
+          voiceStateLabel.textContent = "Listening to you...";
+          pulseDot.className =
+            "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+        }
+        resolve();
+      };
+      activeTtsFinish = finish;
+
+      try {
+        const response = await fetch("/api/tts", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "Accept": "audio/mpeg" },
+          cache: "no-store",
+          body: JSON.stringify({
+            text,
+            voice: selectedVoice,
+            output_language: outputLanguage
+          })
+        });
+
+        if (!response.ok) {
+          const detail = await response.json().catch(() => ({}));
+          throw new Error(detail.detail || `TTS server error: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        activeTtsUrl = URL.createObjectURL(blob);
+        const audio = new Audio(activeTtsUrl);
+        activeTtsAudio = audio;
+        audio.preload = "auto";
+        audio.onended = finish;
+        audio.onerror = finish;
+        await audio.play();
+      } catch (ttsError) {
+        console.warn("Backend TTS unavailable; using browser speech:", ttsError);
+        if (activeTtsUrl) {
+          try { URL.revokeObjectURL(activeTtsUrl); } catch (_) {}
+          activeTtsUrl = null;
+        }
+        activeTtsAudio = null;
+
+        if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+          finish();
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = outputLanguage;
+        utterance.rate = 0.95;
+        utterance.pitch = 0.95;
+        utterance.volume = 1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const target = outputLanguage.toLowerCase();
+        const preferred =
+          voices.find(v => String(v.lang || "").toLowerCase() === target) ||
+          voices.find(v => String(v.lang || "").toLowerCase().startsWith(target.split("-")[0]));
+        if (preferred) utterance.voice = preferred;
+
+        utterance.onend = finish;
+        utterance.onerror = finish;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      }
+    });
+  }
+
+
+  // ==============================
+  // LIVE TURN-TAKING + REAL BACKEND CALLS
+  // ==============================
+  function scheduleListening(delay = 300) {
+    clearTimeout(restartTimer);
+    restartTimer = setTimeout(() => {
+      restartTimer = null;
+      if (keepListening && !sessionEnded && !isMuted && !isSpeaking && !isProcessing) {
+        startListening();
+      }
+    }, delay);
+  }
+
+  let microphonePermissionGranted = false;
+
+  async function requestMicrophonePermission() {
+    // Web Speech can request permission itself, but explicitly checking the mic
+    // gives clearer errors on Chromium and catches blocked devices immediately.
+    if (microphonePermissionGranted) return true;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return true;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop());
+      microphonePermissionGranted = true;
+      return true;
+    } catch (error) {
+      console.warn("Microphone permission failed:", error);
+      keepListening = false;
+      voiceStateLabel.textContent =
+        location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1"
+          ? "Microphone needs HTTPS or localhost"
+          : "Microphone permission denied";
+      pulseDot.className = "w-2 h-2 rounded-full bg-red-500";
+      showToast(voiceStateLabel.textContent);
+      return false;
+    }
+  }
+
+  async function startListening() {
+    if (!recognition || sessionEnded || isMuted || isProcessing) return;
+
+    if (isSpeaking) {
+      stopSpeaking();
+    }
+    if (isListening) return;
+
+    const allowed = await requestMicrophonePermission();
+    if (!allowed || !keepListening || sessionEnded || isMuted || isProcessing) return;
+
+    recognition.lang = liveVoiceSettings.input_language || "en-IN";
+    try {
+      recognition.start();
+    } catch (error) {
+      // Chrome throws InvalidStateError if start() races a previous onend.
+      if (error && error.name === "InvalidStateError") {
+        scheduleListening(350);
+        return;
+      }
+      console.error("Could not start microphone:", error);
+      keepListening = false;
+      voiceStateLabel.textContent = "Could not start microphone";
+      pulseDot.className = "w-2 h-2 rounded-full bg-red-500";
+      showToast("Could not start microphone");
+    }
+  }
+
+  function stopListening(abort = false) {
+    clearTimeout(restartTimer);
+    restartTimer = null;
+    if (!recognition) {
+      isListening = false;
+      return;
+    }
+    try {
+      if (isListening) {
+        abort ? recognition.abort() : recognition.stop();
+      }
+    } catch (_) {}
+    isListening = false;
+    if (!sessionEnded && !isMuted && !isProcessing && !isSpeaking) {
+      micIcon.textContent = "mic";
+    }
+  }
+
+  async function ensureLiveSession() {
+    if (activeLiveSessionId) return activeLiveSessionId;
+    const response = await fetch('/api/live/open-new', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store'
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || 'Could not start a Live AI session.');
+    activeLiveSessionId = String(data.id);
+    document.getElementById('currentSessionTitle').textContent =
+      `Live Transcript: ${data.title || 'Live Conversation'}`;
+    sessionStorage.setItem('maximusLiveSessionId', String(data.id));
+    return activeLiveSessionId;
+  }
+
+  function getWebsiteTarget(text) {
+    const value = String(text || "").trim();
+    if (!value) return null;
+
+    const urlMatch = value.match(/\bhttps?:\/\/[^\s]+/i);
+    if (urlMatch) return urlMatch[0].replace(/[.,!?;:]+$/, "");
+
+    const command = value.match(/^(?:please\s+)?(?:open|go\s+to|visit|launch)\s+(.+)$/i);
+    if (!command) return null;
+    return command[1].trim().replace(/[.,!?;:]+$/, "");
+  }
+
+  async function tryHandleNetworkCommand(text) {
+    const target = getWebsiteTarget(text);
+    if (!target) return false;
+
+    // Only intercept clear website-opening commands. Everything else still
+    // goes to the selected MAXIMUS/BYOK model.
+    const looksLikeWebsite =
+      /(?:youtube|google|github|gmail|instagram|facebook|reddit|linkedin|spotify|whatsapp|chatgpt|\.[a-z]{2,})(?:\/|$)/i.test(target);
+    if (!looksLikeWebsite) return false;
+
+    // A blank tab opened before the await survives popup blockers for typed
+    // commands. Voice commands may not have browser user-activation, so the
+    // fallback below navigates the current tab if a new tab is blocked.
+    let popup = null;
+    try { popup = window.open("", "_blank"); } catch (_) {}
+
+    try {
+      const response = await fetch("/api/network/open", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({ target })
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        if (popup && !popup.closed) popup.close();
+
+        const message = response.status === 403
+          ? "Website access is off. Turn on Network access in Live setup first."
+          : (data.detail || "I couldn't open that website.");
+
+        appendTranscript("MAXIMUS", message);
+        voiceStateLabel.textContent = response.status === 403 ? "Website access is off" : "Website open failed";
+        pulseDot.className = "w-2 h-2 rounded-full bg-amber-500";
+        showToast(message);
+        return true;
+      }
+
+      const url = String(data.url || "").trim();
+      if (!url) throw new Error("The server did not return a website URL.");
+
+      const hostLabel = (() => {
+        try { return new URL(url).hostname.replace(/^www\./, ""); }
+        catch (_) { return target; }
+      })();
+
+      appendTranscript("MAXIMUS", `Opening ${hostLabel}…`);
+      showToast(`Opening ${hostLabel}`);
+
+      if (popup && !popup.closed) {
+        popup.opener = null;
+        popup.location.replace(url);
+      } else {
+        // Browser blocked a popup (common for speech-recognition callbacks).
+        // Current-tab navigation is allowed and makes the command actually work.
+        window.location.assign(url);
+      }
+
+      return true;
+    } catch (error) {
+      if (popup && !popup.closed) popup.close();
+      const message = `I couldn't open that website: ${error.message || "Unknown error"}`;
+      appendTranscript("MAXIMUS", message);
+      voiceStateLabel.textContent = "Website open failed";
+      pulseDot.className = "w-2 h-2 rounded-full bg-red-500";
+      showToast(message);
+      return true;
+    }
+  }
+
+  async function askMAXIMUS(rawText) {
+    const text = String(rawText || "").trim();
+    if (!text || sessionEnded || isProcessing) return;
+
+    isProcessing = true;
+    sendBtn.disabled = true;
+    quickInput.disabled = true;
+    stopListening(false);
+
+    appendTranscript("You", text);
+    voiceStateLabel.textContent = "MAXIMUS is thinking...";
+    pulseDot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
+
+    try {
+      // Website commands are authorization actions, not normal AI questions.
+      // Handling them here prevents MAXIMUS from merely saying "opening..."
+      // without asking the backend to authorize/open the site.
+      if (await tryHandleNetworkCommand(text)) {
+        return;
+      }
+
+      await ensureLiveSession();
+
+      const response = await fetch("/api/live-ask", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({
+          text,
+          output_language: liveVoiceSettings.output_language || "en-IN",
+          speech_language:
+            liveVoiceSettings.speech_language ||
+            voiceLanguageFromId(liveVoiceSettings.voice) ||
+            "en-IN"
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.detail || `Live AI request failed (${response.status})`);
+      }
+
+      activeLiveSessionId = String(data.live_session_id || activeLiveSessionId || "");
+      const title = data.title || "Live Conversation";
+      const reply = String(data.reply || "").trim() || "I couldn't generate a response.";
+      const speechText = String(data.speech_text || reply).trim() || reply;
+
+      document.getElementById("currentSessionTitle").textContent = `Live Transcript: ${title}`;
+      sessionStorage.setItem("maximusLiveSessionId", activeLiveSessionId);
+      sessionStorage.setItem("maximusConversationName", title);
+      sessionStorage.setItem("maximusConversationMode", "live");
+
+      // Only the display-language reply appears in the transcript/history.
+      appendTranscript("MAXIMUS", reply);
+      await loadLiveRecentSessions(false);
+      await refreshCurrentLivePin();
+
+      isProcessing = false;
+      sendBtn.disabled = false;
+      quickInput.disabled = false;
+
+      if (!sessionEnded) {
+        // The backend may return a separately translated copy for speech.
+        await speak(speechText);
+      }
+    } catch (error) {
+      console.error("Live AI request failed:", error);
+      appendTranscript("MAXIMUS", `Error: ${error.message || "Live AI request failed."}`);
+      voiceStateLabel.textContent = "Live AI request failed";
+      pulseDot.className = "w-2 h-2 rounded-full bg-red-500";
+      showToast(error.message || "Live AI request failed.");
+    } finally {
+      isProcessing = false;
+      sendBtn.disabled = false;
+      quickInput.disabled = false;
+      if (!sessionEnded && !isMuted && keepListening && !isSpeaking) {
+        scheduleListening(350);
+      } else if (!sessionEnded && !isSpeaking && !isMuted) {
+        voiceStateLabel.textContent =
+          `Ready • ${LIVE_LANGUAGES[liveVoiceSettings.input_language] || liveVoiceSettings.input_language}`;
+        pulseDot.className = "w-2 h-2 rounded-full bg-zinc-400";
+      }
+    }
+  }
+
+  if (recognition) {
+    recognition.onstart = () => {
+      isListening = true;
+      micIcon.textContent = "mic";
+      voiceStateLabel.textContent = "Listening to you...";
+      pulseDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+    };
+
+    recognition.onresult = async (event) => {
+      const results = Array.from(event.results || []);
+      const transcript = results
+        .map(result => result?.[0]?.transcript || '')
+        .join(' ')
+        .trim();
+      if (!transcript) return;
+      await askMAXIMUS(transcript);
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      if (keepListening && !sessionEnded && !isMuted && !isSpeaking && !isProcessing) {
+        scheduleListening(450);
+      }
+    };
+
+    recognition.onerror = (event) => {
+      isListening = false;
+      console.error("Microphone error:", event.error);
+
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        keepListening = false;
+        voiceStateLabel.textContent = "Microphone permission denied";
+        pulseDot.className = "w-2 h-2 rounded-full bg-red-500";
+        showToast("Allow microphone access in the browser, then tap the mic again.");
+        return;
+      }
+
+      if (event.error === "audio-capture") {
+        keepListening = false;
+        voiceStateLabel.textContent = "No microphone detected";
+        pulseDot.className = "w-2 h-2 rounded-full bg-red-500";
+        showToast("No microphone was detected.");
+        return;
+      }
+
+      if (event.error === "no-speech") {
+        if (keepListening && !sessionEnded && !isMuted && !isSpeaking && !isProcessing) {
+          scheduleListening(300);
+        }
+        return;
+      }
+
+      if (event.error === "aborted") {
+        if (keepListening && !sessionEnded && !isMuted && !isSpeaking && !isProcessing) {
+          scheduleListening(350);
+        }
+        return;
+      }
+
+      if (event.error === "network") {
+        voiceStateLabel.textContent = "Speech recognition network error";
+        pulseDot.className = "w-2 h-2 rounded-full bg-amber-500";
+        if (keepListening && !sessionEnded && !isMuted && !isSpeaking && !isProcessing) {
+          scheduleListening(1000);
+        }
+        return;
+      }
+
+      keepListening = false;
+      voiceStateLabel.textContent = "Microphone error";
+      pulseDot.className = "w-2 h-2 rounded-full bg-red-500";
+    };
+  }
+
+
+  // ==============================
+  // CENTRAL MIC BUTTON
+  // ==============================
+  micBtn.addEventListener(
+    "click",
+    () => {
+
+      if (sessionEnded) return;
+      if (!recognition) {
+        showToast("Voice input is not supported in this browser. You can still type to MAXIMUS.");
+        return;
+      }
+
+      if (isSpeaking) {
+        stopSpeaking();
+      }
+
+      if (keepListening || isListening) {
+
+        keepListening = false;
+        stopListening(true);
+
+        voiceStateLabel.textContent =
+          "Paused • Tap mic to speak";
+
+        pulseDot.className =
+          "w-2 h-2 rounded-full bg-zinc-400";
+
+      } else {
+
+        keepListening = true;
+        startListening();
+      }
+    }
+  );
+
+
+
+  // ==============================
+  // MUTE BUTTON
+  // ==============================
+  muteBtn.addEventListener(
+    "click",
+    () => {
+
+      isMuted = !isMuted;
+
+      const icon =
+        muteBtn.querySelector(
+          ".material-symbols-outlined"
+        );
+
+      const text =
+        muteBtn.querySelector(
+          "span:last-child"
+        );
+
+      if (isMuted) {
+
+        keepListening = false;
+        stopListening(true);
+
+        icon.textContent = "mic_off";
+        text.textContent = "Unmute";
+
+        voiceStateLabel.textContent =
+          "Microphone Muted";
+
+        pulseDot.className =
+          "w-2 h-2 rounded-full bg-amber-500";
+
+      } else {
+
+        icon.textContent = "mic_off";
+        text.textContent = "Mute";
+
+        voiceStateLabel.textContent =
+          "Listening to you...";
+
+        pulseDot.className =
+          "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+
+        keepListening = true;
+        startListening();
+      }
+    }
+  );
+
+
+  // ==============================
+  // END SESSION
+  // ==============================
+  endBtn.addEventListener(
+    "click",
+    () => {
+
+      sessionEnded = true;
+
+      keepListening = false;
+      stopListening(true);
+
+      stopSpeaking();
+
+      isSpeaking = false;
+
+      voiceStateLabel.textContent =
+        "Session Concluded";
+
+      pulseDot.className =
+        "w-2 h-2 rounded-full bg-zinc-400";
+
+      micIcon.textContent =
+        "mic_off";
+
+      micBtn.disabled = true;
+      sendBtn.disabled = true;
+      quickInput.disabled = true;
+      micBtn.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+      );
+
+      appendTranscript(
+        "MAXIMUS",
+        "Live AI session ended."
+      );
+    }
+  );
+
+
+  // ==============================
+  // RESTORE DATABASE LIVE SESSION
+  // ==============================
+  window.activateLiveSession = function(session) {
+    sessionEnded = false;
+    isMuted = false;
+    isSpeaking = false;
+    isProcessing = false;
+    keepListening = false;
+    clearTimeout(restartTimer);
+    restartTimer = null;
+    keepListening = false;
+
+    micBtn.disabled = !recognition;
+    sendBtn.disabled = false;
+    quickInput.disabled = false;
+    micBtn.classList.toggle("opacity-50", !recognition);
+    micBtn.classList.toggle("cursor-not-allowed", !recognition);
+    micIcon.textContent = recognition ? "mic" : "mic_off";
+    voiceStateLabel.textContent = recognition
+      ? "Tap the mic to talk to MAXIMUS"
+      : "Voice input unavailable • Type below";
+    pulseDot.className = recognition
+      ? "w-2 h-2 rounded-full bg-zinc-400"
+      : "w-2 h-2 rounded-full bg-amber-500";
+
+    if (typeof recognition !== "undefined" && recognition) {
+      try { recognition.stop(); } catch (_) {}
+    }
+    isListening = false;
+
+    activeLiveSessionId = session && session.id != null ? String(session.id) : null;
+    const title = session && session.title ? session.title : "Live Conversation";
+    const messages = Array.isArray(session && session.messages) ? session.messages : [];
+    const feed = document.getElementById("transcript-feed");
+    if (!feed) return;
+
+    feed.innerHTML = "";
+
+    if (messages.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "flex items-start gap-3.5 pl-0 md:pl-2";
+      empty.innerHTML = `
+        <div class="w-7 h-7 rounded-lg bg-black overflow-hidden flex items-center justify-center shrink-0 shadow-sm"><img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover"></div>
+        <div class="flex flex-col gap-1 flex-1">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-zinc-900">MAXIMUS</span>
+            <span class="text-[11px] font-mono text-zinc-400">Ready</span>
+          </div>
+          <p class="text-sm text-zinc-700 leading-relaxed">Live AI channel "${escapeHtml(title)}" restored. I am ready.</p>
+        </div>`;
+      feed.appendChild(empty);
+      return;
+    }
+
+    messages.forEach(message => appendTranscript(
+      message.role === "user" ? "You" : "MAXIMUS",
+      message.content || ""
+    ));
+  };
+
+  // ==============================
+  // TEXT INPUT
+  // ==============================
+  async function handleTextCommand() {
+
+    const text =
+      quickInput.value.trim();
+
+    if (!text || sessionEnded) return;
+    if (isProcessing) {
+      showToast("MAXIMUS is already responding.");
+      return;
+    }
+
+    quickInput.value = "";
+
+    await askMAXIMUS(text);
+  }
+
+
+  sendBtn.addEventListener(
+    "click",
+    handleTextCommand
+  );
+
+
+  quickInput.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        handleTextCommand();
+      }
+    }
+  );
+
+
+  // ==============================
+  // PRESET COMMANDS
+  // ==============================
+  document
+    .querySelectorAll(".voice-preset")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        async () => {
+
+          const text =
+            button.textContent
+              .replace(/"/g, "")
+              .trim();
+
+          await askMAXIMUS(text);
+        }
+      );
+
+    });
+
+
+  // ==============================
+  // WAVEFORM
+  // ==============================
+  setInterval(() => {
+
+    if (
+      isListening &&
+      !isMuted &&
+      !sessionEnded
+    ) {
+
+      waveBars.forEach(bar => {
+
+        // A listening indicator, not a microphone-volume measurement.
+        const height = 12;
+
+        bar.style.height =
+          height + "px";
+      });
+
+    } else {
+
+      waveBars.forEach(bar => {
+        bar.style.height = "4px";
+      });
+
+    }
+
+  }, 150);
+
+
+  // ==============================
+  let currentLivePinned=false;
+  async function refreshCurrentLivePin(){
+    const btn=document.getElementById('pinLiveConversationBtn'); if(!btn||!activeLiveSessionId)return;
+    try{const r=await fetch('/api/live/'+encodeURIComponent(activeLiveSessionId),{credentials:'include',cache:'no-store'});const d=await r.json().catch(()=>({}));currentLivePinned=!!d.pinned;btn.querySelector('.material-symbols-outlined').textContent='push_pin';btn.querySelector('span:last-child').textContent=currentLivePinned?'Unpin':'Pin';btn.title=currentLivePinned?'Unpin conversation':'Pin conversation';}catch{}
+  }
+  document.getElementById('pinLiveConversationBtn')?.addEventListener('click',async()=>{
+    if(!activeLiveSessionId)return;
+    try{const r=await fetch('/api/live/'+encodeURIComponent(activeLiveSessionId)+(currentLivePinned?'/unpin':'/pin'),{method:'POST',credentials:'include',headers:{'Accept':'application/json'}});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.detail||'Could not change pin state.');currentLivePinned=!currentLivePinned;await refreshCurrentLivePin();await loadLiveRecentSessions(false);showToast(currentLivePinned?'Conversation pinned':'Conversation unpinned');}catch(e){showToast(e.message||'Could not change pin state.');}
+  });
+
+  // INITIAL STATE
+  // ==============================
+  liveVoiceConfirmBtn?.addEventListener("click", confirmLiveVoiceSettings);
+
+  updateLiveVoicePanel();
+  await loadLiveVoiceSettings();
+  updateLiveSettingsSummary();
+
+  voiceStateLabel.textContent =
+    `Ready • ${LIVE_LANGUAGES[liveVoiceSettings.input_language] || liveVoiceSettings.input_language}`;
+
+  pulseDot.className =
+    "w-2 h-2 rounded-full bg-zinc-400";
+
+  transcriptFeed.innerHTML = "";
+
+  async function initializeLiveConversation() {
+    const params = new URLSearchParams(window.location.search);
+    const requestedId = params.get('live_id');
+    try {
+      if (requestedId) {
+        await switchSession(String(requestedId));
+        await refreshCurrentLivePin();
+        window.history.replaceState({}, document.title, '/speakwithai');
+      } else {
+        const response = await fetch('/api/live/open-new', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store'
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.detail || 'Could not start a new Live AI conversation.');
+        activeLiveSessionId = String(data.id);
+        currentLivePinned = false;
+        sessionStorage.setItem('maximusLiveSessionId', String(data.id));
+        sessionStorage.setItem('maximusConversationName', data.title || '');
+        sessionStorage.setItem('maximusConversationMode', 'live');
+        document.getElementById('currentSessionTitle').textContent = `Live Transcript: ${data.title || 'Live Conversation'}`;
+
+        // Load any messages already attached to this login session's Live AI
+        // conversation. /api/live/open-new reuses the current session now.
+        try {
+          const existingResponse = await fetch('/api/live/' + encodeURIComponent(data.id), {
+            credentials: 'include',
+            cache: 'no-store'
+          });
+          const existing = await existingResponse.json().catch(() => ({}));
+          if (existingResponse.ok) window.activateLiveSession(existing);
+        } catch (_) {}
+
+        await refreshCurrentLivePin();
+        checkEmptyRecents();
+      }
+      await loadLiveRecentSessions(false);
+    } catch (error) {
+      console.error('Live conversation initialization failed:', error);
+      showToast(error.message || 'Could not start a new Live AI conversation.');
+    }
+  }
+
+  await initializeLiveConversation();
+
+  console.log(
+    "MAXIMUS Live AI voice system ready."
+  );
+
+});
+</script>
+</body>
+</html>

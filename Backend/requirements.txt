@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+sqlalchemy
+google-genai
+python-dotenv
+edge-tts
+authlib
+itsdangerous
+fastapi-mail
+PyJWT
+cryptography
+pwdlib[argon2]
+qrcode[pil]
+email-validator
+httpx

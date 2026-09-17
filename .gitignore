@@ -1,0 +1,32 @@
+# Secrets
+.env
+*.env
+Backend/.env
+
+# Virtual environments
+.venv/
+venv/
+Backend/venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# VS Code
+.vscode/
+
+# Runtime
+Backend/uploads/
+Backend/temp/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

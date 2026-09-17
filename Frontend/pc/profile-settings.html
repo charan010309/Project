@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en" data-page="profile-settings">
+<head>
+<script src="/static/theme.js"></script>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>MAXIMUS Workstation // Profile & Account Settings</title>
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#ffffff",
+            "on-error": "#ffffff",
+            "on-background": "#1a1c1c",
+            "on-primary-fixed-variant": "#474649",
+            "inverse-primary": "#c8c6c8",
+            "on-tertiary-container": "#83838c",
+            "primary-container": "#1c1b1d",
+            "tertiary-fixed-dim": "#c6c5cf",
+            "outline-variant": "#e4e4e7",
+            "inverse-surface": "#2f3131",
+            "on-tertiary-fixed-variant": "#46464e",
+            "background": "#f9f9f9",
+            "outline": "#78767b",
+            "on-primary-fixed": "#1c1b1d",
+            "on-secondary-fixed": "#002113",
+            "on-primary-container": "#858386",
+            "primary-fixed": "#e5e1e4",
+            "secondary-container": "#e6f9f0",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#4edea3",
+            "on-surface": "#09090b",
+            "surface-bright": "#ffffff",
+            "primary": "#09090b",
+            "primary-fixed-dim": "#c8c6c8",
+            "surface-container-low": "#f4f4f5",
+            "on-tertiary-fixed": "#1a1b22",
+            "surface": "#f9f9f9",
+            "inverse-on-surface": "#f0f1f1",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary-container": "#1a1b22",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "error-container": "#fee2e2",
+            "surface-variant": "#f1f1f3",
+            "surface-container-high": "#e8e8ea",
+            "tertiary": "#09090b",
+            "secondary-fixed": "#6ffbbe",
+            "surface-container": "#eeeeee",
+            "on-surface-variant": "#52525b",
+            "on-secondary-container": "#006c49",
+            "secondary": "#10b981",
+            "tertiary-fixed": "#e3e1ec",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#dadada",
+            "surface-tint": "#5f5e60",
+            "surface-container-highest": "#e4e4e7",
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.375rem",
+            "xl": "0.5rem",
+            "2xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #e2e2e2; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #c8c5ca; }
+    .ambient-grid {
+      background-size: 32px 32px;
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    }
+  </style>
+<link rel="stylesheet" href="/static/theme.css">
+</head>
+
+<body class="min-h-screen bg-surface text-on-surface font-sans antialiased ambient-grid flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+  <!-- Top Desktop Header Bar -->
+  <header class="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant/70">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Left: Logo & Core Navigation -->
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-primary overflow-hidden flex items-center justify-center shadow-sm">
+            <img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="font-bold text-base tracking-tight text-on-surface">MAXIMUS</span>
+          </div>
+        </div>
+
+        <!-- Suite Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1 pl-4 border-l border-outline-variant/60 text-sm">
+          <a class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-1.5" href="/home">
+            <span class="material-symbols-outlined text-[17px]">forum</span>
+            <span>Home / Chat</span>
+          </a>
+          <a class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-1.5" href="/home">
+            <span class="material-symbols-outlined text-[17px]">space_dashboard</span>
+            <span>Overview</span>
+          </a>
+          <a class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-1.5" href="/speakwithai">
+            <span class="material-symbols-outlined text-[17px]">graphic_eq</span>
+            <span>Speak with AI</span>
+          </a>
+          <a class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-1.5" href="/history">
+            <span class="material-symbols-outlined text-[17px]">history</span>
+            <span>History</span>
+          </a>
+          <a class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-semibold flex items-center gap-1.5" href="/settings">
+            <span class="material-symbols-outlined text-[17px]">settings</span>
+            <span>Settings</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Right: Telemetry Ping & Global Actions -->
+      <div class="flex items-center gap-5">
+      
+        <div class="flex items-center gap-2">
+          <button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" title="Telemetry Inspector" type="button">
+            <span class="material-symbols-outlined text-[20px]">terminal</span>
+          </button>
+          <button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" title="Notifications" type="button">
+            <span class="material-symbols-outlined text-[20px]">notifications</span>
+          </button>
+          <div class="h-5 w-px bg-outline-variant/80 mx-1"></div>
+          <div class="flex items-center gap-2.5 pl-1">
+            <div id="header-avatar" class="relative w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold font-mono ring-1 ring-outline-variant overflow-hidden">
+              <span id="header-avatar-fallback">U</span>
+              <img id="header-avatar-img" src="" alt="Profile" class="hidden absolute inset-0 w-full h-full object-cover" />
+            </div>
+            <span id="header-name" class="hidden sm:inline text-xs font-semibold text-on-surface">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workstation Layout Container -->
+  <main class="flex-1 w-full max-w-[1600px] mx-auto px-6 lg:px-8 py-8">
+    
+    <!-- Top Action & Breadcrumb Control Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-8 mb-8 border-b border-outline-variant/80">
+      <div>
+        <div class="flex items-center gap-2 font-mono text-[11px] tracking-wider uppercase text-on-surface-variant mb-2">
+          <span>MAXIMUS</span>
+          <span class="text-outline-variant">//</span>
+          <a class="hover:text-on-surface transition-colors" href="/settings">SETTINGS</a>
+          <span class="text-outline-variant">//</span>
+          <span class="text-on-surface font-semibold bg-surface-container-low px-2 py-0.5 rounded">PROFILE & ACCOUNT IDENTITY</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-on-surface">Profile & Account Settings</h1>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-mono text-[11px] font-semibold border border-secondary/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            SYS-AUTH VERIFIED
+          </span>
+        </div>
+        <p class="text-sm text-on-surface-variant mt-1.5 max-w-3xl">
+          Manage your personal identity, authentication credentials, workstation sessions, and autonomous preferences.
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3 shrink-0">
+        <button id="discard-btn" class="px-4 py-2 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface text-xs font-semibold hover:bg-surface-container-low active:scale-[0.99] transition-all shadow-sm" type="button">
+          Discard Changes
+        </button>
+        <button class="flex items-center gap-2 px-5 py-2 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-neutral-800 active:scale-[0.99] transition-all shadow-sm" id="save-btn" type="button">
+          <span class="material-symbols-outlined text-[16px]">save</span>
+          <span>Save Changes</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Expansive 12-Column Desktop Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT SIDEBAR / PROFILE OVERVIEW CARD & ANCHORS (4 Columns) -->
+      <div class="lg:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24">
+        
+        <!-- Primary Identity Card -->
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm">
+          <div class="flex flex-col items-center text-center">
+            
+            <!-- Avatar with quick upload -->
+            <div class="relative group mb-4">
+              <div class="w-28 h-28 rounded-full overflow-hidden bg-surface-container ring-4 ring-surface-container-low shadow-inner">
+                <div id="profile-avatar-fallback" class="w-full h-full rounded-full bg-primary text-on-primary flex items-center justify-center text-2xl font-bold font-mono">U</div>
+                <img id="profile-avatar-img" src="" alt="Profile" class="hidden w-full h-full object-cover rounded-full" />
+              </div>
+              <button id="quick-photo-btn" aria-label="Quick update avatar" class="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow hover:bg-neutral-800 transition-colors" title="Upload new photo" type="button">
+                <span class="material-symbols-outlined text-[15px]">photo_camera</span>
+              </button>
+            </div>
+
+            <!-- Identity Badges -->
+            <div class="flex items-center gap-1.5 mb-1">
+              <h2 id="profile-name" class="text-xl font-bold text-on-surface">Loading...</h2>
+              <span class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-[12px]" title="Hardware Verified Token">
+                <span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+              </span>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-2 mb-5">
+              <span id="profile-role-badge" class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface text-xs font-semibold">Profile</span>
+              <span id="profile-id-badge" class="px-2 py-1 rounded bg-surface-container text-on-surface-variant font-mono text-[11px]">SYS-ID #—</span>
+            </div>
+
+            <!-- Action buttons for Photo -->
+            <div class="w-full flex items-center gap-2 pt-2 border-t border-outline-variant/60">
+              <button id="change-photo-btn" class="flex-1 py-1.5 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-medium transition-colors" type="button">
+                Change Photo
+              </button>
+              <button id="remove-photo-btn" class="py-1.5 px-3 rounded-lg hover:bg-error-container text-error text-xs font-medium transition-colors" type="button">
+                Remove
+              </button>
+              <input id="photo-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden">
+            </div>
+          </div>
+
+          <!-- Neural Link / Status Telemetry Bar -->
+          <div class="mt-6 pt-4 border-t border-outline-variant/60 flex flex-col gap-2 font-mono text-xs text-on-surface-variant">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                Neural Link Sync
+              </span>
+              <span class="text-secondary font-semibold">ACTIVE</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span>Assigned Workstation</span>
+              <span class="text-on-surface font-medium">CURRENT WORKSTATION</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span>Last Synchronized</span>
+              <span class="text-on-surface">Loading…</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Anchor Navigation Tabs -->
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-3 shadow-sm flex flex-col gap-1">
+          <span class="px-3 py-2 font-mono text-[10px] tracking-wider uppercase text-on-surface-variant font-semibold">
+            Quick Navigation Anchors
+          </span>
+          <a class="flex items-center justify-between px-3 py-2 rounded-lg bg-surface-container text-on-surface font-medium text-xs hover:bg-surface-container transition-colors" href="#identity-section">
+            <span class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[18px]">badge</span>
+              <span>General Identity</span>
+            </span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+          <a class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant font-medium text-xs hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#credentials-section">
+            <span class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[18px]">security</span>
+              <span>Security & Credentials</span>
+            </span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+          <a class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant font-medium text-xs hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#sessions-section">
+            <span class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[18px]">devices</span>
+              <span>Workstation Sessions</span>
+            </span>
+            <span id="session-count" class="text-xs font-mono bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant">Loading…</span>
+          </a>
+          <a class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant font-medium text-xs hover:bg-surface-container-low hover:text-on-surface transition-colors" href="#preferences-section">
+            <span class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[18px]">tune</span>
+              <span>Autonomous Preferences</span>
+            </span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+          <a class="flex items-center justify-between px-3 py-2 rounded-lg text-on-surface-variant font-medium text-xs hover:bg-error-container/40 hover:text-error transition-colors" href="#compliance-section">
+            <span class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[18px]">warning</span>
+              <span>Compliance & Data</span>
+            </span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT MAIN CONTENT PANELS (8 Columns - Bento / Modular Layout) -->
+      <div class="lg:col-span-8 flex flex-col gap-6">
+        
+        <!-- SECTION 1: General Identity & Credentials -->
+        <section class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm" id="identity-section">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface">
+                <span class="material-symbols-outlined text-[18px]">badge</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-on-surface">General Identity & System Profile</h3>
+                <p class="text-xs text-on-surface-variant">Public identity tags and persona parameters within the MAXIMUS network.</p>
+              </div>
+            </div>
+            <span class="font-mono text-[11px] text-secondary bg-secondary-container px-2.5 py-1 rounded font-medium border border-secondary/20">
+              SYS-AUTH OK
+            </span>
+          </div>
+
+          <!-- Aligned 2-Column Desktop Form Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-on-surface block">Full Legal Name</label>
+              <input id="name-input" class="w-full h-10 px-3.5 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-surface-container-lowest rounded-lg text-sm text-on-surface transition-all outline-none" type="text" value="" autocomplete="name" />
+            </div>
+            <div class="sm:col-span-2 space-y-1.5">
+              <label class="text-xs font-semibold text-on-surface block">Professional Role / Title</label>
+              <input id="role-input" class="w-full h-10 px-3.5 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-surface-container-lowest rounded-lg text-sm text-on-surface transition-all outline-none" type="text" value="" />
+            </div>
+            <div class="sm:col-span-2 space-y-1.5">
+              <div class="flex justify-between items-center">
+                <label class="text-xs font-semibold text-on-surface block">Autonomous Directive (Bio)</label>
+                <span id="bio-count" class="font-mono text-[10px] text-on-surface-variant">0 / 240 chars</span>
+              </div>
+              <textarea id="bio-input" maxlength="240" class="w-full p-3.5 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-surface-container-lowest rounded-lg text-sm text-on-surface transition-all outline-none resize-none leading-relaxed" rows="3"></textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-on-surface block">System Timezone</label>
+              <select id="timezone-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-surface-container-lowest rounded-lg font-mono text-xs text-on-surface transition-all outline-none cursor-pointer">
+                <option value="Asia/Kolkata">UTC+05:30 (India Standard Time)</option>
+                <option value="America/Los_Angeles">UTC-08:00 (Pacific Time - US & Canada)</option>
+                <option value="America/New_York">UTC-05:00 (Eastern Time - US & Canada)</option>
+                <option value="UTC">UTC+00:00 (Coordinated Universal Time)</option>
+                <option value="Europe/Berlin">UTC+01:00 (Central European Time)</option>
+                <option value="Asia/Tokyo">UTC+09:00 (Japan Standard Time - Tokyo)</option>
+              </select>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-semibold text-on-surface block">Interface Locale</label>
+              <select id="locale-input" class="w-full h-10 px-3 bg-surface-container-low border border-transparent focus:border-outline-variant focus:bg-surface-container-lowest rounded-lg font-mono text-xs text-on-surface transition-all outline-none cursor-pointer">
+                <option value="en-IN">English (India) [en-IN]</option>
+                <option value="en-US">English (United States) [en-US]</option>
+                <option value="en-GB">English (United Kingdom) [en-GB]</option>
+                <option value="de-DE">Deutsch (Deutschland) [de-DE]</option>
+                <option value="ja-JP">日本語 (日本) [ja-JP]</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: Contact & Authentication Credentials (Level-3 Encryption) -->
+        <section class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm" id="credentials-section">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface">
+                <span class="material-symbols-outlined text-[18px]">shield_person</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-on-surface">Contact & Authentication Credentials</h3>
+                <p class="text-xs text-on-surface-variant">Verified email, password security, and account authentication.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 font-mono text-[11px] text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded">
+              <span class="material-symbols-outlined text-[14px] text-on-surface">lock</span>
+              <span>LEVEL-3 ENCRYPTION</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 mb-4">
+            <!-- Email Item -->
+            <div class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex flex-col justify-between gap-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs font-semibold text-on-surface-variant block">Primary System Email</span>
+                  <input id="email-input" readonly class="w-full mt-1 bg-transparent border-0 p-0 font-mono text-xs font-semibold text-on-surface focus:ring-0" type="email" value="" autocomplete="email" />
+                </div>
+                <span id="email-status-badge" class="inline-flex items-center gap-1 font-mono text-[10px] text-secondary bg-secondary-container px-2 py-0.5 rounded font-semibold border border-secondary/20">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>Verified</span>
+                </span>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-outline-variant/40">
+                <span class="text-[11px] text-on-surface-variant font-mono">Routing alerts & password resets</span>
+                <button id="edit-email-btn" class="text-xs font-semibold text-on-surface hover:underline" type="button">Edit</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Security & Login -->
+          <div class="mt-4">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="material-symbols-outlined text-[17px] text-on-surface-variant">security</span>
+              <span class="text-xs font-bold uppercase tracking-wide text-on-surface-variant">Security & Login</span>
+            </div>
+
+            <div class="space-y-3">
+              <!-- Password -->
+              <div class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <span class="text-xs font-semibold text-on-surface-variant block">Password</span>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span id="password-hint" class="text-[11px] text-on-surface-variant">Protected by account password</span>
+                  </div>
+                </div>
+                <button id="update-password-btn" class="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant text-on-surface font-mono text-xs font-medium transition-colors shadow-sm" type="button">
+                  Update Password
+                </button>
+              </div>
+
+          </div>
+        </section>
+
+        <!-- SECTION 3: Active Workstation Sessions -->
+        <section class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm" id="sessions-section">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface">
+                <span class="material-symbols-outlined text-[18px]">devices</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-on-surface">Active Workstation Sessions</h3>
+                <p class="text-xs text-on-surface-variant">Nodes currently signed into your cryptographic session token pool.</p>
+              </div>
+            </div>
+            <button id="revoke-all-btn" class="text-error hover:bg-error-container/40 font-mono text-xs px-3 py-1.5 rounded-lg transition-colors font-medium border border-error/20" type="button">
+              Revoke All Other Sessions
+            </button>
+          </div>
+
+          <div class="space-y-3">
+            <!-- Session 1: Current Desktop Workstation -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-surface-container-low/60 border border-outline-variant/60 rounded-lg gap-3">
+              <div class="flex items-center gap-3.5 min-w-0">
+                <div class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-outline-variant/70 flex items-center justify-center text-on-surface shadow-sm shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">desktop_mac</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-sm font-semibold text-on-surface">macOS Sequoia · Chrome 124</span>
+                    <span class="font-mono text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-semibold border border-secondary/20">THIS DEVICE</span>
+                  </div>
+                  <span class="font-mono text-xs text-on-surface-variant mt-0.5">Current browser session</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 self-end sm:self-auto">
+                <div class="flex items-center gap-1.5 font-mono text-[11px] text-secondary font-medium">
+                  <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                  <span>Online Now</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Session 2: Mobile Node -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-surface-container-low/60 border border-outline-variant/60 rounded-lg gap-3">
+              <div class="flex items-center gap-3.5 min-w-0">
+                <div class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-outline-variant/70 flex items-center justify-center text-on-surface shadow-sm shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">phone_iphone</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-sm font-semibold text-on-surface">iPhone 15 Pro · MAXIMUS Mobile App v2.4</span>
+                  </div>
+                  <span class="font-mono text-xs text-on-surface-variant mt-0.5">Registered device</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 self-end sm:self-auto">
+                <button class="px-3 py-1 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-error-container hover:text-error text-on-surface-variant text-xs font-medium transition-colors" type="button">
+                  Revoke Session
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: Autonomous & Neural Preferences -->
+        <section class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-6 shadow-sm" id="preferences-section">
+          <div class="flex items-center justify-between pb-5 border-b border-outline-variant/60 mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface">
+                <span class="material-symbols-outlined text-[18px]">tune</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-on-surface">Autonomous & Neural Preferences</h3>
+                <p class="text-xs text-on-surface-variant">Additional preferences. Features marked unavailable are not active.</p>
+              </div>
+            </div>
+            <span class="font-mono text-[11px] text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded">CONFIG v2</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Toggle 1 -->
+            <div class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex items-start justify-between gap-4">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-on-surface">Auditory Feedback on Voice Duplex</span>
+                <span class="text-xs text-on-surface-variant mt-1 leading-relaxed">Unavailable. Voice answers are controlled on the Live AI page; separate sound cues are not implemented.</span>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0 mt-1">
+                <input id="auditory-feedback-preferences-input" class="sr-only peer" type="checkbox" disabled />
+                <div class="w-10 h-5 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+              </label>
+            </div>
+
+            <!-- Toggle 2 -->
+            <div class="p-4 bg-surface-container-low/60 border border-outline-variant/50 rounded-lg flex items-start justify-between gap-4">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-on-surface">Weekly Neural Usage & Security Digest</span>
+                <span class="text-xs text-on-surface-variant mt-1 leading-relaxed">Unavailable. No scheduled digest emails are sent. View current activity on the Overview page.</span>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0 mt-1">
+                <input id="digest-input" class="sr-only peer" type="checkbox" disabled />
+                <div class="w-10 h-5 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: Account Teardown & Compliance -->
+        <section class="bg-surface-container-lowest rounded-xl border border-error/20 p-6 shadow-sm" id="compliance-section">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="material-symbols-outlined text-error text-[18px]">warning</span>
+                <span class="font-mono text-xs font-bold uppercase text-error tracking-wider">Account Teardown & Compliance Zone</span>
+              </div>
+              <p class="text-xs text-on-surface-variant max-w-xl">
+                Export your account data, or permanently delete your account and saved data.
+              </p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <button id="export-btn" class="px-3.5 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container border border-outline-variant text-on-surface font-mono text-xs font-medium transition-colors" type="button">
+                Export JSON
+              </button>
+              <button id="deactivate-btn" class="px-3.5 py-2 rounded-lg bg-error-container text-error hover:bg-red-200 border border-error/20 font-mono text-xs font-semibold transition-colors" type="button">
+                Deactivate Account
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Micro-interaction feedback toast -->
+    <div class="fixed bottom-6 right-6 bg-primary text-on-primary px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50 border border-neutral-700" id="toast-notification">
+      <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+      <span class="text-xs font-medium">Profile configuration & workstation identity securely synchronized.</span>
+    </div>
+  </main>
+
+  <!-- Desktop Footer -->
+  <footer class="w-full border-t border-outline-variant/70 mt-auto bg-surface-container-lowest">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-8 h-14 flex items-center justify-between text-on-surface-variant font-mono text-xs">
+      <span>© 2025 MAXIMUS AI // TIER-4 ARCHITECTURE</span>
+      <div class="flex items-center gap-6">
+        <span class="hover:text-on-surface transition-colors cursor-pointer">PRIVACY PROTOCOL</span>
+        <span class="hover:text-on-surface transition-colors cursor-pointer">SECURITY AUDIT</span>
+        <span class="hover:text-on-surface transition-colors cursor-pointer">TELEMETRY STATUS</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="email-verify-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-2xl border border-outline-variant shadow-2xl p-6">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h3 id="contact-modal-title" class="text-base font-bold text-on-surface">Change Email Address</h3>
+          <p class="text-xs text-on-surface-variant mt-1">A verification code will be sent to the new email address.</p>
+        </div>
+        <button id="contact-modal-close" type="button" class="w-8 h-8 rounded-lg hover:bg-surface-container-low flex items-center justify-center">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <label class="text-xs font-semibold text-on-surface block mb-1.5">New email address</label>
+      <div class="flex gap-2">
+        <input id="contact-value-input" class="flex-1 h-10 px-3.5 bg-surface-container-low border border-outline-variant/60 rounded-lg text-sm outline-none focus:bg-white focus:border-on-surface" type="email" autocomplete="email" placeholder="you@example.com" />
+        <button id="send-contact-otp-btn" type="button" class="px-3.5 rounded-lg bg-primary text-on-primary text-xs font-semibold">Send OTP</button>
+      </div>
+      <div class="mt-4">
+        <label class="text-xs font-semibold text-on-surface block mb-1.5">Verification code</label>
+        <input id="contact-otp-input" maxlength="6" inputmode="numeric" autocomplete="one-time-code" class="w-full h-10 px-3.5 bg-surface-container-low border border-outline-variant/60 rounded-lg text-sm font-mono outline-none focus:bg-white focus:border-on-surface" placeholder="6-digit OTP" />
+      </div>
+      <div class="flex items-center justify-end gap-2 mt-6">
+        <button id="contact-cancel-btn" type="button" class="px-4 py-2 rounded-lg text-xs font-semibold text-on-surface-variant hover:bg-surface-container-low">Cancel</button>
+        <button id="verify-contact-btn" type="button" class="px-4 py-2 rounded-lg bg-secondary text-white text-xs font-semibold">Verify & Replace</button>
+      </div>
+      <p id="contact-verify-help" class="text-[11px] text-on-surface-variant mt-4"></p>
+    </div>
+  </div>
+
+
+  <!-- Website Warning / Confirmation Modal -->
+  <div id="site-warning-modal" class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-2xl border border-outline-variant shadow-2xl p-6">
+      <div class="flex items-start gap-3">
+        <div id="site-warning-icon-wrap" class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+          <span id="site-warning-icon" class="material-symbols-outlined text-[20px]">warning</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 id="site-warning-title" class="text-base font-bold text-on-surface">Confirm action</h3>
+          <p id="site-warning-message" class="text-sm text-on-surface-variant mt-1.5 leading-relaxed"></p>
+        </div>
+        <button id="site-warning-close" type="button" class="w-8 h-8 rounded-lg hover:bg-surface-container-low flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <div id="site-warning-input-wrap" class="hidden mt-4 space-y-2">
+        <label id="site-warning-input-label" class="text-xs font-semibold text-on-surface block"></label>
+        <input id="site-warning-input" class="w-full h-10 px-3.5 bg-surface-container-low border border-outline-variant/60 rounded-lg text-sm outline-none focus:bg-white focus:border-on-surface" />
+        <p id="site-warning-help" class="text-[11px] text-on-surface-variant"></p>
+      </div>
+      <div id="site-password-wrap" class="hidden mt-4 space-y-3">
+        <div id="site-current-password-field">
+          <label class="text-xs font-semibold text-on-surface block mb-1.5">Current password</label>
+          <input id="site-current-password" type="password" autocomplete="current-password" class="w-full h-10 px-3.5 bg-surface-container-low border border-outline-variant/60 rounded-lg text-sm outline-none focus:bg-white focus:border-on-surface" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-on-surface block mb-1.5">New password</label>
+          <input id="site-new-password" type="password" autocomplete="new-password" class="w-full h-10 px-3.5 bg-surface-container-low border border-outline-variant/60 rounded-lg text-sm outline-none focus:bg-white focus:border-on-surface" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-on-surface block mb-1.5">Confirm new password</label>
+          <input id="site-confirm-password" type="password" autocomplete="new-password" class="w-full h-10 px-3.5 bg-surface-container-low border border-outline-variant/60 rounded-lg text-sm outline-none focus:bg-white focus:border-on-surface" />
+        </div>
+      </div>
+      <p id="site-warning-error" class="hidden text-[11px] text-red-600 mt-3"></p>
+      <div class="flex items-center justify-end gap-2 mt-6">
+        <button id="site-warning-cancel" type="button" class="px-4 py-2 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface-variant hover:bg-surface-container-low">Cancel</button>
+        <button id="site-warning-proceed" type="button" class="px-4 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-neutral-800">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const saveBtn = document.getElementById("save-btn");
+      const discardBtn = document.getElementById("discard-btn");
+      const toast = document.getElementById("toast-notification");
+      const nameInput = document.getElementById("name-input");
+      const emailInput = document.getElementById("email-input");
+      const roleInput = document.getElementById("role-input");
+      const bioInput = document.getElementById("bio-input");
+      const bioCount = document.getElementById("bio-count");
+      const timezoneInput = document.getElementById("timezone-input");
+      const localeInput = document.getElementById("locale-input");
+      const auditoryInput = document.getElementById("auditory-input");
+      const digestInput = document.getElementById("digest-input");
+      const profileName = document.getElementById("profile-name");
+      const headerName = document.getElementById("header-name");
+      const profileAvatar = document.getElementById("profile-avatar-img");
+      const headerAvatar = document.getElementById("header-avatar");
+      const headerAvatarFallback = document.getElementById("header-avatar-fallback");
+      const headerAvatarImg = document.getElementById("header-avatar-img");
+      const profileAvatarFallback = document.getElementById("profile-avatar-fallback");
+      const photoInput = document.getElementById("photo-input");
+      const quickPhotoBtn = document.getElementById("quick-photo-btn");
+      const changePhotoBtn = document.getElementById("change-photo-btn");
+      const removePhotoBtn = document.getElementById("remove-photo-btn");
+      const updatePasswordBtn = document.getElementById("update-password-btn");
+      const revokeAllBtn = document.getElementById("revoke-all-btn");
+      const exportBtn = document.getElementById("export-btn");
+      const deactivateBtn = document.getElementById("deactivate-btn");
+      const editEmailBtn = document.getElementById("edit-email-btn");
+      const contactModal = document.getElementById("email-verify-modal");
+      const contactModalTitle = document.getElementById("contact-modal-title");
+      const contactValueInput = document.getElementById("contact-value-input");
+      const contactOtpInput = document.getElementById("contact-otp-input");
+      const sendContactOtpBtn = document.getElementById("send-contact-otp-btn");
+      const verifyContactBtn = document.getElementById("verify-contact-btn");
+      const contactModalClose = document.getElementById("contact-modal-close");
+      const contactCancelBtn = document.getElementById("contact-cancel-btn");
+      const contactVerifyHelp = document.getElementById("contact-verify-help");
+      let original = null;
+      let accountHasPassword = true;
+      const warningModal = document.getElementById("site-warning-modal");
+      const warningTitle = document.getElementById("site-warning-title");
+      const warningMessage = document.getElementById("site-warning-message");
+      const warningIcon = document.getElementById("site-warning-icon");
+      const warningIconWrap = document.getElementById("site-warning-icon-wrap");
+      const warningInputWrap = document.getElementById("site-warning-input-wrap");
+      const warningInputLabel = document.getElementById("site-warning-input-label");
+      const warningInput = document.getElementById("site-warning-input");
+      const warningHelp = document.getElementById("site-warning-help");
+      const warningPasswordWrap = document.getElementById("site-password-wrap");
+      const currentPasswordField = document.getElementById("site-current-password-field");
+      const currentPasswordInput = document.getElementById("site-current-password");
+      const newPasswordInput = document.getElementById("site-new-password");
+      const confirmPasswordInput = document.getElementById("site-confirm-password");
+      const warningError = document.getElementById("site-warning-error");
+      const warningCancel = document.getElementById("site-warning-cancel");
+      const warningClose = document.getElementById("site-warning-close");
+      const warningProceed = document.getElementById("site-warning-proceed");
+      let pendingWarningAction = null;
+
+      function closeWarningModal() {
+        warningModal?.classList.add("hidden");
+        warningModal?.classList.remove("flex");
+        pendingWarningAction = null;
+        [warningInput, currentPasswordInput, newPasswordInput, confirmPasswordInput].forEach(el => { if (el) el.value = ""; });
+        warningError?.classList.add("hidden");
+        if (warningProceed) { warningProceed.disabled = false; warningProceed.textContent = "Confirm"; }
+      }
+
+      function openWarningModal({ title, message, kind = "confirm", confirmText = "Confirm", icon = "warning", inputLabel = "", inputPlaceholder = "", inputHelp = "", danger = false, passwordMode = "change", onConfirm }) {
+        if (!warningModal) return;
+        pendingWarningAction = onConfirm;
+        warningTitle.textContent = title;
+        warningMessage.textContent = message;
+        warningIcon.textContent = icon;
+        warningProceed.textContent = confirmText;
+        warningIconWrap.className = danger
+          ? "w-10 h-10 rounded-xl bg-red-50 text-red-700 flex items-center justify-center shrink-0"
+          : "w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0";
+        warningProceed.className = danger
+          ? "px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700"
+          : "px-4 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-neutral-800";
+        warningInputWrap?.classList.toggle("hidden", kind !== "text");
+        warningPasswordWrap?.classList.toggle("hidden", kind !== "password");
+        currentPasswordField?.classList.toggle("hidden", kind !== "password" || passwordMode === "set");
+        if (kind === "text") {
+          warningInputLabel.textContent = inputLabel;
+          warningInput.placeholder = inputPlaceholder;
+          warningHelp.textContent = inputHelp;
+        }
+        warningModal.classList.remove("hidden");
+        warningModal.classList.add("flex");
+        setTimeout(() => {
+          if (kind === "password") (passwordMode === "set" ? newPasswordInput : currentPasswordInput)?.focus();
+          else if (kind === "text") warningInput?.focus();
+          else warningProceed?.focus();
+        }, 30);
+      }
+
+      const auditoryFeedbackPreferencesInput = document.getElementById("auditory-feedback-preferences-input");
+      auditoryInput?.addEventListener("change", () => {
+        if (auditoryFeedbackPreferencesInput) auditoryFeedbackPreferencesInput.checked = auditoryInput.checked;
+      });
+      auditoryFeedbackPreferencesInput?.addEventListener("change", () => {
+        if (auditoryInput) auditoryInput.checked = auditoryFeedbackPreferencesInput.checked;
+      });
+
+
+      function showToast(message, error = false) {
+        if (!toast) return;
+        const text = toast.querySelector("span:last-child");
+        const icon = toast.querySelector(".material-symbols-outlined");
+        if (text) text.textContent = message;
+        if (icon) icon.classList.toggle("text-red-400", error);
+        toast.classList.remove("translate-y-24", "opacity-0");
+        toast.classList.add("translate-y-0", "opacity-100");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => {
+          toast.classList.remove("translate-y-0", "opacity-100");
+          toast.classList.add("translate-y-24", "opacity-0");
+        }, 3200);
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function initials(name) {
+        const parts = String(name || "User").trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return "U";
+        return (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : parts[0][0]).toUpperCase();
+      }
+
+      function updateAvatarFallback(name) {
+        const text = initials(name);
+        if (profileAvatarFallback) {
+          profileAvatarFallback.textContent = text;
+          profileAvatarFallback.classList.remove("hidden");
+        }
+        if (profileAvatar) profileAvatar.classList.add("hidden");
+        if (headerAvatarFallback) {
+          headerAvatarFallback.textContent = text;
+          headerAvatarFallback.classList.remove("hidden");
+        }
+        if (headerAvatarImg) headerAvatarImg.classList.add("hidden");
+      }
+
+      function applyProfile(data) {
+        const name = data.name || "User";
+        const email = data.email || "";
+        if (nameInput) nameInput.value = name;
+        if (emailInput) emailInput.value = email;
+        if (roleInput) roleInput.value = data.role || "";
+        if (bioInput) bioInput.value = data.bio || "";
+        if (bioCount) bioCount.textContent = `${(data.bio || "").length} / 240 chars`;
+        if (timezoneInput) timezoneInput.value = data.timezone || "Asia/Kolkata";
+        if (localeInput) localeInput.value = data.locale || "en-IN";
+        if (auditoryInput) auditoryInput.checked = !!data.auditory_feedback;
+        const auditoryFeedbackPreferencesInput = document.getElementById("auditory-feedback-preferences-input");
+        if (auditoryFeedbackPreferencesInput) auditoryFeedbackPreferencesInput.checked = !!data.auditory_feedback;
+        if (digestInput) digestInput.checked = !!data.weekly_digest;
+
+        if (profileName) profileName.textContent = name;
+        if (headerName) headerName.textContent = name;
+
+        const roleBadge = document.getElementById("profile-role-badge");
+        const idBadge = document.getElementById("profile-id-badge");
+        if (roleBadge) roleBadge.textContent = data.role || "Profile";
+        if (idBadge) idBadge.textContent = `SYS-ID #${data.id ?? "—"}`;
+
+        accountHasPassword = !!data.has_password;
+        if (updatePasswordBtn) updatePasswordBtn.textContent = accountHasPassword ? "Update Password" : "Set Password";
+        const passwordHint = document.getElementById("password-hint");
+        if (passwordHint) passwordHint.textContent = accountHasPassword ? "Protected by account password" : "Google sign-in · no MAXIMUS password set";
+
+        const verified = !!data.is_verified;
+        const emailBadge = document.getElementById("email-status-badge");
+        if (emailBadge) {
+          emailBadge.className = verified
+            ? "inline-flex items-center gap-1 font-mono text-[10px] text-secondary bg-secondary-container px-2 py-0.5 rounded font-semibold border border-secondary/20"
+            : "inline-flex items-center gap-1 font-mono text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-semibold border border-amber-200";
+          emailBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${verified ? "bg-secondary" : "bg-amber-500"}"></span><span>${verified ? "Verified" : "Unverified"}</span>`;
+        }
+
+        const imgUrl = data.icon_url || "";
+        if (imgUrl) {
+          if (profileAvatar) {
+            profileAvatar.src = imgUrl;
+            profileAvatar.classList.remove("hidden");
+          }
+          if (profileAvatarFallback) profileAvatarFallback.classList.add("hidden");
+          if (headerAvatarImg) {
+            headerAvatarImg.src = imgUrl;
+            headerAvatarImg.classList.remove("hidden");
+          }
+          if (headerAvatarFallback) headerAvatarFallback.classList.add("hidden");
+        } else {
+          updateAvatarFallback(name);
+        }
+
+        const sync = document.getElementById("sync-time");
+        if (sync) sync.textContent = `Loaded ${new Date().toLocaleString()}`;
+      }
+
+      async function api(url, options = {}) {
+        const response = await fetch(url, {
+          credentials: "include",
+          headers: { "Accept": "application/json", ...(options.body ? {"Content-Type":"application/json"} : {}) },
+          ...options
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          window.location.href = "/login";
+          throw new Error("Not authenticated");
+        }
+        if (!response.ok) throw new Error(data.detail || data.message || `Request failed (${response.status})`);
+        return data;
+      }
+
+      function closeContactModal() {
+        const modal = document.getElementById("email-verify-modal");
+        modal?.classList.add("hidden");
+        modal?.classList.remove("flex");
+        if (contactValueInput) contactValueInput.value = "";
+        if (contactOtpInput) contactOtpInput.value = "";
+      }
+
+      function openEmailModal() {
+        const modal = document.getElementById("email-verify-modal");
+        if (!modal) return;
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        if (contactVerifyHelp) contactVerifyHelp.textContent = "Your email is replaced only after the OTP is verified.";
+        setTimeout(() => contactValueInput?.focus(), 50);
+      }
+
+      function openContactModal(mode = "email") {
+        if (mode !== "email") return;
+        openEmailModal();
+      }
+
+      async function sendContactOtp() {
+        const value = (contactValueInput?.value || "").trim().toLowerCase();
+        if (!value) return showToast("Enter a new email address.", true);
+        if (!/^\S+@\S+\.\S+$/.test(value)) return showToast("Enter a valid email address.", true);
+        sendContactOtpBtn.disabled = true;
+        try {
+          const result = await api("/api/user/email/request", {
+            method: "POST",
+            body: JSON.stringify({ new_email: value })
+          });
+          contactVerifyHelp.textContent = result.message || "OTP sent. Enter it below.";
+          showToast("Verification code sent to the new email.");
+          contactOtpInput?.focus();
+        } catch (error) {
+          showToast(error.message || "Could not send verification code.", true);
+        } finally {
+          sendContactOtpBtn.disabled = false;
+        }
+      }
+
+      async function verifyAndReplaceEmail() {
+        const value = (contactValueInput?.value || "").trim().toLowerCase();
+        const otp = (contactOtpInput?.value || "").trim();
+        if (!value || !/^\S+@\S+\.\S+$/.test(value) || !/^\d{6}$/.test(otp)) return showToast("Enter the new email and 6-digit OTP.", true);
+        verifyContactBtn.disabled = true;
+        try {
+          const result = await api("/api/user/email/verify", {
+            method: "POST",
+            body: JSON.stringify({ new_email: value, otp })
+          });
+          showToast(result.message || "Email replaced successfully.");
+          closeContactModal();
+          await loadProfile();
+        } catch (error) {
+          showToast(error.message || "Email verification failed.", true);
+        } finally {
+          verifyContactBtn.disabled = false;
+        }
+      }
+
+      async function loadProfile() {
+        try {
+          const data = await api("/api/user/profile");
+          original = JSON.parse(JSON.stringify(data));
+          applyProfile(original);
+        } catch (error) {
+          console.error("PROFILE LOAD ERROR:", error);
+          showToast(error.message || "Unable to load account details.", true);
+        }
+      }
+
+      async function saveProfile() {
+        const payload = {
+          name: nameInput.value.trim(),
+          role: roleInput.value.trim(),
+          bio: bioInput.value.trim(),
+          timezone: timezoneInput.value,
+          locale: localeInput.value,
+          auditory_feedback: !!(auditoryFeedbackPreferencesInput ? auditoryFeedbackPreferencesInput.checked : auditoryInput.checked),
+          weekly_digest: !!digestInput.checked
+        };
+        if (!payload.name) return showToast("Name is required.", true);
+        saveBtn.disabled = true;
+        saveBtn.classList.add("opacity-60", "cursor-not-allowed");
+        try {
+          const result = await api("/api/user/profile", { method: "PATCH", body: JSON.stringify(payload) });
+          original = { ...original, ...payload, name: result.name || payload.name, icon_url: result.icon_url ?? original.icon_url };
+          applyProfile(original);
+          showToast("Profile configuration saved successfully.");
+        } catch (error) {
+          console.error("PROFILE SAVE ERROR:", error);
+          showToast(error.message || "Unable to save profile.", true);
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.classList.remove("opacity-60", "cursor-not-allowed");
+        }
+      }
+
+      async function changePhoto(file) {
+        if (!file) return;
+        if (!file.type.startsWith("image/")) return showToast("Select an image file.", true);
+        if (file.size > 2 * 1024 * 1024) return showToast("Photo must be 2 MB or smaller.", true);
+        const reader = new FileReader();
+        reader.onload = async () => {
+          try {
+            const result = await api("/api/user/profile", { method: "PATCH", body: JSON.stringify({ avatar_data: String(reader.result) }) });
+            original.icon_url = result.icon_url || String(reader.result);
+            applyProfile(original);
+            showToast("Profile photo updated.");
+          } catch (error) {
+            showToast(error.message || "Unable to update photo.", true);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      async function removePhoto() {
+        openWarningModal({
+          title: "Remove profile photo",
+          message: "Your current profile photo will be removed from your MAXIMUS account. Your initials will be shown instead.",
+          confirmText: "Remove Photo",
+          icon: "person_remove",
+          danger: true,
+          onConfirm: async () => {
+            try {
+              await api("/api/user/profile/avatar", { method: "DELETE" });
+              original.icon_url = null;
+              applyProfile(original);
+              closeWarningModal();
+              showToast("Profile photo removed.");
+            } catch (error) { throw error; }
+          }
+        });
+      }
+
+      async function updatePassword() {
+        const isSetMode = !accountHasPassword;
+        openWarningModal({
+          title: isSetMode ? "Set MAXIMUS password" : "Update password",
+          message: isSetMode
+            ? "You signed in with Google and do not have a MAXIMUS password yet. Create one to enable email-and-password login too."
+            : "Enter your current password, then choose a new password. Your new password must be at least 8 characters.",
+          kind: "password",
+          passwordMode: isSetMode ? "set" : "change",
+          confirmText: isSetMode ? "Set Password" : "Update Password",
+          icon: isSetMode ? "add_moderator" : "lock",
+          onConfirm: async () => {
+            const currentPassword = currentPasswordInput?.value || "";
+            const newPassword = newPasswordInput?.value || "";
+            const confirmPassword = confirmPasswordInput?.value || "";
+            if ((!isSetMode && !currentPassword) || !newPassword || !confirmPassword) throw new Error(isSetMode ? "Please fill in both password fields." : "Please fill in all password fields.");
+            if (newPassword.length < 8) throw new Error("New password must be at least 8 characters.");
+            if (newPassword !== confirmPassword) throw new Error("New passwords do not match.");
+            const endpoint = isSetMode ? "/api/user/password/set" : "/api/user/password";
+            const body = isSetMode
+              ? { new_password: newPassword, current_password: "" }
+              : { current_password: currentPassword, new_password: newPassword };
+            await api(endpoint, { method: "POST", body: JSON.stringify(body) });
+            accountHasPassword = true;
+            if (updatePasswordBtn) updatePasswordBtn.textContent = "Update Password";
+            closeWarningModal();
+            showToast(isSetMode ? "MAXIMUS password created successfully." : "Password updated successfully.");
+          }
+        });
+      }
+
+      async function loadDevices() {
+        try {
+          const list = await api("/api/devices");
+          const container = document.querySelector("#sessions-section .space-y-3");
+          const count = document.getElementById("session-count");
+          if (!container) return;
+          if (count) count.textContent = `${list.length} Active`;
+          container.innerHTML = list.length ? "" : '<div class="p-4 rounded-lg border border-outline-variant/60 bg-surface-container-low/60 text-xs text-on-surface-variant">No active devices found.</div>';
+          list.forEach(device => {
+            const row = document.createElement("div");
+            row.className = "flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-surface-container-low/60 border border-outline-variant/60 rounded-lg gap-3";
+            const safeName = escapeHtml(device.name || "Browser Device");
+            const detail = device.current ? "Current browser session" : `Last seen ${device.last_seen_at ? new Date(device.last_seen_at).toLocaleString() : "unknown"}`;
+            row.innerHTML = `<div class="flex items-center gap-3.5 min-w-0"><div class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-outline-variant/70 flex items-center justify-center text-on-surface shadow-sm shrink-0"><span class="material-symbols-outlined text-[20px]">${device.name?.toLowerCase().includes("mobile") ? "smartphone" : "desktop_windows"}</span></div><div class="flex flex-col min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="text-sm font-semibold text-on-surface">${safeName}</span>${device.current ? '<span class="font-mono text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-semibold border border-secondary/20">THIS DEVICE</span>' : ''}</div><span class="font-mono text-xs text-on-surface-variant mt-0.5">${escapeHtml(detail)}</span></div></div><div class="flex items-center gap-2 self-end sm:self-auto">${device.current ? '<div class="flex items-center gap-1.5 font-mono text-[11px] text-secondary font-medium"><span class="w-2 h-2 rounded-full bg-secondary"></span><span>Online Now</span></div>' : `<button data-revoke-device="${Number(device.id)}" class="px-3 py-1 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-error-container hover:text-error text-on-surface-variant text-xs font-medium transition-colors" type="button">Revoke Session</button>`}</div>`;
+            container.appendChild(row);
+          });
+          container.querySelectorAll("[data-revoke-device]").forEach(btn => btn.addEventListener("click", async () => {
+            openWarningModal({
+              title: "Revoke device session",
+              message: "This will sign the selected device out of your MAXIMUS account. You can sign in again later.",
+              confirmText: "Revoke Session",
+              icon: "devices_off",
+              danger: true,
+              onConfirm: async () => {
+                try { await api(`/api/devices/${encodeURIComponent(btn.dataset.revokeDevice)}/revoke`, { method: "POST" }); closeWarningModal(); showToast("Device session revoked."); await loadDevices(); }
+                catch (error) { throw error; }
+              }
+            });
+          }));
+        } catch (error) { console.error("DEVICES LOAD ERROR:", error); }
+      }
+
+
+
+      async function revokeOthers() {
+        openWarningModal({
+          title: "Revoke other sessions",
+          message: "All other signed-in devices will be revoked. Your current browser session will remain active.",
+          confirmText: "Revoke Others",
+          icon: "logout",
+          danger: true,
+          onConfirm: async () => {
+            try { const result = await api("/api/devices/revoke-others", { method: "POST" }); closeWarningModal(); showToast(result.message); await loadDevices(); }
+            catch (error) { throw error; }
+          }
+        });
+      }
+
+      async function exportData() {
+        try {
+          const response = await fetch("/api/user/export", { credentials: "include" });
+          if (response.status === 401) return (window.location.href = "/login");
+          if (!response.ok) throw new Error("Export failed.");
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a"); a.href = url; a.download = "maximus-account-export.json"; a.click(); URL.revokeObjectURL(url);
+          showToast("Account export downloaded.");
+        } catch (error) { showToast(error.message || "Unable to export data.", true); }
+      }
+
+      async function deactivate() {
+        openWarningModal({
+          title: "Deactivate MAXIMUS account",
+          message: "This permanently deletes your MAXIMUS account and its saved data. This action cannot be undone.",
+          kind: "text",
+          confirmText: "Delete Account",
+          icon: "delete_forever",
+          inputLabel: 'Type DELETE to confirm',
+          inputPlaceholder: "DELETE",
+          inputHelp: "Enter exactly DELETE to enable account deletion.",
+          danger: true,
+          onConfirm: async () => {
+            if ((warningInput?.value || "").trim() !== "DELETE") throw new Error("Type DELETE exactly to confirm account deletion.");
+            await api("/api/account", { method: "DELETE" });
+            closeWarningModal();
+            window.location.href = "/login";
+          }
+        });
+      }
+
+      function discardChanges() {
+        if (!original) return;
+        const currentSnapshot = {
+          name: nameInput?.value?.trim() || "", role: roleInput?.value?.trim() || "", bio: bioInput?.value?.trim() || "",
+          timezone: timezoneInput?.value || "", locale: localeInput?.value || "",
+          auditory_feedback: !!(auditoryFeedbackPreferencesInput ? auditoryFeedbackPreferencesInput.checked : auditoryInput?.checked),
+          weekly_digest: !!digestInput?.checked
+        };
+        const baseline = {
+          name: original.name || "", role: original.role || "", bio: original.bio || "", timezone: original.timezone || "", locale: original.locale || "",
+          auditory_feedback: !!original.auditory_feedback, weekly_digest: !!original.weekly_digest
+        };
+        if (JSON.stringify(currentSnapshot) === JSON.stringify(baseline)) { showToast("No unsaved changes."); return; }
+        openWarningModal({
+          title: "Discard changes",
+          message: "Your unsaved profile changes will be lost.",
+          confirmText: "Discard Changes",
+          icon: "undo",
+          danger: true,
+          onConfirm: async () => { applyProfile(original); closeWarningModal(); showToast("Changes discarded."); }
+        });
+      }
+
+      bioInput?.addEventListener("input", () => { if (bioCount) bioCount.textContent = `${bioInput.value.length} / 240 chars`; });
+      saveBtn?.addEventListener("click", saveProfile);
+      discardBtn?.addEventListener("click", discardChanges);
+      quickPhotoBtn?.addEventListener("click", () => photoInput?.click());
+      changePhotoBtn?.addEventListener("click", () => photoInput?.click());
+      photoInput?.addEventListener("change", () => { const file = photoInput.files?.[0]; changePhoto(file); photoInput.value = ""; });
+      removePhotoBtn?.addEventListener("click", () => removePhoto());
+      updatePasswordBtn?.addEventListener("click", updatePassword);
+      revokeAllBtn?.addEventListener("click", revokeOthers);
+      exportBtn?.addEventListener("click", exportData);
+      deactivateBtn?.addEventListener("click", deactivate);
+      editEmailBtn?.addEventListener("click", openEmailModal);
+      sendContactOtpBtn?.addEventListener("click", sendContactOtp);
+      verifyContactBtn?.addEventListener("click", verifyAndReplaceEmail);
+      contactModalClose?.addEventListener("click", closeContactModal);
+      contactCancelBtn?.addEventListener("click", closeContactModal);
+      contactModal?.addEventListener("click", (event) => { if (event.target === contactModal) closeContactModal(); });
+
+      warningCancel?.addEventListener("click", closeWarningModal);
+      warningClose?.addEventListener("click", closeWarningModal);
+      warningModal?.addEventListener("click", (event) => { if (event.target === warningModal) closeWarningModal(); });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !warningModal?.classList.contains("hidden")) closeWarningModal(); });
+      warningProceed?.addEventListener("click", async () => {
+        if (!pendingWarningAction) return;
+        warningProceed.disabled = true;
+        warningProceed.textContent = "Working…";
+        warningError?.classList.add("hidden");
+        try {
+          await pendingWarningAction();
+        } catch (error) {
+          warningError.textContent = error?.message || "Action failed.";
+          warningError.classList.remove("hidden");
+          warningProceed.disabled = false;
+          warningProceed.textContent = "Try Again";
+        }
+      });
+      warningInput?.addEventListener("input", () => {
+        if (pendingWarningAction) {
+          const valid = warningInput.value.trim() === "DELETE";
+          warningProceed.disabled = !valid;
+        }
+      });
+
+      loadProfile();
+      loadDevices();
+    })();
+  </script>
+</body>
+</html>
