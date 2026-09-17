@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-page="overview">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="/static/theme.js"></script>
+<title>Overview · MAXIMUS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fafafa;color:#121212;font:14px/1.6 system-ui,sans-serif}header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 32px;border-bottom:1px solid #e4e4e7;background:white}nav{display:flex;gap:20px}a{color:inherit;text-decoration:none}a:hover{text-decoration:underline}main{max-width:1200px;margin:auto;padding:40px 24px}h1{font-size:32px;letter-spacing:-1px}p,.note{color:#71717a}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:28px 0}.card,section{background:white;border:1px solid #e4e4e7;border-radius:16px;padding:24px}.value{font-size:32px;font-weight:600}button{padding:10px 16px;border:1px solid #e4e4e7;border-radius:10px;background:transparent;color:inherit;cursor:pointer}ul{list-style:none;padding:0}li{padding:12px 0;border-bottom:1px solid #e4e4e7}.heading{display:flex;justify-content:space-between;align-items:center}.error{color:#b91c1c}@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}header{flex-wrap:wrap}}@media(max-width:400px){.grid{grid-template-columns:1fr}}
+</style><link rel="stylesheet" href="/static/theme.css">
+</head>
+<body>
+<header><a href="/home" class="maximus-brand"><img src="/static/logo.jpg" alt=""><strong>MAXIMUS</strong></a><nav><a href="/home">Chat</a><a href="/history">History</a><a href="/api-pro">Providers</a><a href="/settings">Settings</a></nav></header>
+<main><div class="heading"><h1>Your activity</h1><button id="refresh" type="button">Refresh</button></div><p id="status" role="status">Loading account activity…</p>
+<div class="grid"><div class="card">Saved chats<div class="value" id="chats">—</div></div><div class="card">Live sessions<div class="value" id="lives">—</div></div><div class="card">Provider requests · 24h<div class="value" id="requests">—</div><small id="errors"></small></div><div class="card">P95 response · 24h<div class="value" id="latency">—</div></div></div>
+<section><h2>Recent conversations</h2><ul id="recent"></ul></section><p class="note">Request metrics cover custom provider text requests recorded in the last 24 hours. Built-in Flash is not included.</p></main>
+<script>
+const $=id=>document.getElementById(id);
+async function get(url){const r=await fetch(url,{credentials:'same-origin',cache:'no-store'});if(r.status===401){location.replace('/login');throw Error('Sign in to continue.')}if(!r.ok)throw Error('Could not load activity. Please retry.');return r.json()}
+async function refresh(){
+ $('refresh').disabled=true;
+ try{const [chats,lives,metrics]=await Promise.all([get('/api/chat/list'),get('/api/live/list'),get('/api/providers/telemetry')]);$('chats').textContent=chats.length;$('lives').textContent=lives.length;$('requests').textContent=metrics.requests;$('errors').textContent=metrics.errors+' failed';$('latency').textContent=metrics.p95_latency_ms==null?'—':(metrics.p95_latency_ms/1000).toFixed(2)+'s';$('recent').replaceChildren();const recent=[...chats,...lives].sort((a,b)=>String(b.updated_at||'').localeCompare(String(a.updated_at||''))).slice(0,6);for(const item of recent){const li=document.createElement('li');const a=document.createElement('a');a.href='/history';a.textContent=item.title||'Untitled conversation';li.append(a);$('recent').append(li)}if(!recent.length)$('recent').textContent='No saved conversations yet.';$('status').textContent='Updated '+new Date().toLocaleTimeString()}
+ catch(error){$('status').textContent=error.message;for(const id of ['chats','lives','requests','latency'])$(id).textContent='—';$('recent').replaceChildren()}
+ finally{$('refresh').disabled=false}
+}
+$('refresh').addEventListener('click',refresh);refresh();
+</script></body></html>

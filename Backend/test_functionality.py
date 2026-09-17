@@ -1,6 +1,6 @@
 """Regression tests using synthetic settings and a temporary database, never .env.
 
-Run: Backend/venv/Scripts/python.exe Backend/test_functionality.py
+Run: venv/Scripts/python.exe Backend/test_functionality.py
 """
 import base64
 import importlib.util
@@ -30,13 +30,17 @@ def get_db():
         yield session
 database.get_db = get_db
 sys.modules["database"] = database
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.modules["Backend.database"] = database
 CONFIG = {"GEMINI_API_KEY": "test-only", "SESSION_SECRET": "isolated-test-secret", "MAIL_USERNAME": "test@example.com", "MAIL_PASSWORD": "test-only", "MAIL_FROM": "test@example.com"}
 env_patch = patch.dict(os.environ, CONFIG, clear=True)
 env_patch.start()
-spec = importlib.util.spec_from_file_location("tested_app", Path(__file__).with_name("app.py"))
+spec = importlib.util.spec_from_file_location("Backend.app", Path(__file__).with_name("app.py"))
 app = importlib.util.module_from_spec(spec)
+sys.modules["Backend.app"] = app
 with patch.object(dotenv, "load_dotenv", return_value=False), patch.object(genai, "Client"):
     spec.loader.exec_module(app)
+app.initialize_database()
 
 class FunctionalityTests(unittest.TestCase):
     def setUp(self):
@@ -136,7 +140,7 @@ class FunctionalityTests(unittest.TestCase):
                 voices.append(voice)
             async def save(self, path):
                 Path(path).write_bytes(b'test-audio')
-        with patch.object(app, 'BASE_DIR', TEMP.name), patch.object(app.edge_tts, 'Communicate', FakeSpeech):
+        with patch.object(app.tempfile, 'gettempdir', return_value=TEMP.name), patch.object(app.edge_tts, 'Communicate', FakeSpeech):
             response = self.client.post('/api/tts', json={'text': 'hello', 'voice': 'en-IN-NeerjaNeural'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b'test-audio')
@@ -155,6 +159,50 @@ class FunctionalityTests(unittest.TestCase):
         self.assertEqual(stats['requests'], 20)
         self.assertEqual(stats['errors'], 0)
         self.assertEqual(stats['p95_latency_ms'], 19)
+
+    def test_vercel_entrypoint_and_page_routes(self):
+        from api.index import app as entrypoint
+        self.assertIs(entrypoint, app.app)
+        for prefix in ['', '/m']:
+            for page in ['/home', '/settings', '/history', '/overview', '/qr-login', '/qr-confirm', '/profile-settings', '/api-pro']:
+                response = self.client.get(prefix + page)
+                self.assertEqual(response.status_code, 200, prefix + page)
+        for asset in ['theme.css', 'theme.js', 'logo.jpg']:
+            self.assertEqual(self.client.get('/static/' + asset).status_code, 200, asset)
+
+    def test_shared_otp_is_one_time_and_expires(self):
+        app.store_otp('test', '123456', {'name': 'Test'})
+        self.assertIsNone(app.verify_otp('test', '000000'))
+        self.assertEqual(app.verify_otp('test', '123456'), {'name': 'Test'})
+        self.assertIsNone(app.verify_otp('test', '123456'))
+        app.store_challenge('otp', 'expired', {}, -1, verification='123456')
+        self.assertIsNone(app.verify_otp('expired', '123456'))
+
+    def test_shared_qr_transfer_and_polling(self):
+        with patch.dict(os.environ, {'APP_BASE_URL': 'https://maximus.example'}):
+            response = self.client.get('/auth/qr/generate')
+        self.assertEqual(response.status_code, 200)
+        token = response.headers['X-MAXIMUS-QR-Token']
+        self.assertEqual(self.client.get('/auth/qr/pending').json()['status'], 'waiting')
+        with TestClient(app.app) as phone:
+            self.assertEqual(phone.get('/auth/qr/status', params={'token': token}).status_code, 404)
+            claimed = phone.get('/auth/qr-confirm', params={'token': token, 'mobile': 'true'}, follow_redirects=False)
+            self.assertEqual(claimed.status_code, 303, claimed.text)
+            self.assertEqual(claimed.headers['location'], '/m/home')
+            self.assertEqual(phone.get('/auth/qr-confirm', params={'token': token}).status_code, 400)
+        self.assertEqual(self.client.get('/auth/qr/pending').json()['status'], 'completed')
+
+    def test_vercel_database_requires_postgres(self):
+        import runpy
+        with patch.dict(os.environ, {'VERCEL': '1', 'DATABASE_URL': 'sqlite:///not-allowed.db'}):
+            with self.assertRaisesRegex(RuntimeError, 'hosted PostgreSQL'):
+                runpy.run_path(str(Path(__file__).with_name('database.py')))
+
+    def test_public_urls_use_deployment_hostname(self):
+        from starlette.requests import Request
+        request = Request({'type': 'http', 'scheme': 'http', 'server': ('localhost', 8000), 'path': '/', 'headers': []})
+        with patch.dict(os.environ, {'VERCEL': '1', 'VERCEL_URL': 'maximus.example', 'APP_BASE_URL': ''}):
+            self.assertEqual(app._public_base_url(request), 'https://maximus.example')
 
     def test_normal_chat_and_live_generation(self):
         with patch.object(app.client.models, 'generate_content', return_value=types.SimpleNamespace(text='Test reply')):

@@ -22,16 +22,27 @@ from pydantic import BaseModel, EmailStr
 
 from google import genai
 from dotenv import load_dotenv
+from pathlib import Path
+import os
+import tempfile
+from contextlib import asynccontextmanager
 
 # Load .env before importing database.py so DATABASE_URL is available.
-load_dotenv()
+if not os.getenv("VERCEL"):
+    load_dotenv(Path(__file__).with_name(".env"))
 
 from sqlalchemy.orm import Session
 from sqlalchemy import inspect, text, Column, Integer, String, DateTime, Float, Boolean, Text
 from sqlalchemy.exc import IntegrityError
 
-from database import SessionLocal, engine, Base, get_db
-from models import User, ChatMessage, ChatSession, LiveSession, LiveMessage
+if __package__:
+    from .database import SessionLocal, engine, Base, get_db
+    from .models import User, ChatMessage, ChatSession, LiveSession, LiveMessage
+    from .auth_store import AuthChallenge, store_challenge, read_challenge, consume_challenge
+else:
+    from database import SessionLocal, engine, Base, get_db
+    from models import User, ChatMessage, ChatSession, LiveSession, LiveMessage
+    from auth_store import AuthChallenge, store_challenge, read_challenge, consume_challenge
 
 from pwdlib import PasswordHash
 
@@ -132,7 +143,15 @@ client = genai.Client(
 # FASTAPI
 # =====================================================
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    # Database DDL belongs to startup, not module import / Vercel inspection.
+    initialize_database()
+    yield
+    engine.dispose()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 # =====================================================
@@ -264,8 +283,8 @@ class AccountProfile(Base):
 # TOKEN STORES
 # =====================================================
 
-qr_tokens = {}
-otp_store = {}
+# One-time codes and QR transfers are stored in the shared database so that
+# verification can land on a different Vercel instance than creation.
 
 
 # =====================================================
@@ -304,7 +323,9 @@ class DeviceSessionMiddleware(BaseHTTPMiddleware):
 app.add_middleware(DeviceSessionMiddleware)
 app.add_middleware(
     SessionMiddleware,
-    secret_key=os.getenv("SESSION_SECRET")
+    secret_key=os.getenv("SESSION_SECRET"),
+    https_only=bool(os.getenv("VERCEL")),
+    same_site="lax",
 )
 
 
@@ -312,223 +333,234 @@ app.add_middleware(
 # CREATE DATABASE TABLES
 # =====================================================
 
-Base.metadata.create_all(bind=engine)
+def initialize_database():
+    if engine.dialect.name == "postgresql":
+        # Serialize cold-start migrations across serverless instances.
+        with engine.begin() as lock_connection:
+            lock_connection.execute(text("SELECT pg_advisory_xact_lock(748312967)"))
+            _initialize_schema()
+    else:
+        _initialize_schema()
 
-# Account profile storage is part of the profile/settings feature.
-Base.metadata.create_all(bind=engine, tables=[AccountProfile.__table__])
 
-# Provider table migration for databases created before BYOK support.
-provider_columns = {column["name"] for column in inspect(engine).get_columns("providers")}
-with engine.begin() as connection:
-    provider_migrations = {
-        "organization": "ALTER TABLE providers ADD COLUMN organization VARCHAR",
-        "api_format": "ALTER TABLE providers ADD COLUMN api_format VARCHAR DEFAULT 'chat_completions' NOT NULL",
-        "model_id": "ALTER TABLE providers ADD COLUMN model_id VARCHAR",
-        "models_json": "ALTER TABLE providers ADD COLUMN models_json TEXT",
-        "is_active": "ALTER TABLE providers ADD COLUMN is_active BOOLEAN DEFAULT TRUE NOT NULL",
-        "is_valid": "ALTER TABLE providers ADD COLUMN is_valid BOOLEAN DEFAULT FALSE NOT NULL",
-        "last_error": "ALTER TABLE providers ADD COLUMN last_error TEXT",
-        "last_latency_ms": "ALTER TABLE providers ADD COLUMN last_latency_ms FLOAT",
-        "last_checked_at": "ALTER TABLE providers ADD COLUMN last_checked_at TIMESTAMP",
-        "created_at": "ALTER TABLE providers ADD COLUMN created_at TIMESTAMP",
-        "updated_at": "ALTER TABLE providers ADD COLUMN updated_at TIMESTAMP",
+def _initialize_schema():
+    Base.metadata.create_all(bind=engine)
+
+    # Account profile storage is part of the profile/settings feature.
+    Base.metadata.create_all(bind=engine, tables=[AccountProfile.__table__])
+
+    # Provider table migration for databases created before BYOK support.
+    provider_columns = {column["name"] for column in inspect(engine).get_columns("providers")}
+    with engine.begin() as connection:
+        provider_migrations = {
+            "organization": "ALTER TABLE providers ADD COLUMN organization VARCHAR",
+            "api_format": "ALTER TABLE providers ADD COLUMN api_format VARCHAR DEFAULT 'chat_completions' NOT NULL",
+            "model_id": "ALTER TABLE providers ADD COLUMN model_id VARCHAR",
+            "models_json": "ALTER TABLE providers ADD COLUMN models_json TEXT",
+            "is_active": "ALTER TABLE providers ADD COLUMN is_active BOOLEAN DEFAULT TRUE NOT NULL",
+            "is_valid": "ALTER TABLE providers ADD COLUMN is_valid BOOLEAN DEFAULT FALSE NOT NULL",
+            "last_error": "ALTER TABLE providers ADD COLUMN last_error TEXT",
+            "last_latency_ms": "ALTER TABLE providers ADD COLUMN last_latency_ms FLOAT",
+            "last_checked_at": "ALTER TABLE providers ADD COLUMN last_checked_at TIMESTAMP",
+            "created_at": "ALTER TABLE providers ADD COLUMN created_at TIMESTAMP",
+            "updated_at": "ALTER TABLE providers ADD COLUMN updated_at TIMESTAMP",
+        }
+        for column_name, statement in provider_migrations.items():
+            if column_name not in provider_columns:
+                connection.execute(text(statement))
+
+
+
+    # =====================================================
+    # VOICE PREFERENCES MIGRATION
+    # =====================================================
+    voice_columns = {column["name"] for column in inspect(engine).get_columns("user_settings")}
+    with engine.begin() as connection:
+        if "input_language" not in voice_columns:
+            connection.execute(text("ALTER TABLE user_settings ADD COLUMN input_language VARCHAR DEFAULT 'en-IN' NOT NULL"))
+            print("✅ Added input_language to user_settings")
+        if "output_language" not in voice_columns:
+            connection.execute(text("ALTER TABLE user_settings ADD COLUMN output_language VARCHAR DEFAULT 'en-IN' NOT NULL"))
+            print("✅ Added output_language to user_settings")
+        if "voice_gender" not in voice_columns:
+            connection.execute(text("ALTER TABLE user_settings ADD COLUMN voice_gender VARCHAR DEFAULT 'female' NOT NULL"))
+            print("✅ Added voice_gender to user_settings")
+        if "network_access" not in voice_columns:
+            connection.execute(text("ALTER TABLE user_settings ADD COLUMN network_access BOOLEAN DEFAULT FALSE NOT NULL"))
+            print("✅ Added network_access to user_settings")
+
+
+    # =====================================================
+    # DATABASE MIGRATION
+    # =====================================================
+
+    inspector = inspect(engine)
+
+
+    # -------------------------
+    # CHAT MESSAGES — session_id
+    # -------------------------
+
+    chat_columns_for_migration = [
+        column["name"]
+        for column in inspector.get_columns("chat_messages")
+    ]
+
+    if "session_id" not in chat_columns_for_migration:
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "ALTER TABLE chat_messages ADD COLUMN session_id INTEGER"
+                )
+            )
+
+        print("✅ Added session_id to chat_messages table")
+
+
+    inspector = inspect(engine)
+
+
+    # -------------------------
+    # CHAT SESSIONS — mode
+    # -------------------------
+
+    chat_session_columns_for_migration = [
+        column["name"]
+        for column in inspector.get_columns("chat_sessions")
+    ]
+
+    if "mode" not in chat_session_columns_for_migration:
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "ALTER TABLE chat_sessions "
+                    "ADD COLUMN mode VARCHAR(20) DEFAULT 'chat' NOT NULL"
+                )
+            )
+
+        print("✅ Added mode to chat_sessions table")
+
+
+    inspector = inspect(engine)
+
+
+    # -------------------------
+    # CONVERSATION SESSIONS — pinned
+    # -------------------------
+
+    chat_session_columns_for_migration = {
+        column["name"] for column in inspect(engine).get_columns("chat_sessions")
     }
-    for column_name, statement in provider_migrations.items():
-        if column_name not in provider_columns:
-            connection.execute(text(statement))
 
-
-
-# =====================================================
-# VOICE PREFERENCES MIGRATION
-# =====================================================
-voice_columns = {column["name"] for column in inspect(engine).get_columns("user_settings")}
-with engine.begin() as connection:
-    if "input_language" not in voice_columns:
-        connection.execute(text("ALTER TABLE user_settings ADD COLUMN input_language VARCHAR DEFAULT 'en-IN' NOT NULL"))
-        print("✅ Added input_language to user_settings")
-    if "output_language" not in voice_columns:
-        connection.execute(text("ALTER TABLE user_settings ADD COLUMN output_language VARCHAR DEFAULT 'en-IN' NOT NULL"))
-        print("✅ Added output_language to user_settings")
-    if "voice_gender" not in voice_columns:
-        connection.execute(text("ALTER TABLE user_settings ADD COLUMN voice_gender VARCHAR DEFAULT 'female' NOT NULL"))
-        print("✅ Added voice_gender to user_settings")
-    if "network_access" not in voice_columns:
-        connection.execute(text("ALTER TABLE user_settings ADD COLUMN network_access BOOLEAN DEFAULT FALSE NOT NULL"))
-        print("✅ Added network_access to user_settings")
-
-
-# =====================================================
-# DATABASE MIGRATION
-# =====================================================
-
-inspector = inspect(engine)
-
-
-# -------------------------
-# CHAT MESSAGES — session_id
-# -------------------------
-
-chat_columns_for_migration = [
-    column["name"]
-    for column in inspector.get_columns("chat_messages")
-]
-
-if "session_id" not in chat_columns_for_migration:
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "ALTER TABLE chat_messages ADD COLUMN session_id INTEGER"
+    if "pinned" not in chat_session_columns_for_migration:
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "ALTER TABLE chat_sessions ADD COLUMN pinned BOOLEAN DEFAULT FALSE NOT NULL"
+                )
             )
-        )
+        print("✅ Added pinned to chat_sessions table")
 
-    print("✅ Added session_id to chat_messages table")
+    live_session_columns_for_migration = {
+        column["name"] for column in inspect(engine).get_columns("live_sessions")
+    }
 
-
-inspector = inspect(engine)
-
-
-# -------------------------
-# CHAT SESSIONS — mode
-# -------------------------
-
-chat_session_columns_for_migration = [
-    column["name"]
-    for column in inspector.get_columns("chat_sessions")
-]
-
-if "mode" not in chat_session_columns_for_migration:
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "ALTER TABLE chat_sessions "
-                "ADD COLUMN mode VARCHAR(20) DEFAULT 'chat' NOT NULL"
+    if "pinned" not in live_session_columns_for_migration:
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "ALTER TABLE live_sessions ADD COLUMN pinned BOOLEAN DEFAULT FALSE NOT NULL"
+                )
             )
-        )
-
-    print("✅ Added mode to chat_sessions table")
+        print("✅ Added pinned to live_sessions table")
 
 
-inspector = inspect(engine)
+    # -------------------------
+    # USERS TABLE
+    # -------------------------
+
+    user_columns = [
+        column["name"]
+        for column in inspector.get_columns("users")
+    ]
 
 
-# -------------------------
-# CONVERSATION SESSIONS — pinned
-# -------------------------
-
-chat_session_columns_for_migration = {
-    column["name"] for column in inspect(engine).get_columns("chat_sessions")
-}
-
-if "pinned" not in chat_session_columns_for_migration:
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "ALTER TABLE chat_sessions ADD COLUMN pinned BOOLEAN DEFAULT FALSE NOT NULL"
+    if "google_id" not in user_columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text("ALTER TABLE users ADD COLUMN google_id VARCHAR")
             )
-        )
-    print("✅ Added pinned to chat_sessions table")
 
-live_session_columns_for_migration = {
-    column["name"] for column in inspect(engine).get_columns("live_sessions")
-}
+        print("✅ Added google_id to users table")
 
-if "pinned" not in live_session_columns_for_migration:
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "ALTER TABLE live_sessions ADD COLUMN pinned BOOLEAN DEFAULT FALSE NOT NULL"
+
+    if "apple_id" not in user_columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text("ALTER TABLE users ADD COLUMN apple_id VARCHAR")
             )
-        )
-    print("✅ Added pinned to live_sessions table")
+
+        print("✅ Added apple_id to users table")
 
 
-# -------------------------
-# USERS TABLE
-# -------------------------
-
-user_columns = [
-    column["name"]
-    for column in inspector.get_columns("users")
-]
-
-
-if "google_id" not in user_columns:
-    with engine.begin() as connection:
-        connection.execute(
-            text("ALTER TABLE users ADD COLUMN google_id VARCHAR")
-        )
-
-    print("✅ Added google_id to users table")
-
-
-if "apple_id" not in user_columns:
-    with engine.begin() as connection:
-        connection.execute(
-            text("ALTER TABLE users ADD COLUMN apple_id VARCHAR")
-        )
-
-    print("✅ Added apple_id to users table")
-
-
-if "reset_token" not in user_columns:
-    with engine.begin() as connection:
-        connection.execute(
-            text("ALTER TABLE users ADD COLUMN reset_token VARCHAR")
-        )
-
-    print("✅ Added reset_token to users table")
-
-
-if "reset_token_expires" not in user_columns:
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "ALTER TABLE users ADD COLUMN reset_token_expires TIMESTAMP"
+    if "reset_token" not in user_columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text("ALTER TABLE users ADD COLUMN reset_token VARCHAR")
             )
-        )
 
-    print("✅ Added reset_token_expires to users table")
-
-
-if "phone" not in user_columns:
-    with engine.begin() as connection:
-        connection.execute(
-            text("ALTER TABLE users ADD COLUMN phone VARCHAR")
-        )
-
-    print("✅ Added phone to users table")
+        print("✅ Added reset_token to users table")
 
 
-if "is_verified" not in user_columns:
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "ALTER TABLE users ADD COLUMN is_verified BOOLEAN DEFAULT FALSE"
+    if "reset_token_expires" not in user_columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "ALTER TABLE users ADD COLUMN reset_token_expires TIMESTAMP"
+                )
             )
-        )
 
-    print("✅ Added is_verified to users table")
+        print("✅ Added reset_token_expires to users table")
 
 
-# -------------------------
-# CHAT MESSAGES TABLE
-# -------------------------
-
-chat_columns = [
-    column["name"]
-    for column in inspector.get_columns("chat_messages")
-]
-
-if "pinned" not in chat_columns:
-    with engine.begin() as connection:
-        connection.execute(
-            text(
-                "ALTER TABLE chat_messages ADD COLUMN pinned BOOLEAN DEFAULT FALSE"
+    if "phone" not in user_columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text("ALTER TABLE users ADD COLUMN phone VARCHAR")
             )
-        )
 
-    print("✅ Added pinned to chat_messages table")
+        print("✅ Added phone to users table")
+
+
+    if "is_verified" not in user_columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "ALTER TABLE users ADD COLUMN is_verified BOOLEAN DEFAULT FALSE"
+                )
+            )
+
+        print("✅ Added is_verified to users table")
+
+
+    # -------------------------
+    # CHAT MESSAGES TABLE
+    # -------------------------
+
+    chat_columns = [
+        column["name"]
+        for column in inspector.get_columns("chat_messages")
+    ]
+
+    if "pinned" not in chat_columns:
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "ALTER TABLE chat_messages ADD COLUMN pinned BOOLEAN DEFAULT FALSE"
+                )
+            )
+
+        print("✅ Added pinned to chat_messages table")
 
 
 # =====================================================
@@ -537,7 +569,7 @@ if "pinned" not in chat_columns:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", "").split(",") if origin.strip()],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -566,6 +598,8 @@ STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 
 def _frontend_page(directory: str, filename: str) -> FileResponse:
     path = os.path.join(directory, filename)
+    if directory == MOBILE_DIR and not os.path.isfile(path):
+        path = os.path.join(PC_DIR, filename)
     if not os.path.isfile(path):
         raise HTTPException(status_code=404, detail=f"Frontend page not found: {filename}")
     return FileResponse(path)
@@ -744,21 +778,17 @@ class APIKeyVerifyRequest(BaseModel):
 
 def generate_otp() -> str:
     """Generate a random 6-digit OTP."""
-    return str(random.randint(100000, 999999))
+    return str(secrets.randbelow(900000) + 100000)
 
 
 def store_otp(
     key: str,
     otp: str,
-    data: dict = {}
+    data: Optional[dict] = None
 ):
     """Store OTP with 10-minute expiry."""
 
-    otp_store[key] = {
-        "otp": otp,
-        "expires": datetime.utcnow() + timedelta(minutes=10),
-        "data": data
-    }
+    store_challenge("otp", key, data or {}, 600, verification=otp)
 
 
 def verify_otp(
@@ -767,21 +797,7 @@ def verify_otp(
 ):
     """Verify OTP."""
 
-    entry = otp_store.get(key)
-
-    if not entry:
-        return None
-
-    if datetime.utcnow() > entry["expires"]:
-        del otp_store[key]
-        return None
-
-    if entry["otp"] != otp:
-        return None
-
-    del otp_store[key]
-
-    return entry["data"]
+    return consume_challenge("otp", key, verification=otp)
 
 
 async def send_otp_email(
@@ -1224,7 +1240,7 @@ def _provider_chat_impl(
         url = base + "/chat/completions" if base.endswith("/v1") else base + "/v1/chat/completions"
 
     # This is only the HTTP read deadline, not an artificial generation delay.
-    request_timeout = 300 if is_ollama else 120
+    request_timeout = 45 if os.getenv("VERCEL") else (300 if is_ollama else 120)
     status, data, latency = _provider_request(
         url, method="POST", api_key=key, organization=provider.organization or "",
         body=body, timeout=request_timeout
@@ -1340,7 +1356,7 @@ oauth.register(
 @app.get("/auth/google")
 async def google_login(request: Request):
 
-    redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
+    redirect_uri = os.getenv("GOOGLE_REDIRECT_URI") or (_public_base_url(request) + "/auth/google/callback")
 
     return await oauth.google.authorize_redirect(
         request,
@@ -2566,6 +2582,18 @@ def signup_complete(
 # QR LOGIN
 # =====================================================
 
+def _public_base_url(request: Request) -> str:
+    configured = os.getenv("APP_BASE_URL", "").strip().rstrip("/")
+    if configured:
+        return configured
+    if os.getenv("VERCEL"):
+        hostname = os.getenv("VERCEL_PROJECT_PRODUCTION_URL") or os.getenv("VERCEL_URL")
+        if hostname:
+            return "https://" + hostname
+        raise HTTPException(status_code=503, detail="Configure APP_BASE_URL for public login links.")
+    return str(request.base_url).rstrip("/")
+
+
 @app.get("/auth/qr/generate")
 def generate_qr(request: Request, db: Session = Depends(get_db)):
     """Create a short-lived QR session that transfers the current PC account to a new device."""
@@ -2582,10 +2610,11 @@ def generate_qr(request: Request, db: Session = Depends(get_db)):
     token = secrets.token_urlsafe(32)
     now = time.time()
     request.session["qr_target_id"] = target_id
-    qr_tokens[token] = {"target_id": target_id, "source_user_id": user.id, "created": now, "expires": now + 60, "used": False}
+    request.session["qr_token"] = token
+    store_challenge("qr", token, {"target_id": target_id, "source_user_id": user.id}, 60)
 
     lan_host = os.getenv("MAXIMUS_LAN_HOST", "").strip()
-    if not lan_host:
+    if not lan_host and not os.getenv("VERCEL") and not os.getenv("APP_BASE_URL"):
         try:
             probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             probe.connect(("8.8.8.8", 80))
@@ -2597,7 +2626,8 @@ def generate_qr(request: Request, db: Session = Depends(get_db)):
     scheme = request.url.scheme
     port = request.url.port
     host_part = lan_host if not port else f"{lan_host}:{port}"
-    qr_url = f"{scheme}://{host_part}/auth/qr-confirm?token={token}"
+    base_url = _public_base_url(request) if os.getenv("VERCEL") or os.getenv("APP_BASE_URL") else f"{scheme}://{host_part}"
+    qr_url = f"{base_url}/auth/qr-confirm?token={token}"
 
     qr = qrcode.QRCode(version=1, box_size=10, border=4)
     qr.add_data(qr_url); qr.make(fit=True)
@@ -2611,74 +2641,45 @@ def generate_qr(request: Request, db: Session = Depends(get_db)):
 
 
 @app.get("/auth/qr-confirm")
-def scan_qr(
-    token: str,
-    request: Request,
-    mobile: bool = False,
-    db: Session = Depends(get_db),
-):
-    """Claim the PC QR login session and sign the scanning device in immediately."""
-    data = qr_tokens.get(token)
+def scan_qr(token: str, request: Request, mobile: bool = False, db: Session = Depends(get_db)):
+    data = consume_challenge("qr", token)
     if not data:
-        raise HTTPException(status_code=404, detail="Invalid or expired QR code.")
-    if data.get("used"):
-        raise HTTPException(status_code=400, detail="This QR code has already been used.")
-    if time.time() > data["expires"]:
-        qr_tokens.pop(token, None)
-        raise HTTPException(status_code=400, detail="QR code expired. Please generate a new one.")
-
-    user = db.query(User).filter(User.id == data.get("source_user_id")).first()
+        raise HTTPException(status_code=400, detail="QR code is invalid, expired, or already used.")
+    user = db.query(User).filter(User.id == data["source_user_id"]).first()
     if not user:
-        qr_tokens.pop(token, None)
         raise HTTPException(status_code=404, detail="The MAXIMUS account could not be found.")
-
-    data["used"] = True
-    data["completed_at"] = time.time()
     request.session["user_id"] = user.id
     request.session["user_name"] = user.name
     request.session["user_email"] = user.email
     _create_device_session(request, db, user.id)
     _start_authenticated_conversation_session(request, db, user.id)
-    qr_tokens.pop(token, None)
-
-    # Mobile signup scanner adds ?mobile=1. Native phone camera scans are
-    # detected from the user agent as a fallback.
     destination = "/m/home" if mobile or _is_mobile_client(request) else "/home"
     return RedirectResponse(url=destination, status_code=303)
 
 
+def _qr_status(request: Request, token: str):
+    entry = read_challenge("qr", token)
+    target_id = request.session.get("qr_target_id")
+    if not entry or not target_id or entry["data"].get("target_id") != target_id:
+        raise HTTPException(status_code=404, detail="Invalid or expired QR session.")
+    if entry["used"]:
+        return {"status": "completed"}
+    if time.time() > entry["expires"]:
+        raise HTTPException(status_code=400, detail="QR code expired. Please generate a new one.")
+    return {"status": "waiting"}
+
+
 @app.get("/auth/qr/pending")
 def qr_pending(request: Request):
-    target_id = request.session.get("qr_target_id")
-    if not target_id:
-        raise HTTPException(status_code=400, detail="No active QR login session.")
-    token = next((candidate for candidate, data in qr_tokens.items() if data.get("target_id") == target_id), None)
+    token = request.session.get("qr_token")
     if not token:
-        request.session.pop("qr_target_id", None)
-        return {"status": "completed"}
-    data = qr_tokens[token]
-    if time.time() > data["expires"]:
-        qr_tokens.pop(token, None); request.session.pop("qr_target_id", None)
-        raise HTTPException(status_code=400, detail="QR login request expired.")
-    return {"status": "completed" if data.get("used") else "waiting"}
+        raise HTTPException(status_code=400, detail="No active QR login session.")
+    return _qr_status(request, token)
 
 
 @app.get("/auth/qr/status")
 def qr_status(request: Request, token: str):
-    data = qr_tokens.get(token)
-    target_id = request.session.get("qr_target_id")
-    if not data or not target_id or data.get("target_id") != target_id:
-        if target_id and not data:
-            request.session.pop("qr_target_id", None)
-            return {"status": "completed"}
-        raise HTTPException(status_code=404, detail="Invalid or expired QR login session.")
-    if time.time() > data["expires"]:
-        qr_tokens.pop(token, None); request.session.pop("qr_target_id", None)
-        raise HTTPException(status_code=400, detail="QR code expired. Please generate a new one.")
-    if data.get("used"):
-        qr_tokens.pop(token, None); request.session.pop("qr_target_id", None)
-        return {"status": "completed"}
-    return {"status": "waiting"}
+    return _qr_status(request, token)
 
 
 @app.post("/auth/qr/approve")
@@ -2703,7 +2704,8 @@ async def forgot_password_page():
 
 @app.post("/forgot-password")
 async def forgot_password(
-    data: dict
+    data: dict,
+    request: Request,
 ):
 
     email = data.get(
@@ -2761,10 +2763,7 @@ async def forgot_password(
 
         db.commit()
 
-        reset_link = (
-            "http://127.0.0.1:8000/"
-            f"reset-password?token={token}"
-        )
+        reset_link = f"{_public_base_url(request)}/reset-password?token={token}"
 
         message = MessageSchema(
             subject="JARVIS AI - Password Reset",
@@ -4530,7 +4529,7 @@ def unpin_chat(
 def pin_chat_conversation(chat_id: int, request: Request, db: Session = Depends(get_db)):
     user_id = _get_current_user_id(request)
     result = db.execute(
-        text("UPDATE chat_sessions SET pinned = 1 WHERE id = :id AND user_id = :uid"),
+        text("UPDATE chat_sessions SET pinned = TRUE WHERE id = :id AND user_id = :uid"),
         {"id": chat_id, "uid": user_id}
     )
     if result.rowcount == 0:
@@ -4543,7 +4542,7 @@ def pin_chat_conversation(chat_id: int, request: Request, db: Session = Depends(
 def unpin_chat_conversation(chat_id: int, request: Request, db: Session = Depends(get_db)):
     user_id = _get_current_user_id(request)
     result = db.execute(
-        text("UPDATE chat_sessions SET pinned = 0 WHERE id = :id AND user_id = :uid"),
+        text("UPDATE chat_sessions SET pinned = FALSE WHERE id = :id AND user_id = :uid"),
         {"id": chat_id, "uid": user_id}
     )
     if result.rowcount == 0:
@@ -4556,7 +4555,7 @@ def unpin_chat_conversation(chat_id: int, request: Request, db: Session = Depend
 def pin_live_conversation(live_session_id: int, request: Request, db: Session = Depends(get_db)):
     user_id = _get_current_user_id(request)
     result = db.execute(
-        text("UPDATE live_sessions SET pinned = 1 WHERE id = :id AND user_id = :uid"),
+        text("UPDATE live_sessions SET pinned = TRUE WHERE id = :id AND user_id = :uid"),
         {"id": live_session_id, "uid": user_id}
     )
     if result.rowcount == 0:
@@ -4569,7 +4568,7 @@ def pin_live_conversation(live_session_id: int, request: Request, db: Session = 
 def unpin_live_conversation(live_session_id: int, request: Request, db: Session = Depends(get_db)):
     user_id = _get_current_user_id(request)
     result = db.execute(
-        text("UPDATE live_sessions SET pinned = 0 WHERE id = :id AND user_id = :uid"),
+        text("UPDATE live_sessions SET pinned = FALSE WHERE id = :id AND user_id = :uid"),
         {"id": live_session_id, "uid": user_id}
     )
     if result.rowcount == 0:
@@ -4747,7 +4746,7 @@ async def text_to_speech(
         )
 
         output_path = os.path.join(
-            BASE_DIR,
+            tempfile.gettempdir(),
             filename
         )
 

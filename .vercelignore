@@ -1,0 +1,21 @@
+.git
+**/.git
+.vscode
+.venv
+venv
+Backend/venv
+**/__pycache__
+**/*.pyc
+**/.env*
+**/*.env
+**/*.db
+**/*.db-*
+**/*.sqlite*
+**/*.mp3
+MAXIMUS
+Android App
+Assets
+Docs
+Backend/test_*.py
+Frontend/static/test-*.cjs
+**/*.log

@@ -7,7 +7,10 @@ from sqlalchemy import (
     DateTime, Boolean, Text, ForeignKey
 )
 from sqlalchemy.orm import relationship
-from database import Base
+if __package__:
+    from .database import Base
+else:
+    from database import Base
 from datetime import datetime
 
 
@@ -79,6 +82,7 @@ class LiveSession(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     title = Column(String(200), nullable=False, default="New Live Session")
+    pinned = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -145,4 +149,3 @@ class ProviderTelemetry(Base):
     status_code = Column(Integer, nullable=True)
     error = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
-

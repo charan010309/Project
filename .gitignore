@@ -1,6 +1,8 @@
 # Secrets
 .env
 *.env
+.env.*
+**/.env.*
 Backend/.env
 
 # Virtual environments
@@ -16,6 +18,9 @@ __pycache__/
 *.db
 *.sqlite
 *.sqlite3
+*.db-wal
+*.db-shm
+*.db-journal
 
 # VS Code
 .vscode/
@@ -23,6 +28,8 @@ __pycache__/
 # Runtime
 Backend/uploads/
 Backend/temp/
+Backend/*.mp3
+.vercel/
 
 # Logs
 *.log
