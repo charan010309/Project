@@ -198,6 +198,40 @@ class FunctionalityTests(unittest.TestCase):
         self.assertEqual(self.client.get('/home').content, (Path(app.PC_DIR) / 'home.html').read_bytes())
         self.assertEqual(self.client.get('/m/overview').content, (Path(app.PC_DIR) / 'overview.html').read_bytes())
 
+    def test_mobile_account_preferences_persist(self):
+        response = self.client.patch('/api/user/profile', json={'name': 'Mobile User', 'bio': 'A real profile'})
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(self.client.get('/api/user/profile').json()['name'], 'Mobile User')
+        response = self.client.put('/api/settings', json={'temperature': 0.4, 'context_limit': 64, 'output_language': 'te-IN'})
+        self.assertEqual(response.status_code, 200, response.text)
+        settings = self.client.get('/api/settings').json()
+        self.assertEqual(settings['temperature'], 0.4)
+        self.assertEqual(settings['output_language'], 'te-IN')
+
+    def test_mobile_conversation_workflow(self):
+        chat_id = self.client.post('/api/chat/new', json={'title': 'New Chat'}).json()['id']
+        self.assertEqual(self.client.get(f'/api/chat/{chat_id}').status_code, 200)
+        with patch.object(app.client.models, 'generate_content', return_value=types.SimpleNamespace(text='Mobile answer')):
+            response = self.client.post('/ask', json={'text': 'Plan my day', 'model': 'flash'})
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()['title'], 'Plan my day')
+        saved = self.client.get(f'/api/chat/{chat_id}').json()
+        self.assertEqual([m['content'] for m in saved['messages']], ['Plan my day', 'Mobile answer'])
+        self.assertEqual(self.client.post(f'/api/chat/{chat_id}/pin').status_code, 200)
+        self.assertTrue(self.client.get('/api/chat/list').json()[0]['pinned'])
+        self.assertEqual(self.client.delete(f'/api/chat/{chat_id}').status_code, 200)
+        self.assertEqual(self.client.get(f'/api/chat/{chat_id}').status_code, 404)
+
+    def test_mobile_assets_and_accessible_shells(self):
+        for asset in ['mobile.css', 'mobile.js']:
+            self.assertEqual(self.client.get('/static/' + asset).status_code, 200)
+        for route in ['home', 'history', 'settings', 'profile-settings', 'api-pro', 'speakwithai']:
+            html = self.client.get('/m/' + route).text
+            self.assertIn('/static/mobile.js', html)
+            self.assertIn('aria-label="Main navigation"', html)
+            self.assertNotIn('user-scalable=no', html)
+            self.assertNotIn('href="#"', html)
+
     def test_oauth_state_error_is_not_internal_server_error(self):
         from unittest.mock import AsyncMock
         from authlib.integrations.base_client.errors import MismatchingStateError
