@@ -597,10 +597,8 @@ STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 
 
 def _frontend_page(directory: str, filename: str) -> FileResponse:
-    # Share the API-wired responsive pages. The legacy mobile HTML files are
-    # design mockups with placeholder forms and must not replace real features.
-    if directory == MOBILE_DIR:
-        directory = PC_DIR
+    # Explicit mobile routes must use their dedicated mobile templates.
+    # Fall back only when that particular template has not been created yet.
     path = os.path.join(directory, filename)
     if directory == MOBILE_DIR and not os.path.isfile(path):
         path = os.path.join(PC_DIR, filename)

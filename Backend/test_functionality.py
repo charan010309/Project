@@ -170,7 +170,7 @@ class FunctionalityTests(unittest.TestCase):
         for asset in ['theme.css', 'theme.js', 'logo.jpg']:
             self.assertEqual(self.client.get('/static/' + asset).status_code, 200, asset)
 
-    def test_mobile_routing_preserves_queries_and_real_chat(self):
+    def test_mobile_routing_preserves_queries_and_mobile_templates(self):
         for user_agent in ['Mozilla/5.0 (iPhone; CPU iPhone OS 18_0)', 'Mozilla/5.0 (Linux; Android 15) Mobile']:
             headers = {'user-agent': user_agent}
             for path in app.MOBILE_PAGE_PATHS:
@@ -180,11 +180,23 @@ class FunctionalityTests(unittest.TestCase):
                 self.assertEqual(response.headers['location'], expected + '?test=keep')
             response = self.client.get('/m/home', headers=headers)
             self.assertEqual(response.status_code, 200)
-            self.assertIn('id="mobileSidebarToggle"', response.text)
-            self.assertIn("fetch('/ask'", response.text)
-            self.assertNotIn('ops@maximus.ai', response.text)
+            self.assertEqual(response.content, (Path(app.MOBILE_DIR) / 'home.html').read_bytes())
+            self.assertNotIn('id="mobileSidebarToggle"', response.text)
             self.assertEqual(self.client.get('/api/settings', headers=headers, follow_redirects=False).status_code, 200)
         self.assertEqual(self.client.get('/home', follow_redirects=False).status_code, 200)
+
+    def test_each_mobile_route_serves_its_own_template(self):
+        pages = {'/m/': 'intro.html', '/m/home': 'home.html', '/m/login': 'login.html',
+                 '/m/signup': 'signup.html', '/m/settings': 'settings.html',
+                 '/m/history': 'history.html', '/m/speakwithai': 'speakWithAI.html',
+                 '/m/profile-settings': 'profile-settings.html', '/m/api-pro': 'apipro.html',
+                 '/m/forgot-password': 'forgot-password.html', '/m/reset-password': 'reset-password.html'}
+        for route, filename in pages.items():
+            response = self.client.get(route)
+            self.assertEqual(response.status_code, 200, route)
+            self.assertEqual(response.content, (Path(app.MOBILE_DIR) / filename).read_bytes(), route)
+        self.assertEqual(self.client.get('/home').content, (Path(app.PC_DIR) / 'home.html').read_bytes())
+        self.assertEqual(self.client.get('/m/overview').content, (Path(app.PC_DIR) / 'overview.html').read_bytes())
 
     def test_oauth_state_error_is_not_internal_server_error(self):
         from unittest.mock import AsyncMock
