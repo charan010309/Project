@@ -3551,14 +3551,8 @@ def ask(
         else:
             chat_prompt = _build_chat_prompt(db, chat.id, settings, user_text)
 
-        db.add(
-            ChatMessage(
-                user_id=request.session["user_id"],
-                session_id=chat.id,
-                role="user",
-                content=user_text
-            )
-        )
+        # Finish session metadata before the external call. Persist the user
+        # message together with the reply, so failed requests are safe to retry.
         db.commit()
 
         if selected_model.startswith("provider:"):
@@ -3610,6 +3604,14 @@ def ask(
             )
             reply = response.text or "I couldn't generate a response."
 
+        db.add(
+            ChatMessage(
+                user_id=request.session["user_id"],
+                session_id=chat.id,
+                role="user",
+                content=user_text
+            )
+        )
         db.add(
             ChatMessage(
                 user_id=request.session["user_id"],
@@ -3884,15 +3886,9 @@ def live_ask(
                 + ("..." if len(user_text) > 60 else "")
             )
 
-        # Save the user's transcribed voice input.
-        db.add(
-            LiveMessage(
-                user_id=user_id,
-                session_id=live.id,
-                role="user",
-                content=user_text
-            )
-        )
+        # Save metadata now; persist a complete turn only after generation.
+        # This also keeps the current utterance out of history until it is
+        # appended once by the prompt builder below.
         db.commit()
 
         settings = _get_settings(db, user_id)
@@ -4033,6 +4029,8 @@ def live_ask(
                 print("Live speech translation warning:", speech_error)
                 speech_text = reply
 
+        # Save both sides together so a failed live request can be retried.
+        db.add(LiveMessage(user_id=user_id, session_id=live.id, role="user", content=user_text))
         # Save the displayed assistant response separately from normal Chat.
         db.add(
             LiveMessage(

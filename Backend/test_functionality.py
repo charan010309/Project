@@ -223,14 +223,55 @@ class FunctionalityTests(unittest.TestCase):
         self.assertEqual(self.client.get(f'/api/chat/{chat_id}').status_code, 404)
 
     def test_mobile_assets_and_accessible_shells(self):
-        for asset in ['mobile.css', 'mobile.js']:
+        for asset in ['mobile.css', 'mobile.js', 'mobile-home.css', 'mobile-home.js', 'mobile-voice.css', 'mobile-voice.js']:
             self.assertEqual(self.client.get('/static/' + asset).status_code, 200)
         for route in ['home', 'history', 'settings', 'profile-settings', 'api-pro', 'speakwithai']:
             html = self.client.get('/m/' + route).text
-            self.assertIn('/static/mobile.js', html)
-            self.assertIn('aria-label="Main navigation"', html)
+            script = {'home': 'mobile-home.js', 'speakwithai': 'mobile-voice.js'}.get(route, 'mobile.js')
+            self.assertIn('/static/' + script, html)
+            marker = {'home': 'id="appSidebar"', 'speakwithai': 'id="sidebarDrawer"'}.get(route, 'aria-label="Main navigation"')
+            self.assertIn(marker, html)
             self.assertNotIn('user-scalable=no', html)
             self.assertNotIn('href="#"', html)
+
+    def test_supplied_mobile_home_has_real_controls(self):
+        html = self.client.get('/m/home').text
+        for element in ['chatInput', 'messageList', 'activeModelSelect', 'networkToggle', 'pinnedList', 'recentList', 'cameraModal']:
+            self.assertIn(f'id="{element}"', html)
+        self.assertNotIn('operator@maximus.ai', html)
+        self.assertNotIn('stitch-placeholder', html)
+        self.assertNotIn('value="pro"', html)
+        script = self.client.get('/static/mobile-home.js').text
+        for endpoint in ['/ask-image', '/ask', '/api/chat/list', '/api/providers', '/api/user/profile', '/api/settings']:
+            self.assertIn(endpoint, script)
+        self.assertNotIn('Simulate model reply', script)
+
+    def test_failed_chat_can_be_retried_without_duplicate_messages(self):
+        chat_id = self.client.post('/api/chat/new', json={'title': 'New Chat'}).json()['id']
+        with patch.object(app.client.models, 'generate_content', side_effect=RuntimeError('Temporary outage')):
+            self.assertEqual(self.client.post('/ask', json={'text': 'Retry me'}).status_code, 502)
+        self.assertEqual(self.client.get(f'/api/chat/{chat_id}').json()['messages'], [])
+        with patch.object(app.client.models, 'generate_content', return_value=types.SimpleNamespace(text='Recovered')):
+            self.assertEqual(self.client.post('/ask', json={'text': 'Retry me'}).status_code, 200)
+        messages = self.client.get(f'/api/chat/{chat_id}').json()['messages']
+        self.assertEqual([m['content'] for m in messages], ['Retry me', 'Recovered'])
+
+    def test_failed_live_turn_does_not_leave_duplicate_transcript(self):
+        session_id = self.client.post('/api/live/new', json={'title': 'New Live Session'}).json()['id']
+        with patch.object(app.client.models, 'generate_content', side_effect=RuntimeError('Outage')):
+            self.assertEqual(self.client.post('/api/live-ask', json={'text': 'Retry voice'}).status_code, 503)
+        self.assertEqual(self.client.get(f'/api/live/{session_id}').json()['messages'], [])
+        with patch.object(app.client.models, 'generate_content', return_value=types.SimpleNamespace(text='Recovered')):
+            self.assertEqual(self.client.post('/api/live-ask', json={'text': 'Retry voice'}).status_code, 200)
+        self.assertEqual([m['content'] for m in self.client.get(f'/api/live/{session_id}').json()['messages']], ['Retry voice', 'Recovered'])
+
+    def test_supplied_voice_page_controls(self):
+        html = self.client.get('/m/speakwithai').text
+        for identifier in ['openLiveSettingsBtn', 'pinLiveConversationBtn', 'centralMicBtn', 'transcriptFeed']:
+            self.assertIn(f'id="{identifier}"', html)
+        self.assertNotIn('operator@maximus.ai', html)
+        self.assertNotIn('Simulate Assistant Response', html)
+        self.assertNotIn('value="ultra"', html)
 
     def test_oauth_state_error_is_not_internal_server_error(self):
         from unittest.mock import AsyncMock

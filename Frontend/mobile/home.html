@@ -1,24 +1,366 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#006c4a">
-  <title>Chat · MAXIMUS</title>
-  <script src="/static/theme.js"></script>
-  <link rel="stylesheet" href="/static/mobile.css">
-  <script src="/static/mobile.js" defer></script>
+<!DOCTYPE html><html data-page="home" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>MAXIMUS AI — Chat</title>
+<!-- Google Fonts & Font Awesome -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            surface: '#FAFAFA',
+            sidebar: '#F7F7F7',
+            borderSubtle: '#EEEEEE',
+            brandDark: '#121212',
+            emeraldLive: '#059669'
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAFAFA;
+      color: #121212;
+      overscroll-behavior-y: none;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #E2E2E2;
+      border-radius: 9999px;
+    }
+
+    /* Subtle background grid pattern */
+    .ambient-grid {
+      background-size: 28px 28px;
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    }
+
+    /* Thinking dots animation */
+    @keyframes dotPulse {
+      0%, 100% { opacity: 0.3; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-3px); }
+    }
+    .thinking-dot:nth-child(1) { animation: dotPulse 0.9s infinite ease-in-out; }
+    .thinking-dot:nth-child(2) { animation: dotPulse 0.9s infinite ease-in-out 0.15s; }
+    .thinking-dot:nth-child(3) { animation: dotPulse 0.9s infinite ease-in-out 0.3s; }
+
+    /* Touch spring drawer transitions */
+    .drawer-backdrop {
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+    }
+    .drawer-panel {
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+<script src="/static/theme.js"></script>
+<link rel="stylesheet" href="/static/mobile-home.css">
 </head>
-<body data-mobile-page="chat">
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="app-header"><a class="brand" href="/m/home"><span class="brand-mark" aria-hidden="true">M</span>MAXIMUS</a><a class="account-link" href="/m/profile-settings">Account</a></header>
-  <main id="main"><h1>Chat</h1><p id="status" role="status" aria-live="polite">Loading…</p><div id="page"></div></main>
-  <nav class="bottom-nav" aria-label="Main navigation">
-    <a href="/m/home" data-nav="chat"><span aria-hidden="true">◈</span>Chat</a>
-    <a href="/m/speakwithai" data-nav="voice"><span aria-hidden="true">◎</span>Voice</a>
-    <a href="/m/history" data-nav="history"><span aria-hidden="true">◷</span>History</a>
-    <a href="/m/settings" data-nav="settings"><span aria-hidden="true">⚙</span>Settings</a>
-  </nav>
-  <noscript><p class="card">Please enable JavaScript to use MAXIMUS.</p></noscript>
-</body>
-</html>
+<body class="h-[100dvh] w-full flex flex-col antialiased overflow-hidden bg-surface ambient-grid selection:bg-neutral-200">
+<!-- ================================================================= -->
+<!-- TABLET / MOBILE UNIFIED APP WRAPPER -->
+<!-- ================================================================= -->
+<div class="flex-1 w-full h-full flex relative overflow-hidden">
+<!-- ==================== SIDEBAR (Collapsible Drawer on Mobile & Tablet) ==================== -->
+<!-- On Tablet (md >= 768px): Collapsible left rail or overlay drawer; On Mobile: full slide-over drawer -->
+<div class="drawer-backdrop fixed inset-0 z-40 bg-black/40 backdrop-blur-xs opacity-0 pointer-events-none transition-all lg:hidden" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+<aside class="drawer-panel fixed top-0 bottom-0 left-0 z-50 w-72 md:w-80 bg-sidebar/95 backdrop-blur-xl border-r border-borderSubtle flex flex-col justify-between -translate-x-full lg:translate-x-0 lg:static lg:z-10 shadow-2xl lg:shadow-none transition-transform duration-300" id="appSidebar">
+<!-- Sidebar Header -->
+<div class="p-4 flex flex-col h-full overflow-hidden">
+<div class="flex items-center justify-between pb-3 border-b border-borderSubtle">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-black overflow-hidden flex items-center justify-center shadow-xs">
+<img alt="MAXIMUS" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='&lt;span class=\'text-white font-bold text-xs\'&gt;M&lt;/span&gt;'" src="/static/logo.jpg">
+</div>
+<div class="flex flex-col">
+<span class="font-extrabold text-sm tracking-tight text-brandDark">MAXIMUS</span>
+<span class="text-[10px] font-mono text-neutral-400">Mobile &amp; Tablet Core</span>
+</div>
+</div>
+<button aria-label="Close menu" class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 hover:bg-neutral-200/50 lg:hidden" onclick="toggleSidebar(false)" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Quick "New Conversation" Button -->
+<button class="w-full mt-4 flex items-center justify-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 shadow-xs active:scale-[0.98] transition-all group" id="newChatDrawerBtn" onclick="openNewConversationModal()" type="button">
+<span class="material-symbols-outlined text-[18px] text-neutral-600 group-hover:text-neutral-900">add</span>
+<span class="text-xs font-semibold text-neutral-800">New Conversation</span>
+</button>
+<!-- Navigation Links -->
+<nav class="mt-4 space-y-1" aria-label="Main navigation">
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl bg-neutral-900 text-white font-semibold text-xs shadow-xs" href="/m/home">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="">Chat Session</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50 transition-colors font-medium text-xs" href="/m/speakwithai">
+<span class="material-symbols-outlined text-[18px] text-emeraldLive">graphic_eq</span>
+<span class="">Live AI Voice</span>
+<span class="ml-auto text-[9px] font-mono bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">Live</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50 transition-colors font-medium text-xs" href="/m/history">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span class="">History &amp; Archive</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50 transition-colors font-medium text-xs" href="/m/settings">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span class="">Settings</span>
+</a>
+</nav>
+<!-- Pinned Section -->
+<div class="mt-5 shrink-0">
+<div class="flex items-center justify-between px-2 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[13px] text-neutral-400">push_pin</span>
+<span class="">Pinned</span>
+</span>
+<span class="font-mono text-[9px] px-1.5 py-0.2 bg-neutral-200/60 rounded-full text-neutral-600" id="pinnedBadge">0</span>
+</div>
+<ul class="mt-1.5 space-y-1 text-xs" id="pinnedList"></ul>
+</div>
+<!-- Recent Threads -->
+<div class="mt-4 flex-1 overflow-y-auto pr-0.5">
+<div class="px-2 text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
+<span class="">Recent</span>
+</div>
+<ul class="space-y-1 text-xs" id="recentList"></ul>
+</div>
+</div>
+<!-- User Profile at Drawer Bottom -->
+<div class="p-3 border-t border-borderSubtle bg-white/70">
+<div class="flex items-center justify-between px-2 py-1.5 rounded-xl hover:bg-neutral-100 transition-colors cursor-pointer" role="link" tabindex="0" aria-label="Account profile" onkeydown="if(event.key==='Enter')window.location.href='/m/profile-settings'" onclick="window.location.href='/m/profile-settings'">
+<div class="flex items-center gap-2.5 overflow-hidden">
+<div class="w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+              U
+            </div>
+<div class="min-w-0">
+<div class="text-xs font-semibold text-neutral-900 truncate" id="profileName">Loading…</div>
+<div class="text-[10px] text-neutral-400 truncate" id="profileEmail"></div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[18px] text-neutral-400">chevron_right</span>
+</div>
+</div>
+</aside>
+<!-- ==================== MAIN CHAT STAGE ==================== -->
+<main class="flex-1 flex flex-col h-full min-w-0 relative bg-surface overflow-hidden">
+<!-- Top Header Navigation Bar -->
+<header class="h-14 px-3 sm:px-6 border-b border-borderSubtle bg-white/80 backdrop-blur-md flex items-center justify-between shrink-0 z-20">
+<!-- Left: Hamburger Toggle & Status -->
+<div class="flex items-center gap-2 sm:gap-3 min-w-0">
+<button aria-label="Toggle Navigation Drawer" class="w-9 h-9 -ml-1 rounded-xl flex items-center justify-center text-neutral-700 hover:bg-neutral-100 active:bg-neutral-200 transition-colors" onclick="toggleSidebar(true)" type="button">
+<span class="material-symbols-outlined text-[20px]">menu</span>
+</button>
+<div class="h-4 w-px bg-neutral-200 hidden sm:block"></div>
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></div>
+<h1 class="text-xs sm:text-sm font-bold text-neutral-900 truncate tracking-tight" id="headerThreadTitle">
+              MAXIMUS Chat
+            </h1>
+<span class="hidden sm:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-600 border border-neutral-200 shrink-0">
+              Chat
+            </span>
+</div>
+</div>
+<!-- Right: Actions (Model badge, New Chat, Share) -->
+<div class="flex items-center gap-1.5 sm:gap-2">
+<!-- Voice Mode Quick Switcher -->
+<a class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 active:scale-95 transition-all text-xs font-semibold" href="/m/speakwithai" title="Jump to Speak with AI Voice">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">graphic_eq</span>
+<span class="hidden sm:inline">Live AI</span>
+</a>
+<!-- Pin/Save button -->
+<button class="w-8 h-8 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 flex items-center justify-center transition-colors" id="pinConversationBtn" onclick="togglePinCurrentThread()" title="Pin Conversation" type="button">
+<span class="material-symbols-outlined text-[18px]">push_pin</span>
+</button>
+<!-- Share button -->
+<button class="w-8 h-8 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 flex items-center justify-center transition-colors" onclick="shareConversation()" title="Share Conversation" type="button">
+<span class="material-symbols-outlined text-[18px]">ios_share</span>
+</button>
+<!-- New Chat Icon Button -->
+<button class="w-8 h-8 rounded-lg bg-neutral-900 text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-xs" onclick="openNewConversationModal()" title="New Chat" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Message Feed -->
+<div class="flex-1 overflow-y-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 space-y-4" id="chatScrollArea">
+<!-- Welcome Hero Banner (Shows when session is fresh or empty) -->
+<div class="max-w-xl mx-auto text-center py-6 sm:py-10 px-4" id="welcomeBanner">
+<div class="w-12 h-12 rounded-2xl bg-black mx-auto mb-3 overflow-hidden shadow-sm flex items-center justify-center">
+<img alt="MAXIMUS" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='&lt;span class=\'text-white font-bold text-lg\'&gt;M&lt;/span&gt;'" src="/static/logo.jpg">
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-neutral-100 border border-neutral-200 text-[10px] font-mono text-neutral-600 mb-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            Unified Mobile &amp; Tablet Workspace
+          </div>
+<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-brandDark">Where shall we begin?</h2>
+<p class="text-xs sm:text-sm text-neutral-500 max-w-sm mx-auto mt-1 leading-relaxed">
+            Formulate complex reasoning, synthesize code, analyze attached images, or switch to Live AI Voice.
+          </p>
+<!-- Starter Prompt Cards (Responsive Grid: 1 col on mobile, 3 cols on tablet) -->
+
+</div>
+<!-- Chat Transcript Container -->
+<div id="messageList" class="space-y-4" role="log" aria-label="Conversation"></div>
+<p id="chatStatus" role="status" aria-live="polite" class="max-w-2xl mx-auto text-xs text-neutral-500 break-words"></p>
+
+</div>
+<!-- ==================== COMPOSER AREA (STICKY BOTTOM) ==================== -->
+<div class="shrink-0 bg-white/95 backdrop-blur-md border-t border-borderSubtle px-3 sm:px-6 py-2.5 sm:py-3 z-20">
+<div class="max-w-3xl mx-auto space-y-2">
+<!-- Attachment Preview Strip (Hidden by default) -->
+<div class="hidden items-center justify-between p-2 rounded-xl bg-neutral-100 border border-neutral-200 text-xs" id="attachmentStrip">
+<div class="flex items-center gap-2.5 overflow-hidden">
+<div class="w-8 h-8 rounded-lg bg-white border border-neutral-300 overflow-hidden flex items-center justify-center shrink-0">
+<img alt="attachment" class="w-full h-full object-cover hidden" id="attachedThumbnail">
+<span class="material-symbols-outlined text-[18px] text-neutral-500" id="attachedIcon">image</span>
+</div>
+<div class="min-w-0">
+<div class="font-semibold text-neutral-800 truncate" id="attachedFileName">photo.png</div>
+<div class="text-[10px] text-neutral-400">Ready to analyze with prompt</div>
+</div>
+</div>
+<button aria-label="Remove attachment" class="w-6 h-6 rounded-md hover:bg-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-800" onclick="clearAttachment()" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Quick Controls Pill Bar (Model Selection & Network Access Switch) -->
+<div class="flex items-center justify-between text-xs px-1">
+<!-- Model Switcher Pill -->
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400">Model:</span>
+<div class="relative">
+<select class="h-7 text-[11px] font-semibold bg-neutral-100 hover:bg-neutral-200/70 border border-neutral-200/80 rounded-lg px-2 pr-6 appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-neutral-400" id="activeModelSelect" aria-label="Active model">
+<option value="flash">MAXIMUS Flash</option>
+</select>
+<span class="material-symbols-outlined text-[14px] absolute right-1.5 top-1.5 pointer-events-none text-neutral-500">expand_more</span>
+</div>
+</div>
+<!-- Network Access Toggle -->
+<label class="flex items-center gap-2 cursor-pointer select-none text-[11px]" title="Save website-opening permission. This does not enable automatic web search.">
+<span class="text-neutral-500 font-medium">Web Access</span>
+<input class="sr-only peer" id="networkToggle" type="checkbox">
+<span class="relative w-7 h-4 bg-neutral-200 rounded-full peer peer-checked:bg-emerald-600 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-transform peer-checked:after:translate-x-3 shadow-2xs"></span>
+<span class="text-[10px] font-mono text-neutral-400" id="networkToggleLabel">Off</span>
+</label>
+</div>
+<!-- Main Input Field Capsule -->
+<form class="relative flex items-center gap-1.5 bg-neutral-100 hover:bg-neutral-100/80 focus-within:bg-white border border-neutral-300 focus-within:border-neutral-900 rounded-2xl px-2.5 py-1.5 shadow-2xs focus-within:shadow-md transition-all" onsubmit="handleMessageSubmit(event)">
+<!-- File Attach Button -->
+<button class="w-8 h-8 rounded-xl flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200/60 active:scale-95 transition-colors" onclick="document.getElementById('fileUploadInput').click()" title="Attach image" aria-label="Attach image" type="button">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<input accept="image/jpeg,image/png,image/webp" class="hidden" id="fileUploadInput" onchange="handleFileChange(event)" type="file">
+<!-- Camera Snapshot Button (Mobile native camera trigger) -->
+<button class="w-8 h-8 rounded-xl flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200/60 active:scale-95 transition-colors" onclick="openCameraModal()" title="Take photo" type="button">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+</button>
+<!-- Text Input -->
+<textarea class="flex-1 bg-transparent border-0 outline-none text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 py-1.5 px-1 resize-none max-h-32 leading-5" id="chatInput" aria-label="Message" maxlength="20000" onkeydown="handleInputKeydown(event)" placeholder="Message MAXIMUS..." rows="1"></textarea>
+<!-- Send Action Button -->
+<button class="w-8 h-8 rounded-xl bg-black text-white hover:bg-neutral-800 active:scale-90 flex items-center justify-center shadow-xs transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed" id="sendBtn" aria-label="Send message" disabled type="submit">
+<span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+</button>
+</form>
+<div class="text-center">
+<span class="text-[10px] text-neutral-400">MAXIMUS reasoning engine can make errors. Verify critical data.</span>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- ==================== NEW CONVERSATION MODAL ==================== -->
+<div class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4" id="newConversationModal" role="dialog" aria-modal="true" aria-label="New conversation">
+<div class="bg-white rounded-2xl w-full max-w-sm p-5 border border-neutral-200 shadow-2xl space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-base font-bold text-neutral-900">New Conversation</h3>
+<button class="w-8 h-8 rounded-lg hover:bg-neutral-100 flex items-center justify-center text-neutral-400 hover:text-neutral-800" onclick="closeNewConversationModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div>
+<label class="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5" for="newThreadName">Conversation Name</label>
+<input class="w-full h-10 px-3 rounded-xl border border-neutral-300 text-xs sm:text-sm focus:border-black focus:outline-none bg-neutral-50 focus:bg-white" id="newThreadName" maxlength="200" placeholder="e.g. Tablet Refactoring, Neural Duplex" type="text">
+</div>
+<div class="space-y-2">
+<span class="block text-[11px] font-bold uppercase tracking-wider text-neutral-500">Select Mode</span>
+<div class="grid grid-cols-2 gap-2">
+<button class="p-3 rounded-xl border border-neutral-900 bg-neutral-50 text-left" id="modeOptionChat" onclick="setNewModalMode('chat')" type="button">
+<div class="flex items-center gap-1.5 font-bold text-xs text-neutral-900 mb-0.5">
+<span class="material-symbols-outlined text-[16px]">chat</span> Chat
+            </div>
+<p class="text-[10px] text-neutral-500">Text &amp; visual reasoning</p>
+</button>
+<button class="p-3 rounded-xl border border-neutral-200 hover:border-neutral-400 text-left" id="modeOptionLive" onclick="setNewModalMode('live')" type="button">
+<div class="flex items-center gap-1.5 font-bold text-xs text-neutral-900 mb-0.5">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">graphic_eq</span> Live Voice
+            </div>
+<p class="text-[10px] text-neutral-500">Voice conversation</p>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2 border-t border-neutral-100">
+<button class="px-3.5 py-2 text-xs font-semibold text-neutral-600 hover:bg-neutral-100 rounded-xl" onclick="closeNewConversationModal()" type="button">Cancel</button>
+<button class="px-4 py-2 text-xs font-semibold bg-black text-white hover:bg-neutral-800 rounded-xl shadow-xs" onclick="createNewThread()" type="button">Start Session</button>
+</div>
+</div>
+</div>
+<!-- ==================== CAMERA MODAL ==================== -->
+<div class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" id="cameraModal" role="dialog" aria-modal="true" aria-label="Camera capture">
+<div class="bg-neutral-900 text-white rounded-2xl w-full max-w-sm p-4 flex flex-col items-center gap-3">
+<div class="w-full flex items-center justify-between pb-2 border-b border-neutral-800">
+<span class="text-xs font-bold uppercase tracking-wider font-mono">Camera Capture</span>
+<button class="text-neutral-400 hover:text-white" onclick="closeCameraModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="w-full aspect-square bg-black rounded-xl overflow-hidden relative flex items-center justify-center border border-neutral-800">
+<video autoplay="" class="w-full h-full object-cover" id="cameraStream" playsinline=""></video>
+<canvas class="hidden" id="cameraCanvas"></canvas>
+</div>
+<div class="w-full flex items-center gap-2 pt-2">
+<button class="flex-1 py-2.5 rounded-xl bg-white text-black font-semibold text-xs flex items-center justify-center gap-2 hover:bg-neutral-200" onclick="snapCameraPhoto()" type="button">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+<span class="">Capture Photo</span>
+</button>
+<button class="px-4 py-2.5 rounded-xl bg-neutral-800 text-neutral-300 font-medium text-xs hover:bg-neutral-700" onclick="closeCameraModal()" type="button">Cancel</button>
+</div>
+</div>
+</div>
+<!-- Toast Notification -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 pointer-events-none transition-all duration-300 bg-neutral-900 text-white px-4 py-2 rounded-xl text-xs shadow-xl z-50 flex items-center gap-2 font-medium" id="toastNotification" role="status" aria-live="polite">
+<span id="toastMessage" class=""></span>
+</div>
+<script src="/static/mobile-home.js" defer></script>
+
+
+
+
+</body></html>
