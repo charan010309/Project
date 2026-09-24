@@ -1,24 +1,297 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#006c4a">
-  <title>Profile · MAXIMUS</title>
-  <script src="/static/theme.js"></script>
-  <link rel="stylesheet" href="/static/mobile.css">
-  <script src="/static/mobile.js" defer></script>
-</head>
-<body data-mobile-page="profile">
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="app-header"><a class="brand" href="/m/home"><span class="brand-mark" aria-hidden="true">M</span>MAXIMUS</a><a class="account-link" href="/m/profile-settings">Account</a></header>
-  <main id="main"><h1>Profile</h1><p id="status" role="status" aria-live="polite">Loading…</p><div id="page"></div></main>
-  <nav class="bottom-nav" aria-label="Main navigation">
-    <a href="/m/home" data-nav="chat"><span aria-hidden="true">◈</span>Chat</a>
-    <a href="/m/speakwithai" data-nav="voice"><span aria-hidden="true">◎</span>Voice</a>
-    <a href="/m/history" data-nav="history"><span aria-hidden="true">◷</span>History</a>
-    <a href="/m/settings" data-nav="settings"><span aria-hidden="true">⚙</span>Settings</a>
-  </nav>
-  <noscript><p class="card">Please enable JavaScript to use MAXIMUS.</p></noscript>
-</body>
-</html>
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head><title>Profile &amp; Account · MAXIMUS</title><script src="/static/theme.js"></script><link rel="stylesheet" href="/static/mobile-profile.css"><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "tertiary-fixed-dim": "#c6c5cf", "outline": "#78767b", "surface-container-high": "#e8e8e8", "secondary-fixed-dim": "#68dba9", "inverse-on-surface": "#f0f1f1", "tertiary-fixed": "#e3e1ec", "surface-container-highest": "#e2e2e2", "on-primary": "#ffffff", "error": "#ba1a1a", "primary-fixed": "#e5e1e4", "secondary": "#006c4a", "on-background": "#1a1c1c", "on-tertiary": "#ffffff", "surface-tint": "#5f5e60", "on-primary-container": "#858386", "primary": "#000000", "surface": "#f9f9f9", "secondary-container": "#82f5c1", "primary-fixed-dim": "#c8c6c8", "surface-container-lowest": "#ffffff", "on-tertiary-container": "#83838c", "surface-variant": "#e2e2e2", "on-tertiary-fixed-variant": "#46464e", "on-error": "#ffffff", "tertiary-container": "#1a1b22", "surface-bright": "#f9f9f9", "inverse-primary": "#c8c6c8", "on-surface": "#1a1c1c", "on-secondary": "#ffffff", "tertiary": "#000000", "inverse-surface": "#2f3131", "outline-variant": "#c8c5ca", "on-secondary-container": "#00714e", "background": "#f9f9f9", "on-error-container": "#93000a", "on-secondary-fixed": "#002114", "surface-dim": "#dadada", "on-secondary-fixed-variant": "#005137", "on-primary-fixed-variant": "#474649", "on-tertiary-fixed": "#1a1b22", "surface-container": "#eeeeee", "surface-container-low": "#f3f3f3", "primary-container": "#1c1b1d", "error-container": "#ffdad6", "secondary-fixed": "#85f8c4", "on-primary-fixed": "#1c1b1d", "on-surface-variant": "#47464a" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-md": "0.75rem", "space-3xl": "3rem", "space-xl": "1.5rem", "gutter-tablet": "1.5rem", "gutter": "1rem", "space-2xl": "2rem", "space-lg": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "margin-tablet": "2rem", "margin": "1rem" }, fontFamily: { "code-block": ["JetBrains Mono"], "body-md": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "label-caps": ["JetBrains Mono"], "headline-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"], "code-inline": ["JetBrains Mono"] }, fontSize: { "code-block": ["12px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}], "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}], "display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700"}], "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400"}], "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}], "label-caps": ["11px", {"lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600"}], "headline-sm": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "body-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400"}], "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}], "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600"}], "display-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.025em", "fontWeight": "700"}], "code-inline": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;min-height:100vh;}body{overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}#drawer-toggle:checked ~ #nav-drawer{transform:translateX(0%);visibility:visible;}#drawer-toggle:checked ~ #drawer-backdrop{opacity:1;pointer-events:auto;}</style><style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen antialiased"><input class="hidden peer" id="drawer-toggle" type="checkbox"/><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><label aria-label="Open navigation drawer" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container transition-colors cursor-pointer select-none" for="drawer-toggle"><span class="material-symbols-outlined text-[24px]">menu</span></label><div class="flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-container-low"><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface uppercase">MAXIMUS</span><div class="flex items-center gap-1 pl-1"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-fixed-dim opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-caps text-label-caps text-secondary hidden sm:inline uppercase">SYS-AUTH</span></div></div></div></div><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm text-on-surface truncate hidden md:inline max-w-[200px]">Profile &amp; Account</span><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><div class="fixed inset-0 z-50 bg-primary/30 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 ease-out" id="drawer-backdrop"><label aria-label="Close navigation backdrop" class="absolute inset-0 cursor-pointer" for="drawer-toggle"></label></div><aside class="fixed top-0 left-0 bottom-0 z-50 w-72 max-w-[85vw] bg-surface-container-lowest shadow-[0_8px_24px_rgba(0,0,0,0.08)] transform -translate-x-full transition-transform duration-300 ease-out flex flex-col pt-safe pb-safe" id="nav-drawer"><div class="h-16 px-gutter flex items-center justify-between shrink-0"><div class="flex items-center gap-2"><span class="font-headline-sm text-headline-sm font-bold text-on-surface uppercase">MAXIMUS</span><span class="font-label-caps text-label-caps px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">Account</span></div><label aria-label="Close drawer" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" for="drawer-toggle"><span class="material-symbols-outlined text-[22px]">close</span></label></div><div class="px-gutter py-space-sm"><div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-container-low"><span class="w-2 h-2 rounded-full bg-secondary shrink-0"></span><span class="font-code-inline text-code-inline text-on-surface-variant truncate" id="drawer-account-id">Account</span></div></div><nav aria-label="Main navigation" class="flex-1 overflow-y-auto px-gutter py-space-sm space-y-1" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors min-h-[44px]" data-path="chat" href="/m/home"><span class="material-symbols-outlined text-[20px]">chat_bubble</span><span class="font-body-md text-body-md">Chat</span></a><a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors min-h-[44px]" data-path="live-ai" href="/m/speakwithai"><span class="material-symbols-outlined text-[20px]">stream</span><span class="font-body-md text-body-md">Live AI</span><span class="ml-auto flex h-2 w-2 rounded-full bg-secondary"></span></a><a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors min-h-[44px]" data-path="history" href="/m/history"><span class="material-symbols-outlined text-[20px]">history</span><span class="font-body-md text-body-md">History</span></a><a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors min-h-[44px]" data-path="ecosystem" href="/m/qr-login"><span class="material-symbols-outlined text-[20px]">hub</span><span class="font-body-md text-body-md">Ecosystem</span></a><a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors min-h-[44px]" data-path="models-providers" href="/m/api-pro"><span class="material-symbols-outlined text-[20px]">neurology</span><span class="font-body-md text-body-md">Models &amp; Providers</span></a><div class="pt-space-sm pb-space-xs"><span class="font-label-caps text-label-caps text-outline uppercase px-3 tracking-wider">System Config</span></div><a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors min-h-[44px]" data-path="settings" href="/m/settings"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md">Settings</span></a><a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors min-h-[44px]" data-path="profile-account" href="/m/profile-settings"><span class="material-symbols-outlined text-[20px]">manage_accounts</span><span class="font-body-md text-body-md">Profile &amp; Account</span></a></nav><div class="p-gutter shrink-0"><div class="flex items-center gap-3 p-2 rounded-lg bg-surface-container-low"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0 flex-1"><span class="font-body-sm text-body-sm font-semibold text-on-surface truncate" id="drawer-name">Account</span><span class="font-code-block text-code-block text-on-surface-variant truncate" id="drawer-email">Loading…</span></div></div></div></aside><main class="flex flex-col relative w-full pt-16 bg-surface min-h-[calc(100vh-4rem)]"><div class="flex flex-col w-full pb-28">
+<!-- Top Status Breadcrumb -->
+<div class="px-gutter pt-3 pb-2 flex flex-col gap-2">
+<div class="flex items-center justify-between gap-2 overflow-hidden">
+<div class="flex items-center gap-1.5 min-w-0">
+<span class="font-code-block text-code-block text-outline truncate uppercase">MAXIMUS // SETTINGS // IDENTITY</span>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container/40 shrink-0">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-caps text-label-caps text-secondary font-semibold" id="verification-status">Loading…</span>
+</div>
+</div>
+</div>
+<!-- Horizontal Scrollable Anchor Pill Navigator -->
+<div class="w-full overflow-x-auto no-scrollbar px-gutter py-2 flex items-center gap-2">
+<a class="px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-caps text-label-caps whitespace-nowrap shadow-sm" href="#section-identity">General Identity</a>
+<a class="px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap transition-colors" href="#section-credentials">Security &amp; Credentials</a>
+<a class="px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap transition-colors" href="#section-sessions">Active Sessions</a>
+<a class="px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap transition-colors" href="#section-preferences">Preferences</a>
+<a class="px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap transition-colors" href="#section-compliance">Compliance</a>
+</div>
+<div class="px-gutter space-y-4 mt-2">
+<!-- Profile Header Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+<div class="absolute -right-10 -top-10 w-32 h-32 bg-secondary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Avatar & Quick Actions -->
+<div class="relative mb-3">
+<div class="w-24 h-24 rounded-full overflow-hidden shadow-inner bg-surface-container flex items-center justify-center">
+<img id="profile-photo" alt="Profile photo" class="hidden w-full h-full object-cover"><span id="avatar-initials" class="text-display-mobile text-secondary">M</span>
+</div>
+<button aria-label="Edit Avatar Photo" class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md active:scale-95 transition-transform" id="btn-quick-photo" type="button">
+<span class="material-symbols-outlined text-[16px]">photo_camera</span>
+</button>
+</div>
+<div class="flex items-center justify-center gap-1.5">
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold" id="profile-name">Your account</h2>
+<span class="hidden material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;" id="verified-icon" title="Email verified">verified</span>
+</div>
+<div class="flex items-center gap-2 mt-1.5 flex-wrap justify-center">
+<span class="font-label-caps text-label-caps px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-medium" id="profile-role">Profile</span>
+<span class="font-code-block text-code-block text-outline" id="profile-account-id">Account</span>
+</div>
+<!-- Photo Action Buttons -->
+<div class="flex items-center gap-2 mt-4 w-full max-w-xs">
+<button id="change-photo" class="flex-1 min-h-[44px] px-3 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-body-sm text-body-sm font-semibold flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+<span>Change Photo</span>
+</button>
+<button id="remove-photo" class="min-h-[44px] px-3 py-2 rounded-lg bg-surface-container-low hover:bg-error-container text-outline hover:text-on-error-container font-body-sm text-body-sm font-semibold flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span>Remove</span>
+</button>
+</div>
+<div id="profile-status" role="status" aria-live="polite" class="w-full mt-4 bg-surface-container-low rounded-lg p-3 text-body-sm text-left">Loading profile…</div><button id="retry-profile" class="hidden min-h-[44px]">Retry loading</button>
+</div>
+<!-- General Identity & System Profile Card -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-4" id="section-identity">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface text-[20px]">badge</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">General Identity</h3>
+</div>
+<span class="font-label-caps text-label-caps text-outline uppercase">CORE-PARAM</span>
+</div>
+<div class="space-y-3">
+<!-- Full Legal Name -->
+<div class="space-y-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase">Full Legal Name</label>
+<div class="relative">
+<input class="w-full min-h-[44px] px-3.5 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="profile-name-input" aria-label="Full name" autocomplete="name" maxlength="120" required type="text" value=""/>
+</div>
+</div>
+<!-- Professional Role -->
+<div class="space-y-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase">Professional Role / Title</label>
+<div class="relative">
+<input class="w-full min-h-[44px] px-3.5 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="profile-role-input" aria-label="Professional role" maxlength="160" type="text" value=""/>
+</div>
+</div>
+<!-- Autonomous Directive (Bio) -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase">Autonomous Directive (Bio)</label>
+<span class="font-code-block text-code-block text-outline" id="char-counter">0 / 240 chars</span>
+</div>
+<textarea class="w-full p-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none" id="bio-input" aria-label="Bio" maxlength="240" rows="3"></textarea>
+</div>
+<!-- System Timezone -->
+<div class="space-y-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase">System Timezone</label>
+<div class="relative">
+<select id="profile-timezone" aria-label="Timezone" class="w-full min-h-[44px] px-3.5 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10">
+<option selected="" value="Asia/Kolkata">Asia/Kolkata</option>
+<option value="UTC">Coordinated Universal Time (UTC)</option>
+<option value="America/Los_Angeles">America/Los_Angeles</option>
+<option value="Europe/London">Europe/London</option>
+<option value="Asia/Tokyo">Asia/Tokyo</option>
+</select>
+<span class="material-symbols-outlined text-outline absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Interface Locale -->
+<div class="space-y-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase">Interface Locale</label>
+<div class="relative">
+<select id="profile-locale" aria-label="Locale" class="w-full min-h-[44px] px-3.5 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary transition-all pr-10">
+<option selected="" value="en-IN">English (India) [en-IN]</option>
+<option value="en-US">English (US) [en-US]</option>
+<option value="de-DE">Deutsch [de-DE]</option>
+<option value="ja-JP">日本語 [ja-JP]</option>
+</select>
+<span class="material-symbols-outlined text-outline absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact & Authentication Credentials -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-4" id="section-credentials">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface text-[20px]">shield_person</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Security &amp; Credentials</h3>
+</div>
+<span class="font-label-caps text-label-caps text-secondary font-semibold bg-secondary-container/40 px-2 py-0.5 rounded-md" id="login-method">Account</span>
+</div>
+<!-- Email Item -->
+<div class="p-3 bg-surface-container-low rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="min-w-0">
+<span class="font-label-caps text-label-caps text-outline uppercase block">Primary System Email</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-code-block text-code-block text-on-surface font-semibold truncate" id="profile-email">Loading…</span>
+<span class="flex items-center gap-0.5 text-secondary font-label-caps text-label-caps bg-secondary-container/60 px-1.5 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span id="email-verified">Loading…</span>
+</span>
+</div>
+</div>
+<button class="min-h-[44px] px-4 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface font-body-sm text-body-sm font-semibold rounded-lg self-start sm:self-auto shrink-0 shadow-sm transition-colors" id="btn-open-email-modal" type="button">
+          Edit
+        </button>
+</div>
+<!-- Password Item -->
+<div class="p-3 bg-surface-container-low rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="min-w-0">
+<span class="font-label-caps text-label-caps text-outline uppercase block">Access Key / Password</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-code-block text-code-block text-on-surface font-bold tracking-widest">••••••••••••••••</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5" id="password-summary">Loading sign-in options…</span>
+</div>
+<button id="update-password" class="min-h-[44px] px-4 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface font-body-sm text-body-sm font-semibold rounded-lg self-start sm:self-auto shrink-0 shadow-sm transition-colors" type="button">
+          Update Password
+        </button>
+</div>
+</section>
+<!-- Active Workstation Sessions Card -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-4" id="section-sessions">
+<div class="flex items-center justify-between"><h3 class="font-headline-sm text-headline-sm font-semibold">Active Sessions</h3><span id="session-count" class="text-label-caps text-outline">Loading…</span></div>
+<div id="device-list" class="space-y-2.5"></div><button id="retry-devices" class="hidden min-h-[44px]">Retry sessions</button>
+<button id="revoke-others" class="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-error-container/60 text-on-error-container font-body-sm font-semibold">Revoke All Other Sessions</button></section>
+<!-- Autonomous Preferences Card -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-4" id="section-preferences">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface text-[20px]">tune</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Autonomous Preferences</h3>
+</div>
+</div>
+<div class="space-y-3">
+<!-- Auditory Feedback (Disabled in mobile) -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between gap-3 opacity-60">
+<div class="min-w-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold block">Auditory Feedback &amp; Sonics</span>
+<span class="font-body-sm text-body-sm text-outline block mt-0.5">Unavailable in mobile mode</span>
+</div>
+<div class="w-11 h-6 bg-surface-container-high rounded-full relative pointer-events-none">
+<div class="w-5 h-5 bg-outline rounded-full absolute top-0.5 left-0.5"></div>
+</div>
+</div>
+<!-- Weekly Digest -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between gap-3">
+<div class="min-w-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold block">Weekly Usage Digest Preference</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Save your preference; automated digest delivery is not available yet.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer min-w-[44px] min-h-[44px] justify-center">
+<input id="weekly-digest" aria-label="Weekly digest preference" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-on-primary after:content-[''] after:absolute after:top-[14px] after:left-[4px] after:bg-on-primary after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Account Teardown & Compliance Zone -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-4" id="section-compliance">
+<div class="flex items-center gap-2 pb-1 text-error">
+<span class="material-symbols-outlined text-[22px]">warning</span>
+<h3 class="font-headline-sm text-headline-sm font-semibold">Teardown &amp; Compliance</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Download your saved account data, or permanently delete your MAXIMUS account and conversations.
+      </p>
+<div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+<button id="export-profile" class="min-h-[44px] px-4 py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-body-sm text-body-sm font-semibold flex items-center justify-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export JSON</span>
+</button>
+<button class="min-h-[44px] px-4 py-2.5 rounded-lg bg-error text-on-error font-body-sm text-body-sm font-semibold flex items-center justify-center gap-2 active:scale-98 transition-all" id="btn-open-deactivate-modal" type="button">
+<span class="material-symbols-outlined text-[18px]">delete_forever</span>
+<span>Delete Account</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-gutter py-3 pb-safe">
+<div class="max-w-screen-md mx-auto flex items-center justify-end gap-3">
+<button class="min-h-[44px] px-5 py-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-body-md text-body-md font-semibold transition-colors" id="btn-discard" type="button">
+        Discard
+      </button>
+<button class="min-h-[44px] px-6 py-2.5 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-body-md text-body-md font-semibold shadow-md active:scale-98 transition-all flex items-center gap-2" id="btn-save-changes" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Save Changes</span>
+</button>
+</div>
+</div>
+<!-- Modal: Email OTP Confirmation -->
+<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-primary/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200" id="modal-email">
+<div class="w-full sm:max-w-md bg-surface-container-lowest rounded-t-2xl sm:rounded-2xl p-space-xl shadow-xl flex flex-col gap-4 transform translate-y-4 transition-transform duration-200">
+<div class="w-10 h-1 bg-surface-container-highest rounded-full mx-auto sm:hidden -mt-2 mb-1"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">mark_email_read</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Update System Email</h4>
+</div>
+<button aria-label="Close modal" class="w-9 h-9 rounded-lg flex items-center justify-center text-outline hover:bg-surface-container-low transition-colors" id="btn-close-email-modal" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        A 6-digit verification code will be sent to your new email address.
+      </p>
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-outline uppercase">New System Email</label>
+<input class="w-full min-h-[44px] px-3.5 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="new-email" aria-label="New email address" autocomplete="email" placeholder="you@example.com" required type="email"/>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2">
+<button class="min-h-[44px] px-4 py-2 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md font-semibold hover:bg-surface-container transition-colors" id="btn-cancel-email" type="button">
+          Cancel
+        </button>
+<button id="send-email-code" class="min-h-[44px] px-5 py-2 rounded-lg bg-primary text-on-primary font-body-md text-body-md font-semibold hover:bg-primary-container shadow-sm transition-colors" type="button">
+          Send Code
+        </button>
+</div>
+</div>
+</div>
+<input id="avatar-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+<!-- Modal: Deactivate Warning Confirmation -->
+<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-primary/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200" id="modal-deactivate">
+<div class="w-full sm:max-w-md bg-surface-container-lowest rounded-t-2xl sm:rounded-2xl p-space-xl shadow-xl flex flex-col gap-4 transform translate-y-4 transition-transform duration-200">
+<div class="w-10 h-1 bg-surface-container-highest rounded-full mx-auto sm:hidden -mt-2 mb-1"></div>
+<div class="flex items-center gap-3 text-error">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-error-container text-[24px]">crisis_alert</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm font-bold text-on-surface">Delete your account?</h4>
+<span class="font-code-block text-code-block text-error">IRREVERSIBLE OPERATION</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        This permanently deletes your MAXIMUS profile, conversations, saved provider keys, and sessions. It cannot be undone. It does not delete your Google account.
+      </p>
+<label class="text-body-sm">Type DELETE to confirm<input id="delete-confirmation" aria-label="Type DELETE to confirm" autocomplete="off" class="profile-field"></label><p id="delete-status" role="status"></p><div class="flex items-center justify-end gap-2 pt-2">
+<button class="min-h-[44px] px-4 py-2 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md font-semibold hover:bg-surface-container transition-colors" id="btn-cancel-deactivate" type="button">
+          Abort
+        </button>
+<button id="delete-account" class="min-h-[44px] px-5 py-2 rounded-lg bg-error text-on-error font-body-md text-body-md font-semibold hover:opacity-90 shadow-sm transition-opacity" type="button">
+          Delete permanently
+        </button>
+</div>
+</div>
+</div>
+<!-- Micro Toast Notification Element -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-primary text-on-primary font-body-sm text-body-sm flex items-center gap-2 shadow-lg opacity-0 pointer-events-none transition-opacity duration-300" id="toast">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+<span id="toast-message">Configuration saved successfully</span>
+</div>
+</div>
+</main><script src="/static/mobile-profile.js" defer></script></body></html>

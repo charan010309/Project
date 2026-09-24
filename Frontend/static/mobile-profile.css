@@ -1,0 +1,18 @@
+html,body{max-width:100%;overflow-x:clip}section[id]{scroll-margin-top:80px}
+.profile-field{display:block;width:100%;min-height:44px;padding:10px 14px;margin-top:6px;border-radius:8px;background:#f3f3f3;color:#1a1c1c}
+.profile-label{display:block;font-size:13px;margin-top:12px}
+.profile-primary,.profile-secondary{min-height:44px;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600}
+.profile-primary{background:#000;color:#fff}.profile-secondary{background:#eee;color:#1a1c1c}
+.profile-modal{position:fixed;inset:0;z-index:80;background:#0006;display:flex;align-items:flex-end;justify-content:center;padding:0}
+.profile-panel{width:100%;max-width:448px;background:#fff;border-radius:20px 20px 0 0;padding:24px;max-height:90dvh;overflow-y:auto}
+.hidden{display:none!important}[hidden]{display:none!important}
+#modal-email,#modal-deactivate{z-index:80}#modal-email>div,#modal-deactivate>div{max-height:90dvh;overflow-y:auto;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+#nav-drawer{z-index:70}#drawer-backdrop{z-index:60}
+#profile-status,#device-list p,#profile-name{overflow-wrap:anywhere}#profile-name{max-width:100%}
+button:disabled{opacity:.5;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #006c4a;outline-offset:3px}
+html[data-theme=dark] body,html[data-theme=dark] .bg-surface{background:#141413;color:#eee}
+html[data-theme=dark] [class*=bg-surface-container],html[data-theme=dark] .profile-panel,html[data-theme=dark] .profile-field,html[data-theme=dark] .profile-secondary{background:#242423;color:#eee}
+html[data-theme=dark] [class*=text-on-surface],html[data-theme=dark] .text-outline{color:#d5d5ce}
+html[data-theme=dark] header,html[data-theme=dark] [class*=bg-surface\/]{background:#141413ed}
+html[data-theme=dark] .text-secondary{color:#82f5c1}
+@media(min-width:640px){.profile-modal{align-items:center;padding:16px}.profile-panel{border-radius:20px}}

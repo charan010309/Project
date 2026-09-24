@@ -1646,12 +1646,11 @@ async def request_email_change(data: EmailChangeRequest, request: Request, db: S
     if db.query(User).filter(User.email == new_email).first():
         raise HTTPException(status_code=400, detail="That email address is already registered.")
     otp = generate_otp()
-    store_otp(f"email_change:{user_id}:{new_email}", otp)
-    print(f"📧 EMAIL CHANGE OTP for {new_email}: {otp}")
     try:
         await send_otp_email(new_email, user.name or "MAXIMUS user", otp)
-    except Exception as e:
-        print(f"[EMAIL ERROR] {e}")
+    except Exception:
+        raise HTTPException(status_code=503, detail="Could not send the verification email. Please try again later.")
+    store_otp(f"email_change:{user_id}:{new_email}", otp)
     return {"message": "Verification code sent to the new email."}
 
 

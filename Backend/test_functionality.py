@@ -223,16 +223,68 @@ class FunctionalityTests(unittest.TestCase):
         self.assertEqual(self.client.get(f'/api/chat/{chat_id}').status_code, 404)
 
     def test_mobile_assets_and_accessible_shells(self):
-        for asset in ['mobile.css', 'mobile.js', 'mobile-home.css', 'mobile-home.js', 'mobile-voice.css', 'mobile-voice.js', 'mobile-history.js', 'mobile-history.css']:
+        for asset in ['mobile.css', 'mobile.js', 'mobile-home.css', 'mobile-home.js', 'mobile-voice.css', 'mobile-voice.js', 'mobile-history.js', 'mobile-history.css', 'mobile-profile.js', 'mobile-profile.css']:
             self.assertEqual(self.client.get('/static/' + asset).status_code, 200)
         for route in ['home', 'history', 'settings', 'profile-settings', 'api-pro', 'speakwithai']:
             html = self.client.get('/m/' + route).text
-            script = {'home': 'mobile-home.js', 'speakwithai': 'mobile-voice.js', 'history': 'mobile-history.js'}.get(route, 'mobile.js')
+            script = {'home': 'mobile-home.js', 'speakwithai': 'mobile-voice.js', 'history': 'mobile-history.js', 'profile-settings': 'mobile-profile.js'}.get(route, 'mobile.js')
             self.assertIn('/static/' + script, html)
             marker = {'home': 'id="appSidebar"', 'speakwithai': 'id="sidebarDrawer"'}.get(route, 'aria-label="Main navigation"')
             self.assertIn(marker, html)
             self.assertNotIn('user-scalable=no', html)
             self.assertNotIn('href="#"', html)
+
+    def test_supplied_mobile_profile_controls(self):
+        html = self.client.get('/m/profile-settings').text
+        for element in ['profile-name-input', 'profile-role-input', 'bio-input', 'profile-timezone', 'profile-locale', 'device-list', 'delete-confirmation']:
+            self.assertIn(f'id="{element}"', html)
+        for fake in ['Dev Operator', 'operator@maximus.ai', '103.22.45.19', 'LATENCY: 12ms', 'SYS-ID #9402', 'Hardware Verified']:
+            self.assertNotIn(fake, html)
+        script = self.client.get('/static/mobile-profile.js').text
+        for endpoint in ['/api/user/profile', '/api/user/email/request', '/api/user/email/verify', '/api/user/password', '/api/devices', '/api/user/export', '/api/account']:
+            self.assertIn(endpoint, script)
+        self.assertNotIn('innerHTML', script)
+
+    def test_profile_preferences_avatar_and_validation(self):
+        data = {'name': 'Profile Test', 'role': 'Engineer', 'bio': 'Mobile profile', 'timezone': 'UTC', 'locale': 'en-US', 'weekly_digest': True, 'avatar_data': 'data:image/png;base64,dGVzdA=='}
+        self.assertEqual(self.client.patch('/api/user/profile', json=data).status_code, 200)
+        profile = self.client.get('/api/user/profile').json()
+        for key in ['name', 'role', 'bio', 'timezone', 'locale', 'weekly_digest']:
+            self.assertEqual(profile[key], data[key])
+        self.assertEqual(profile['icon_url'], data['avatar_data'])
+        self.assertEqual(self.client.patch('/api/user/profile', json={'name': ' '}).status_code, 400)
+        self.assertEqual(self.client.patch('/api/user/profile', json={'bio': 'x'*241}).status_code, 400)
+        self.assertEqual(self.client.delete('/api/user/profile/avatar').status_code, 200)
+        self.assertIsNone(self.client.get('/api/user/profile').json()['icon_url'])
+
+    def test_email_change_delivery_and_verification(self):
+        with patch.object(app, 'send_otp_email', side_effect=RuntimeError('Mail down')), patch.object(app, 'generate_otp', return_value='123456'):
+            self.assertEqual(self.client.post('/api/user/email/request', json={'new_email': 'new@example.com'}).status_code, 503)
+        self.assertEqual(self.client.post('/api/user/email/verify', json={'new_email': 'new@example.com', 'otp': '123456'}).status_code, 400)
+        with patch.object(app, 'send_otp_email', return_value=None), patch.object(app, 'generate_otp', return_value='654321'):
+            self.assertEqual(self.client.post('/api/user/email/request', json={'new_email': 'new@example.com'}).status_code, 200)
+        self.assertEqual(self.client.post('/api/user/email/verify', json={'new_email': 'new@example.com', 'otp': '000000'}).status_code, 400)
+        self.assertEqual(self.client.post('/api/user/email/verify', json={'new_email': 'new@example.com', 'otp': '654321'}).status_code, 200)
+        self.assertEqual(self.client.get('/api/user/profile').json()['email'], 'new@example.com')
+        self.assertEqual(self.client.post('/api/user/email/verify', json={'new_email': 'new@example.com', 'otp': '654321'}).status_code, 400)
+
+    def test_profile_password_set_and_update(self):
+        self.assertEqual(self.client.post('/api/user/password/set', json={'current_password': '', 'new_password': 'synthetic-password'}).status_code, 200)
+        self.assertTrue(self.client.get('/api/user/profile').json()['has_password'])
+        self.assertEqual(self.client.post('/api/user/password', json={'current_password': 'wrong', 'new_password': 'updated-test-password'}).status_code, 400)
+        self.assertEqual(self.client.post('/api/user/password', json={'current_password': 'synthetic-password', 'new_password': 'updated-test-password'}).status_code, 200)
+
+    def test_profile_export_and_account_deletion_isolation(self):
+        self.assertEqual(self.client.get('/api/user/export').json()['user']['email'], 'test@example.com')
+        self.assertEqual(self.client.delete('/api/account').status_code, 200)
+        # The manually seeded domainless cookie is not removed by an HTTP
+        # response for testserver.local; real browser cookies are domain-bound.
+        with database.SessionLocal() as db:
+            self.assertIsNone(db.get(app.User, 1))
+        self.client.cookies.clear()
+        self.assertEqual(self.client.get('/api/user/profile').status_code, 401)
+        with database.SessionLocal() as db:
+            self.assertIsNotNone(db.get(app.User, 2))
 
     def test_supplied_mobile_history_has_real_controls(self):
         html = self.client.get('/m/history').text
