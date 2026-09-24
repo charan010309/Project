@@ -223,16 +223,42 @@ class FunctionalityTests(unittest.TestCase):
         self.assertEqual(self.client.get(f'/api/chat/{chat_id}').status_code, 404)
 
     def test_mobile_assets_and_accessible_shells(self):
-        for asset in ['mobile.css', 'mobile.js', 'mobile-home.css', 'mobile-home.js', 'mobile-voice.css', 'mobile-voice.js']:
+        for asset in ['mobile.css', 'mobile.js', 'mobile-home.css', 'mobile-home.js', 'mobile-voice.css', 'mobile-voice.js', 'mobile-history.js', 'mobile-history.css']:
             self.assertEqual(self.client.get('/static/' + asset).status_code, 200)
         for route in ['home', 'history', 'settings', 'profile-settings', 'api-pro', 'speakwithai']:
             html = self.client.get('/m/' + route).text
-            script = {'home': 'mobile-home.js', 'speakwithai': 'mobile-voice.js'}.get(route, 'mobile.js')
+            script = {'home': 'mobile-home.js', 'speakwithai': 'mobile-voice.js', 'history': 'mobile-history.js'}.get(route, 'mobile.js')
             self.assertIn('/static/' + script, html)
             marker = {'home': 'id="appSidebar"', 'speakwithai': 'id="sidebarDrawer"'}.get(route, 'aria-label="Main navigation"')
             self.assertIn(marker, html)
             self.assertNotIn('user-scalable=no', html)
             self.assertNotIn('href="#"', html)
+
+    def test_supplied_mobile_history_has_real_controls(self):
+        html = self.client.get('/m/history').text
+        for element in ['history-items-container', 'preview-messages', 'history-search', 'history-pinned', 'history-recent', 'confirm-delete', 'export-session']:
+            self.assertIn(f'id="{element}"', html)
+        for sample in ['sess-01', 'Pro Tier Active', '2.4k tokens', '0.4 MB', 'VAD Interruption']:
+            self.assertNotIn(sample, html)
+        script = self.client.get('/static/mobile-history.js').text
+        for endpoint in ['/api/chat/list', '/api/live/list', '/api/user/profile']:
+            self.assertIn(endpoint, script)
+        self.assertNotIn('innerHTML', script)
+
+    def test_history_chat_and_live_ids_do_not_collide(self):
+        with database.SessionLocal() as db:
+            db.add_all([app.ChatSession(id=1, user_id=1, title='Chat history'), app.LiveSession(id=1, user_id=1, title='Voice history')])
+            db.flush()
+            db.add_all([app.ChatMessage(user_id=1, session_id=1, role='user', content='Chat message'), app.LiveMessage(user_id=1, session_id=1, role='user', content='Voice message')])
+            db.commit()
+        self.assertEqual(self.client.get('/api/chat/list').json()[0]['message_count'], 1)
+        self.assertEqual(self.client.get('/api/live/list').json()[0]['message_count'], 1)
+        self.assertEqual(self.client.post('/api/live/1/pin').status_code, 200)
+        self.assertFalse(self.client.get('/api/chat/list').json()[0]['pinned'])
+        self.assertTrue(self.client.get('/api/live/list').json()[0]['pinned'])
+        self.assertEqual(self.client.delete('/api/live/1').status_code, 200)
+        self.assertEqual(self.client.get('/api/chat/1').json()['messages'][0]['content'], 'Chat message')
+        self.assertEqual(self.client.get('/api/live/1').status_code, 404)
 
     def test_supplied_mobile_home_has_real_controls(self):
         html = self.client.get('/m/home').text

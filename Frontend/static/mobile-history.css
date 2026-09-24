@@ -1,0 +1,33 @@
+/* Small functional additions; the supplied layout and palette stay intact. */
+html,body{max-width:100%;width:100%;overflow-x:clip}
+button,a,input{-webkit-tap-highlight-color:transparent}
+button:disabled{opacity:.5;cursor:wait}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #006c4a;outline-offset:3px}
+.history-icon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center}
+.history-icon[aria-pressed=true]{color:#006c4a;background:#82f5c133}
+.history-icon[aria-pressed=true] span{font-variation-settings:'FILL' 1}
+.history-inspect{width:100%;text-align:left;overflow-wrap:anywhere}
+.history-badge{display:inline-block;border-radius:20px;padding:3px 8px;background:#82f5c144;color:#006c4a;font:600 11px 'JetBrains Mono',monospace}
+.history-message{padding:12px;border-radius:16px;max-width:94%;background:#fff;white-space:pre-wrap;overflow-wrap:anywhere}
+.history-message p{margin-top:8px}
+.history-user{margin-left:auto;background:#000;color:#fff}
+.history-assistant{margin-right:auto}
+.history-assistant>div{color:#006c4a}
+#preview-messages{min-height:0;max-height:58dvh;overscroll-behavior:contain}
+#preview-sheet{z-index:70;max-height:88dvh}
+#preview-sheet-backdrop{z-index:60}
+#sort-popover,#delete-modal{z-index:80}
+#maximus-drawer{z-index:70}
+#maximus-drawer-backdrop{z-index:60}
+#account-email{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#manage-tools button,.history-retry{padding:8px 12px;border-radius:8px;background:#eee}
+#history-status{font-size:13px;overflow-wrap:anywhere}
+#sync-status{display:none}
+html[data-theme=dark] body,html[data-theme=dark] .bg-surface{background:#141413;color:#eee}
+html[data-theme=dark] [class*=bg-surface-container],html[data-theme=dark] .history-assistant{background:#222221;color:#eee}
+html[data-theme=dark] header{background:#141413ed}
+html[data-theme=dark] [class*=text-on-surface]{color:#e4e4de}
+html[data-theme=dark] [class*=text-on-surface-variant]{color:#b5b5ae}
+html[data-theme=dark] .text-secondary,html[data-theme=dark] .history-badge,html[data-theme=dark] .history-assistant>div{color:#82f5c1}
+html[data-theme=dark] #manage-tools button,html[data-theme=dark] .history-retry{background:#333331}
+@media(min-width:480px){#sync-status{display:inline}}

@@ -14,6 +14,18 @@ if __name__ == '__main__':
 
     case = fixture.FunctionalityTests()
     case.setUp()
+    # Non-production history fixtures; matching IDs exercise chat/live isolation.
+    with fixture.database.SessionLocal() as db:
+        chat = fixture.app.ChatSession(user_id=1, title='Mobile history test', pinned=True)
+        live = fixture.app.LiveSession(user_id=1, title='Voice history test')
+        db.add_all([chat, live])
+        db.flush()
+        db.add_all([
+            fixture.app.ChatMessage(user_id=1, session_id=chat.id, role='user', content='Test saved chat'),
+            fixture.app.ChatMessage(user_id=1, session_id=chat.id, role='assistant', content='Saved reply <script> is displayed as text.'),
+            fixture.app.LiveMessage(user_id=1, session_id=live.id, role='user', content='Test saved voice'),
+        ])
+        db.commit()
 
     @fixture.app.app.get('/test-mobile-login')
     def test_login():
