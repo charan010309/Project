@@ -16,3 +16,11 @@ html[data-theme=dark] [class*=text-on-surface],html[data-theme=dark] .text-outli
 html[data-theme=dark] header,html[data-theme=dark] [class*=bg-surface\/]{background:#141413ed}
 html[data-theme=dark] .text-secondary{color:#82f5c1}
 @media(min-width:640px){.profile-modal{align-items:center;padding:16px}.profile-panel{border-radius:20px}}
+/* Match the PC account workspace while retaining the mobile drawer and forms. */
+.workspace-logo{width:32px;height:32px;object-fit:cover;border-radius:8px;border:1px solid #e4e4e7;flex:none;margin-right:4px}
+main.bg-surface{background-color:#f9f9f9;background-image:linear-gradient(to right,rgba(0,0,0,.025) 1px,transparent 1px),linear-gradient(to bottom,rgba(0,0,0,.025) 1px,transparent 1px);background-size:32px 32px}
+header{border-bottom:1px solid #e4e4e7}
+main section[id]{border:1px solid #e4e4e7;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.profile-field{border:1px solid #e4e4e7}
+html[data-theme=dark] main.bg-surface{background-color:#141413;background-image:linear-gradient(to right,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.025) 1px,transparent 1px)}
+html[data-theme=dark] header,html[data-theme=dark] main section[id],html[data-theme=dark] .profile-field{border-color:#353b35}

@@ -735,6 +735,7 @@
     /* END MAXIMUS LIVE AI DARK MODE */
 </style>
 <link rel="stylesheet" href="/static/theme.css">
+<link rel="stylesheet" href="/static/voice-workstation.css">
 </head>
 <body class="bg-[#fafafa] font-sans text-zinc-900 antialiased min-h-screen flex flex-col justify-between selection:bg-black selection:text-white">
 
@@ -843,14 +844,17 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="relative flex-1 w-full max-w-4xl mx-auto px-2 md:px-6 py-4 md:py-10 flex flex-col items-center justify-start gap-10">
+    <main class="voice-workspace-main relative flex-1 w-full max-w-4xl mx-auto px-2 md:px-6 py-4 md:py-10 flex flex-col items-center justify-start gap-10">
 
     <!-- Central Voice Stage -->
-    <div class="flex flex-col items-center justify-center text-center pt-2 w-full md:-translate-x-20 lg:-translate-x-28">
+    <div class="voice-stage flex flex-col items-center justify-center text-center pt-2 w-full md:-translate-x-20 lg:-translate-x-28">
+      <div class="voice-stage-eyebrow"><span></span> YOUR VOICE SPACE</div>
+      <h1 class="voice-stage-heading">A conversation, naturally.</h1>
+      <p class="voice-stage-intro">Talk things through with MAXIMUS, or type whenever you prefer.</p>
       <div class="relative flex items-center justify-center mb-6">
         <div class="pulse-layer-1 absolute w-48 h-48 rounded-full bg-emerald-400/20 pointer-events-none"></div>
         <div class="pulse-layer-2 absolute w-40 h-40 rounded-full bg-emerald-500/15 pointer-events-none"></div>
-        <button class="relative z-10 w-24 h-24 rounded-full bg-black hover:scale-105 active:scale-95 text-white shadow-[0_12px_36px_rgba(0,0,0,0.18)] transition-all duration-300 flex items-center justify-center group focus:outline-none focus:ring-4 focus:ring-emerald-500/20" id="central-mic-btn" title="Tap to speak or pause">
+        <button class="relative z-10 w-24 h-24 rounded-full bg-black hover:scale-105 active:scale-95 text-white shadow-[0_12px_36px_rgba(0,0,0,0.18)] transition-all duration-300 flex items-center justify-center group focus:outline-none focus:ring-4 focus:ring-emerald-500/20" id="central-mic-btn" type="button" title="Tap to speak or pause" aria-label="Start or pause voice input">
           <span class="material-symbols-outlined text-4xl text-white group-hover:scale-110 transition-transform" id="mic-icon">mic</span>
         </button>
       </div>
@@ -858,10 +862,10 @@
       <div class="flex flex-col items-center gap-1.5">
         <div class="inline-flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="status-pulse-dot"></span>
-          <span class="font-medium text-zinc-900 text-lg tracking-tight" id="voice-state-label">Listening to you...</span>
+          <span class="font-medium text-zinc-900 text-lg tracking-tight" id="voice-state-label">Ready when you are</span>
         </div>
         <p class="text-xs text-zinc-500 max-w-xs">
-          Speak naturally or interrupt anytime. MAXIMUS is synthesizing contextual audio from your live session.
+          Tap the microphone to start or pause voice input.
         </p>
       </div>
 
@@ -901,7 +905,7 @@
             <span class="material-symbols-outlined text-[15px]">push_pin</span><span>Pin</span>
           </button>
         </div>
-        <span class="live-transcript-meta text-[11px] font-mono text-zinc-400">Low-latency audio sync</span>
+        <span class="live-transcript-meta text-[11px] font-mono text-zinc-400">YOUR CONVERSATION</span>
       </div>
 
       <div class="flex flex-col gap-5 max-h-[380px] overflow-y-auto pr-1" id="transcript-feed"></div>
@@ -1051,7 +1055,7 @@
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
         <span>MAXIMUS Live Audio Core 4.2</span>
       </div>
-      <div>End-to-End Encrypted Session</div>
+      <div>Speak, listen, or type at your own pace.</div>
     </div>
   </footer>
 

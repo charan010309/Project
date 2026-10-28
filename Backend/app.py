@@ -2136,7 +2136,10 @@ def intro():
 
 
 @app.get("/home")
-def home():
+def home(request: Request):
+
+    if not request.session.get("user_id"):
+        return RedirectResponse("/login", status_code=303)
 
     return _frontend_page(PC_DIR, "home.html")
 
@@ -2184,7 +2187,9 @@ def mobile_intro():
 
 
 @app.get("/m/home")
-def mobile_home():
+def mobile_home(request: Request):
+    if not request.session.get("user_id"):
+        return RedirectResponse("/m/login", status_code=303)
     return _frontend_page(MOBILE_DIR, "home.html")
 
 

@@ -1,0 +1,36 @@
+/* The mobile account screens use the same workstation palette as the PC pages. */
+body[data-mobile-page="settings"],body[data-mobile-page="providers"]{
+  font-family:"Plus Jakarta Sans",sans-serif;
+  background-color:var(--bg);
+  background-image:linear-gradient(to right,rgba(0,0,0,.025) 1px,transparent 1px),linear-gradient(to bottom,rgba(0,0,0,.025) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+body[data-mobile-page="settings"] .app-header,body[data-mobile-page="providers"] .app-header{
+  position:sticky;top:0;z-index:15;background:var(--bg);border-color:#e4e4e7;
+}
+body[data-mobile-page="settings"] .brand,body[data-mobile-page="providers"] .brand{letter-spacing:-.02em;font-size:16px;gap:10px}
+body[data-mobile-page="settings"] .brand-mark,body[data-mobile-page="providers"] .brand-mark{
+  padding:0;width:32px;height:32px;overflow:hidden;border-radius:8px;background:#09090b;flex:none;
+}
+.brand-mark img{display:block;width:100%;height:100%;object-fit:cover}
+.workspace-heading{padding:2px 0 22px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+.workspace-breadcrumb{font:600 10px/1.6 "JetBrains Mono",monospace;letter-spacing:.07em;color:var(--muted);margin-bottom:10px;overflow-wrap:anywhere}
+.workspace-breadcrumb span{color:#b7b7bd;padding:0 3px}
+.workspace-heading h1{font-size:26px;line-height:1.2;letter-spacing:-.035em;margin:0}
+.workspace-description{font-size:13px;line-height:1.55;color:var(--muted);margin:8px 0 0}
+.workspace-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.workspace-badge{font:600 10px "JetBrains Mono",monospace;padding:5px 8px;border-radius:999px;background:#e6f9f0;color:#006c49}
+body[data-mobile-page="settings"] .card,body[data-mobile-page="providers"] .card{border:1px solid #e4e4e7;border-radius:12px;padding:20px;background:var(--card);box-shadow:0 1px 3px #0000000a}
+body[data-mobile-page="settings"] h2,body[data-mobile-page="providers"] h2{font-size:16px;letter-spacing:-.02em;font-weight:700}
+body[data-mobile-page="settings"] .field,body[data-mobile-page="providers"] .field{font-size:12px;color:var(--muted)}
+body[data-mobile-page="settings"] input,body[data-mobile-page="settings"] select,body[data-mobile-page="settings"] textarea,body[data-mobile-page="providers"] input{border-color:#e4e4e7;background:#f4f4f5;border-radius:8px;color:#09090b}
+body[data-mobile-page="settings"] .primary,body[data-mobile-page="providers"] .primary{background:#09090b;border-color:#09090b;color:#fff;border-radius:8px}
+body[data-mobile-page="settings"] .choice[aria-pressed=true]{background:#e6f9f0;color:#006c49;border-color:#10b981}
+body[data-mobile-page="settings"] .bottom-nav,body[data-mobile-page="providers"] .bottom-nav{border-color:#e4e4e7;box-shadow:0 -3px 20px #00000008}
+body[data-mobile-page="settings"] .bottom-nav a[aria-current],body[data-mobile-page="providers"] .bottom-nav a[aria-current]{background:#eeeeee;color:#09090b}
+html[data-theme="dark"] body[data-mobile-page="settings"],html[data-theme="dark"] body[data-mobile-page="providers"]{background-image:linear-gradient(to right,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.025) 1px,transparent 1px)}
+html[data-theme="dark"] body[data-mobile-page="settings"] .card,html[data-theme="dark"] body[data-mobile-page="providers"] .card,html[data-theme="dark"] .app-header{border-color:var(--line)}
+html[data-theme="dark"] body[data-mobile-page="settings"] input,html[data-theme="dark"] body[data-mobile-page="settings"] select,html[data-theme="dark"] body[data-mobile-page="settings"] textarea,html[data-theme="dark"] body[data-mobile-page="providers"] input{background:#242423;color:#f0f3ef;border-color:var(--line)}
+html[data-theme="dark"] body[data-mobile-page="settings"] .primary,html[data-theme="dark"] body[data-mobile-page="providers"] .primary{background:#f0f3ef;border-color:#f0f3ef;color:#141413}
+html[data-theme="dark"] body[data-mobile-page="settings"] .choice[aria-pressed=true]{background:#203c2d;color:#85f8c4;border-color:#85f8c4}
+html[data-theme="dark"] body[data-mobile-page="settings"] .bottom-nav a[aria-current],html[data-theme="dark"] body[data-mobile-page="providers"] .bottom-nav a[aria-current]{background:#353b35;color:#f0f3ef}

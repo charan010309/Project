@@ -216,16 +216,16 @@
 <div class="w-12 h-12 rounded-2xl bg-black mx-auto mb-3 overflow-hidden shadow-sm flex items-center justify-center">
 <img alt="MAXIMUS" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='&lt;span class=\'text-white font-bold text-lg\'&gt;M&lt;/span&gt;'" src="/static/logo.jpg">
 </div>
-<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-neutral-100 border border-neutral-200 text-[10px] font-mono text-neutral-600 mb-2">
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            Unified Mobile &amp; Tablet Workspace
-          </div>
+<div class="mobile-welcome-kicker">Your thinking space</div>
 <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-brandDark">Where shall we begin?</h2>
 <p class="text-xs sm:text-sm text-neutral-500 max-w-sm mx-auto mt-1 leading-relaxed">
-            Formulate complex reasoning, synthesize code, analyze attached images, or switch to Live AI Voice.
+            A question, a fresh idea, or something you're working through.<br>Let's make progress together.
           </p>
-<!-- Starter Prompt Cards (Responsive Grid: 1 col on mobile, 3 cols on tablet) -->
-
+<div class="mobile-welcome-starters">
+<button type="button" onclick="applyPrompt('Help me brainstorm ideas for ')"><span aria-hidden="true">✦</span><strong>Explore an idea</strong><small>Turn a thought into a starting point.</small></button>
+<button type="button" onclick="applyPrompt('Explain this to me simply: ')"><span aria-hidden="true">◎</span><strong>Understand something</strong><small>Get a clear, useful explanation.</small></button>
+<button type="button" onclick="applyPrompt('Help me write a first draft of ')"><span aria-hidden="true">↗</span><strong>Create a first draft</strong><small>Find the words to get started.</small></button>
+</div>
 </div>
 <!-- Chat Transcript Container -->
 <div id="messageList" class="space-y-4" role="log" aria-label="Conversation"></div>

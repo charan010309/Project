@@ -76,6 +76,32 @@ class FunctionalityTests(unittest.TestCase):
             for path, payload in [('/ask-image', self.image()), ('/api/tts', {'text': 'hello'}), ('/ask', {'text': 'hello'})]:
                 self.assertEqual(anonymous.post(path, json=payload).status_code, 401, path)
 
+    def test_home_pages_redirect_signed_out_visitors(self):
+        with TestClient(app.app) as anonymous:
+            for path, destination in [('/home', '/login'), ('/m/home', '/m/login')]:
+                with self.subTest(path=path):
+                    response = anonymous.get(path, follow_redirects=False)
+                    self.assertEqual(response.status_code, 303)
+                    self.assertEqual(response.headers['location'], destination)
+                    self.assertEqual(anonymous.get(path).status_code, 200)
+            response = anonymous.get('/home', headers={'user-agent': 'iPhone'}, follow_redirects=True)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.url.path, '/m/login')
+
+        for path, folder in [('/home', app.PC_DIR), ('/m/home', app.MOBILE_DIR)]:
+            with self.subTest(signed_in_path=path):
+                response = self.client.get(path, follow_redirects=False)
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.content, (Path(folder) / 'home.html').read_bytes())
+
+        with TestClient(app.app) as revoked:
+            session = {'user_id': 1, 'device_id': 999999}
+            cookie = TimestampSigner(CONFIG['SESSION_SECRET']).sign(base64.b64encode(json.dumps(session).encode())).decode()
+            revoked.cookies.set('session', cookie)
+            response = revoked.get('/home', follow_redirects=False)
+            self.assertEqual(response.status_code, 303)
+            self.assertEqual(response.headers['location'], '/login')
+
     def test_generation_failures_return_errors(self):
         with patch.object(app.client.models, 'generate_content', side_effect=RuntimeError('private upstream error')):
             for path, payload in [('/ask-image', self.image()), ('/ask', {'text': 'hello'})]:

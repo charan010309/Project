@@ -3,3 +3,81 @@ body{height:100dvh;overflow:hidden}#commandInput{min-width:0;font-size:16px}#tra
 html.dark body,html.dark .bg-surfaceOffWhite{background-color:#141413!important}html.dark #voiceError.error{color:#fca5a5}button:focus-visible,a:focus-visible{outline:2px solid #10b981;outline-offset:3px}
 @media(max-width:767px){body>div.flex-1{overflow-y:auto;display:block}body>div.flex-1>div:first-child{overflow:visible}body>div.flex-1>div:nth-child(2){min-height:360px;overflow:visible}#transcriptFeed{max-height:45dvh}#textCommandForm{margin-bottom:env(safe-area-inset-bottom)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Bring the mobile voice workspace closer to the desktop voice stage. */
+.mobile-voice-stage {background:#f7f7f4}
+.mobile-transcript-card {border:1px solid #e4e4e7;border-radius:18px;box-shadow:0 4px 18px rgb(0 0 0 / 3%)}
+.mobile-transcript-card > div:first-child {background:#fff}
+#centralMicBtn {background:#384c37}
+#toggleMuteBtn,#endSessionBtn {border-radius:9999px}
+#toggleMuteBtn {flex:0 1 150px}
+html.dark .mobile-voice-stage {background:#101310!important}
+html.dark .mobile-transcript-card {background:#171b17;border-color:#303830}
+html.dark .mobile-transcript-card > div:first-child {background:#171b17}
+@media(max-width:767px){
+ body>div.flex-1 {background:#f7f7f4;padding:0 16px 24px}
+ body>div.flex-1>.mobile-voice-stage {padding:22px 4px 12px;min-height:0}
+ body>div.flex-1>.mobile-transcript-card {min-height:260px;margin:10px 0 0}
+ #transcriptFeed {min-height:100px;max-height:40dvh}
+ html.dark body>div.flex-1 {background:#101310}
+}
+
+/* A calmer voice workspace, shared visually with the desktop experience. */
+body[data-page="mobileVoice"],html[data-page="mobileVoice"] body{background:#f7f7f4}
+html[data-page="mobileVoice"] body>header{min-height:68px;padding-top:max(10px,env(safe-area-inset-top));background:rgba(250,250,248,.94);border-color:#e9ebe5}
+html[data-page="mobileVoice"] #openSidebarBtn{box-shadow:none;border-color:#e5e8e1;background:#fff}
+html[data-page="mobileVoice"] #pinLiveConversationBtn,html[data-page="mobileVoice"] #openLiveSettingsBtn{border:1px solid transparent;color:#656c64}
+html[data-page="mobileVoice"] #pinLiveConversationBtn:hover,html[data-page="mobileVoice"] #openLiveSettingsBtn:hover{background:#edf2eb;border-color:#e0e7de}
+.mobile-voice-stage{position:relative;gap:0;background:#f4f6f0;border:1px solid #e5eae1;border-radius:24px;box-shadow:0 8px 30px rgba(39,54,38,.035)}
+.voice-stage-meta>div:first-child{background:rgba(255,255,255,.8);border-color:#e0e7dd;color:#627661;padding:6px 10px;letter-spacing:.08em}
+.voice-stage-meta>div:last-child{color:#737f71;font-size:10px}
+.voice-stage-center{width:100%;margin:18px auto 20px}
+.voice-stage-intro{text-align:center;margin-bottom:18px}
+.voice-stage-intro>span{display:block;color:#7c8a79;font:600 9px/1.5 'JetBrains Mono',monospace;letter-spacing:.16em}
+.voice-stage-intro h1{margin:6px 0 0;color:#1f2920;font-size:clamp(22px,5vw,28px);font-weight:700;letter-spacing:-.05em;line-height:1.2}
+.voice-stage-intro p{margin:6px 0 0;color:#829080;font-size:12px}
+.voice-orb{position:relative;width:144px;height:144px;display:grid;place-items:center;isolation:isolate}
+.voice-orb:before,.voice-orb:after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+.voice-orb:before{inset:0;background:rgba(152,181,145,.14);border:1px solid rgba(118,151,110,.13)}
+.voice-orb:after{inset:13px;border:1px solid rgba(118,151,110,.16);background:rgba(211,226,206,.24)}
+.voice-orb .pulse-layer-1,.voice-orb .pulse-layer-2{inset:auto;width:100%;height:100%;background:rgba(137,177,128,.15)}
+#centralMicBtn{width:96px;height:96px;background:#344a35;border:4px solid rgba(255,255,255,.74);box-shadow:0 12px 28px rgba(52,74,53,.21)}
+#centralMicBtn:disabled{opacity:.65}
+#micSubLabel{font-size:8px;letter-spacing:.12em}
+#equalizerContainer{height:20px;margin-top:6px;gap:4px}
+#equalizerContainer .wave-bar{width:3px;max-height:16px;background:#9daf99}
+#equalizerContainer .wave-bar:nth-child(4),#equalizerContainer .wave-bar:nth-child(5),#equalizerContainer .wave-bar:nth-child(6){background:#668b64}
+#voiceStatusTitle{font-size:15px;line-height:1.35;color:#28352a;letter-spacing:-.02em}
+.voice-stage-center>div:last-child{margin-top:8px}
+.voice-stage-center>div:last-child p{font-size:11px;color:#7d887c;line-height:1.6}
+.voice-session-controls{max-width:290px;padding-top:0}
+#toggleMuteBtn,#endSessionBtn{height:42px;box-shadow:none;font-weight:600}
+#toggleMuteBtn{background:#fff;border-color:#e0e6dc;color:#4b5a4c}
+#endSessionBtn{background:#f9f2ef;border-color:#eddcd5;color:#946052}
+.mobile-transcript-card{background:#fff;border:1px solid #e7e9e3;border-radius:20px;box-shadow:0 8px 30px rgba(39,54,38,.04);overflow:hidden}
+.mobile-transcript-card>div:first-child{padding:17px 18px;background:#fff;border-color:#eef0eb}
+#sessionTitleHeading{font-size:11px;letter-spacing:.07em}
+#saveState{color:#819080}
+#transcriptFeed{padding:20px 18px;color:#8a9388}
+#textCommandForm{border-radius:14px;border-color:#e4e9e1;background:#f8faf6;padding:5px}
+#commandInput{font-size:16px}
+#sendCommandBtn{background:#344a35;border-radius:11px;box-shadow:none}
+html.dark .mobile-voice-stage{background:#1b231c!important;border-color:#303b30;box-shadow:none}
+html.dark .voice-stage-meta>div:first-child{background:#252f25;border-color:#3b493b;color:#c4d4c2}
+html.dark .voice-stage-meta>div:last-child,html.dark .voice-stage-intro p,html.dark .voice-stage-center>div:last-child p{color:#a2b09f}
+html.dark .voice-stage-intro>span{color:#a0b39c}
+html.dark .voice-stage-intro h1,html.dark #voiceStatusTitle{color:#edf4eb}
+html.dark .voice-orb:before{background:rgba(146,176,139,.1);border-color:rgba(166,194,159,.13)}
+html.dark .voice-orb:after{background:rgba(146,176,139,.09);border-color:rgba(166,194,159,.15)}
+html.dark #centralMicBtn{background:#91ad8a;color:#142215;border-color:#344634}
+html.dark #toggleMuteBtn{background:#263126;border-color:#394b39;color:#dce8da}
+html.dark #endSessionBtn{background:#352925;border-color:#51403a;color:#e8b7a7}
+html.dark .mobile-transcript-card,html.dark .mobile-transcript-card>div:first-child{background:#1b201b!important;border-color:#303930}
+html.dark #textCommandForm{background:#242d24;border-color:#354235}
+html.dark #sendCommandBtn{background:#91ad8a;color:#142215}
+@media(max-width:767px){
+ html[data-page="mobileVoice"] body>div.flex-1{padding:14px 14px calc(24px + env(safe-area-inset-bottom));background:#f7f7f4}
+ html[data-page="mobileVoice"] body>div.flex-1>.mobile-voice-stage{padding:17px 17px 20px}
+ html[data-page="mobileVoice"] body>div.flex-1>.mobile-transcript-card{margin:14px 0 0;min-height:260px}
+ html.dark[data-page="mobileVoice"] body>div.flex-1{background:#141813}
+}

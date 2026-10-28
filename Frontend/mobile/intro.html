@@ -26,6 +26,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>MAXIMUS — Your Personal AI Assistant</title>
+    <meta name="description" content="Chat, explore images, and use voice with MAXIMUS. Choose Gemini or connect a supported provider and manage your conversations.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MAXIMUS — Your Personal AI Assistant">
+    <meta property="og:description" content="Chat, explore images, and use voice with MAXIMUS.">
+    <meta property="og:url" content="https://maximusai-nine.vercel.app/">
+    <meta property="og:image" content="https://maximusai-nine.vercel.app/static/logo.jpg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MAXIMUS — Your Personal AI Assistant">
+    <meta name="twitter:description" content="Chat, explore images, and use voice with MAXIMUS.">
+    <meta name="twitter:image" content="https://maximusai-nine.vercel.app/static/logo.jpg">
+    <link rel="icon" type="image/jpeg" href="/static/logo.jpg">
 
 
     <!-- =====================================================
@@ -208,6 +219,36 @@
 
         }
 
+        /* Match the desktop intro navigation while keeping it phone-friendly. */
+        #mobileMenu { display: none; }
+        /* Keep small labels readable on light cards and preserve contrast on the dark CTA. */
+        body .text-neutral-400 { color: #626269; }
+        body .bg-brandDark .text-neutral-400 { color: #c0c0c6; }
+        body .text-emerald-600 { color: #06714c; }
+        .skip-link { position:absolute; left:1rem; top:-5rem; z-index:100; padding:.75rem 1rem; background:#fff; color:#09090b; border:1px solid #52525b; border-radius:.5rem; }
+        .skip-link:focus { top:1rem; }
+        a:focus-visible, button:focus-visible, summary:focus-visible {
+            outline: 3px solid #387f65; outline-offset: 3px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+        }
+        @media (max-width: 767px) {
+            #mobileMenu {
+                position: fixed; top: 5rem; left: 1rem; right: 1rem; z-index: 49;
+                background: rgba(250, 250, 250, 0.97); backdrop-filter: blur(14px);
+                border: 1px solid #E4E4E7; border-radius: 1rem;
+                box-shadow: 0 12px 30px rgba(0,0,0,0.08); padding: 0.75rem;
+            }
+            #mobileMenu.open { display: block; }
+            #mobileMenu a {
+                display: flex; align-items: center; justify-content: space-between;
+                padding: 0.8rem 0.9rem; border-radius: 0.7rem;
+                color: #3f3f46; font-size: 0.75rem; font-weight: 600;
+            }
+            #mobileMenu a:hover { background: #f4f4f5; color: #09090B; }
+        }
+
 
     </style>
 
@@ -217,6 +258,7 @@
 <body
     class="bg-surface text-brandDark antialiased relative bg-fine-grid selection:bg-neutral-200"
 >
+    <a class="skip-link" href="#main">Skip to main content</a>
 
 
     <!-- =====================================================
@@ -245,7 +287,7 @@
                 >
                     <img
                         src="/static/logo.jpg"
-                        alt="MAXIMUS"
+                        alt=""
                         class="w-full h-full object-cover"
                     />
                 </div>
@@ -265,18 +307,31 @@
             </a>
 
 
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors">Features</a>
+                <a href="#workflow" class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors">Workflow</a>
+                <a href="#privacy" class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors">Privacy</a>
+                <a href="#faq" class="text-xs font-medium text-brandMuted hover:text-brandDark transition-colors">FAQ</a>
+            </nav>
+
             <!-- RIGHT BUTTONS -->
 
             <div class="flex items-center gap-4">
 
+                <button id="mobileMenuButton" type="button" aria-label="Open navigation" aria-expanded="false"
+                    class="md:hidden w-9 h-9 rounded-xl border border-subtleBorder bg-white flex items-center justify-center text-neutral-700 hover:bg-neutral-100 transition">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
 
 
 
+
+                <a href="/m/login" class="hidden md:inline-flex text-xs font-semibold text-neutral-700 hover:text-brandDark">Sign in</a>
                 <a
                     href="/m/signup"
                     class="inline-flex items-center gap-2 bg-brandDark hover:bg-neutral-800 text-white text-xs font-semibold px-4 py-2.5 rounded-full transition-all hover:shadow-md hover:-translate-y-0.5"
                 >
-                    <span>Sign Up/Log In</span>
+                    <span>Create account</span>
 
                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
 
@@ -288,6 +343,15 @@
 
     </header>
 
+    <div id="mobileMenu" aria-hidden="true">
+        <a href="#features" data-mobile-link>Features <i class="fa-solid fa-arrow-down text-[10px]"></i></a>
+        <a href="#workflow" data-mobile-link>Workflow <i class="fa-solid fa-arrow-down text-[10px]"></i></a>
+        <a href="#privacy" data-mobile-link>Privacy <i class="fa-solid fa-arrow-down text-[10px]"></i></a>
+        <a href="#faq" data-mobile-link>FAQ <i class="fa-solid fa-arrow-down text-[10px]"></i></a>
+        <a href="/m/login">Sign in <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+    </div>
+
+    <main id="main">
 
     <!-- =====================================================
          HERO SECTION
@@ -328,7 +392,7 @@
                         </span>
 
                         <span class="text-[11px] text-neutral-500">
-                            Real-Time Streaming
+                            Text, voice &amp; images
                         </span>
 
                     </div>
@@ -358,9 +422,8 @@
                         <p
                             class="text-base sm:text-lg text-brandMuted leading-relaxed max-w-lg font-normal"
                         >
-                            MAXIMUS coordinates conversational reasoning,
-                            low-latency voice synthesis, and vision intelligence
-                            in one serene, distraction-free environment.
+                            Chat, explore images, and use voice in one focused
+                            workspace. Choose Gemini or connect your own provider.
                         </p>
 
                     </div>
@@ -378,7 +441,7 @@
                         >
 
                             <span>
-                                Start Free Conversation
+                                Create account
                             </span>
 
                             <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -387,7 +450,7 @@
 
 
                         <a
-                            href="#features"
+                            href="/m/login"
                             class="inline-flex items-center gap-2 bg-white hover:bg-neutral-50 text-neutral-700 font-semibold text-sm px-5 py-3.5 rounded-full border border-subtleBorder transition-all hover:border-neutral-400"
                         >
 
@@ -396,71 +459,13 @@
                             ></i>
 
                             <span>
-                                Explore Capabilities
+                                Sign in
                             </span>
 
                         </a>
 
                     </div>
 
-
-                    <!-- METRICS -->
-
-                    <div
-                        class="grid grid-cols-3 gap-6 pt-8 border-t border-subtleBorder/80 max-w-md"
-                    >
-
-                        <div>
-
-                            <div
-                                class="text-xl font-bold font-mono text-neutral-900"
-                            >
-                                0.4s
-                            </div>
-
-                            <div
-                                class="text-[11px] text-neutral-500 font-medium mt-0.5"
-                            >
-                                Median latency
-                            </div>
-
-                        </div>
-
-
-                        <div>
-
-                            <div
-                                class="text-xl font-bold font-mono text-neutral-900"
-                            >
-                                100%
-                            </div>
-
-                            <div
-                                class="text-[11px] text-neutral-500 font-medium mt-0.5"
-                            >
-                                Session isolation
-                            </div>
-
-                        </div>
-
-
-                        <div>
-
-                            <div
-                                class="text-xl font-bold text-neutral-900"
-                            >
-                                Vision
-                            </div>
-
-                            <div
-                                class="text-[11px] text-neutral-500 font-medium mt-0.5"
-                            >
-                                Zero-shot analysis
-                            </div>
-
-                        </div>
-
-                    </div>
 
                 </div>
 
@@ -507,7 +512,7 @@
                                 <span
                                     class="font-mono text-[11px] text-neutral-400 ml-2"
                                 >
-                                    maximus-agent.local
+                                    MAXIMUS · Example conversation
                                 </span>
 
                             </div>
@@ -534,22 +539,21 @@
                             class="p-6 space-y-4 font-sans text-xs"
                         >
 
-                            <!-- JARVIS -->
+                            <!-- MAXIMUS -->
 
                             <div class="flex items-start gap-3">
 
                                 <div
                                     class="w-6 h-6 rounded-md bg-black overflow-hidden flex items-center justify-center shrink-0"
                                 >
-                                    <img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover"/>
+                                    <img src="/static/logo.jpg" alt="" class="w-full h-full object-cover"/>
                                 </div>
 
                                 <div
                                     class="bg-neutral-50 border border-neutral-200/70 rounded-xl rounded-tl-sm px-3.5 py-2.5 text-neutral-700 leading-relaxed max-w-sm"
                                 >
-                                    I can assist with real-time code synthesis,
-                                    document evaluation, and direct voice
-                                    discussions. What shall we tackle?
+                                    I can help with questions, code, images,
+                                    and voice conversations. What shall we tackle?
                                 </div>
 
                             </div>
@@ -569,14 +573,14 @@
                             </div>
 
 
-                            <!-- JARVIS RESPONSE -->
+                            <!-- MAXIMUS RESPONSE -->
 
                             <div class="flex items-start gap-3">
 
                                 <div
                                     class="w-6 h-6 rounded-md bg-black overflow-hidden flex items-center justify-center shrink-0"
                                 >
-                                    <img src="/static/logo.jpg" alt="MAXIMUS" class="w-full h-full object-cover"/>
+                                    <img src="/static/logo.jpg" alt="" class="w-full h-full object-cover"/>
                                 </div>
 
                                 <div
@@ -634,7 +638,7 @@
                             <div
                                 class="text-[10px] text-neutral-400"
                             >
-                                Natural bidirectional speech
+                                Speak and hear replies
                             </div>
 
                         </div>
@@ -659,13 +663,13 @@
                             <div
                                 class="text-[11px] font-bold text-neutral-900"
                             >
-                                Zero Data Retention
+                                Conversation history
                             </div>
 
                             <div
                                 class="text-[10px] text-neutral-400"
                             >
-                                Ephemeral memory mode
+                                View and delete sessions
                             </div>
 
                         </div>
@@ -747,9 +751,8 @@
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Formulates crisp summaries, debugs intricate
-                        codebases, and structures multi-step analytical
-                        frameworks with zero extraneous padding.
+                        Ask questions, explore ideas, get help with code,
+                        and turn notes into useful summaries.
                     </p>
 
                     <div
@@ -776,21 +779,20 @@
                     <h3
                         class="text-base font-bold text-brandDark mb-2"
                     >
-                        Live Voice Duplex
+                        Voice Conversations
                     </h3>
 
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Conversational audio dialogue with low turn-taking
-                        latency. Interrupt comfortably, clarify nuance,
-                        and discuss ideas naturally out loud.
+                        Speak or type your thoughts and listen to responses.
+                        Voice input depends on browser support and permission.
                     </p>
 
                     <div
                         class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
                     >
-                        Low-latency synthesis
+                        Speech input &amp; audio replies
                     </div>
 
                 </div>
@@ -818,14 +820,14 @@
                         class="text-xs text-brandMuted leading-relaxed"
                     >
                         Attach screenshots, product mockups, whiteboards,
-                        or camera snapshots. MAXIMUS extracts text, flags
-                        anomalies, and describes components.
+                        or camera snapshots. Ask MAXIMUS to describe an image
+                        or help interpret its visible content.
                     </p>
 
                     <div
                         class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
                     >
-                        Real-time OCR & inspection
+                        Image analysis with Gemini
                     </div>
 
                 </div>
@@ -852,9 +854,8 @@
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Search, tag, and restore prior discussions in
-                        milliseconds. Your context is preserved across
-                        devices with client-side encryption.
+                        Browse, search, pin, and reopen saved chat and voice
+                        conversations associated with your account.
                     </p>
 
                     <div
@@ -882,21 +883,20 @@
                     <h3
                         class="text-base font-bold text-brandDark mb-2"
                     >
-                        Privacy & Compliance
+                        Account Controls
                     </h3>
 
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Explicit data-sharing controls with opt-out switches
-                        for model retraining. Your private prompts and
-                        intellectual property stay strictly yours.
+                        Review your saved conversations, export account data,
+                        manage connected devices, or delete your history.
                     </p>
 
                     <div
                         class="mt-6 pt-4 border-t border-neutral-100 font-mono text-[10px] text-neutral-400"
                     >
-                        SOC2 Type II aligned
+                        History, export &amp; device controls
                     </div>
 
                 </div>
@@ -969,7 +969,7 @@
                     <h2
                         class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brandDark mt-2"
                     >
-                        Start collaborating in seconds
+                        Get started with MAXIMUS
                     </h2>
 
                 </div>
@@ -977,8 +977,8 @@
                 <p
                     class="text-xs text-brandMuted max-w-sm"
                 >
-                    No complicated orchestration or extensive setup required.
-                    Simple, secure, and ready to deploy.
+                    Create an account, choose how to interact, and return
+                    to your saved conversations when you need them.
                 </p>
 
             </div>
@@ -1001,14 +1001,13 @@
                     <h3
                         class="text-sm font-bold text-neutral-900"
                     >
-                        Verify Identity
+                        Create your account
                     </h3>
 
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Sign up using verified email or pair instantaneously
-                        via mobile QR token.
+                        Create an account or sign in to your existing account.
                     </p>
 
                 </div>
@@ -1031,8 +1030,8 @@
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Type queries, talk via continuous mic streaming,
-                        or drop in images and files.
+                        Type a message, use voice input in a supported browser,
+                        or attach an image to chat.
                     </p>
 
                 </div>
@@ -1049,14 +1048,14 @@
                     <h3
                         class="text-sm font-bold text-neutral-900"
                     >
-                        Real-Time Synthesis
+                        Get a response
                     </h3>
 
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Watch structured answers, code blocks, or voice
-                        replies stream with near-zero latency.
+                        Receive a text reply, or use the voice interface
+                        to listen to spoken responses.
                     </p>
 
                 </div>
@@ -1079,8 +1078,8 @@
                     <p
                         class="text-xs text-brandMuted leading-relaxed"
                     >
-                        Sessions are automatically archived and indexed
-                        for rapid retrieval at any time.
+                        Reopen saved conversations from your account history
+                        or delete them when you no longer need them.
                     </p>
 
                 </div>
@@ -1111,15 +1110,36 @@
             <h2
                 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brandDark mt-3"
             >
-                Your conversations stay yours.
+                Manage your conversations.
             </h2>
 
             <p class="text-sm text-brandMuted leading-relaxed mt-5 max-w-2xl mx-auto">
-                MAXIMUS is designed with clear session controls and straightforward
-                privacy settings, so you stay in control of how your conversations
-                are handled.
+                Conversations are stored in your account history. You can view,
+                export, or delete them and manage signed-in devices. Messages
+                are sent to the AI provider you select; that provider's data
+                practices also apply. An ephemeral mode is not currently available.
             </p>
 
+        </div>
+    </section>
+
+    <section id="faq" class="py-24 border-t border-subtleBorder">
+        <div class="max-w-4xl mx-auto px-6 sm:px-8">
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-brandDark">Frequently asked questions</h2>
+            <div class="mt-8 space-y-3">
+                <details class="bg-white border border-subtleBorder rounded-2xl p-5">
+                    <summary class="font-semibold cursor-pointer">Can I use my own AI provider?</summary>
+                    <p class="text-sm text-brandMuted leading-relaxed mt-3">You can connect a supported OpenAI-compatible provider and choose an available model. Your provider may charge for usage under its own terms.</p>
+                </details>
+                <details class="bg-white border border-subtleBorder rounded-2xl p-5">
+                    <summary class="font-semibold cursor-pointer">Are conversations saved?</summary>
+                    <p class="text-sm text-brandMuted leading-relaxed mt-3">Chat and voice conversations are stored in your account history. You can review or delete them; ephemeral mode is not currently available.</p>
+                </details>
+                <details class="bg-white border border-subtleBorder rounded-2xl p-5">
+                    <summary class="font-semibold cursor-pointer">Can I use voice and images?</summary>
+                    <p class="text-sm text-brandMuted leading-relaxed mt-3">You can attach images for Gemini analysis and use voice where browser speech support and permissions are available.</p>
+                </details>
+            </div>
         </div>
     </section>
 
@@ -1151,14 +1171,13 @@
                 <h2
                     class="text-3xl sm:text-5xl font-extrabold tracking-tight"
                 >
-                    Experience intelligence with zero noise.
+                    Make space for your next idea.
                 </h2>
 
                 <p
                     class="text-xs sm:text-sm text-neutral-400 leading-relaxed"
                 >
-                    Join thousands of developers, researchers, and creators
-                    getting more done with JARVIS.
+                    Explore ideas, ask questions, and get things done with MAXIMUS.
                 </p>
 
                 <div
@@ -1169,7 +1188,7 @@
                         href="/m/signup"
                         class="bg-white text-brandDark hover:bg-neutral-100 text-xs font-bold px-7 py-3.5 rounded-full transition-all hover:scale-105"
                     >
-                        Create A Free Account Now
+                        Create account
                     </a>
 
 
@@ -1181,6 +1200,7 @@
 
     </section>
 
+    </main>
 
     <!-- =====================================================
          FOOTER
@@ -1201,7 +1221,7 @@
                 >
                     <img
                         src="/static/logo.jpg"
-                        alt="MAXIMUS"
+                        alt=""
                         class="w-full h-full object-cover"
                     />
                 </div>
@@ -1211,13 +1231,13 @@
                 </span>
 
                 <span>
-                    — Powered by Gemini 3.6-FLASH
+                    — Works with Gemini and your own providers
                 </span>
 
             </div>
 
 
-            <div class="flex items-center gap-6">
+            <div class="flex flex-wrap items-center justify-center gap-6">
 
                 <a
                     href="#features"
@@ -1230,14 +1250,14 @@
                     href="/m/login"
                     class="hover:text-brandDark transition-colors"
                 >
-                    Login
+                    Sign in
                 </a>
 
                 <a
                     href="/m/signup"
                     class="hover:text-brandDark transition-colors"
                 >
-                    Sign Up
+                    Create account
                 </a>
 
                 <a
@@ -1246,6 +1266,8 @@
                 >
                     Privacy
                 </a>
+
+                <a href="#faq" class="hover:text-brandDark transition-colors">FAQ</a>
 
             </div>
 
@@ -1283,6 +1305,23 @@
                 navbar.classList.add('h-20');
             }
         });
+
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+            mobileMenuButton.querySelector('i').className = 'fa-solid fa-bars text-sm';
+        }
+        mobileMenuButton.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+            mobileMenuButton.setAttribute('aria-expanded', String(isOpen));
+            mobileMenuButton.querySelector('i').className = isOpen ? 'fa-solid fa-xmark text-sm' : 'fa-solid fa-bars text-sm';
+        });
+        document.querySelectorAll('[data-mobile-link]').forEach(link => link.addEventListener('click', closeMobileMenu));
+        window.addEventListener('resize', () => { if (window.innerWidth >= 768) closeMobileMenu(); });
 
     </script>
 

@@ -190,9 +190,9 @@
 <!-- ========================================================= -->
 <div class="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden relative">
 <!-- LEFT COLUMN / UPPER STAGE: Interactive Voice Orb & Mic Core -->
-<div class="w-full md:w-5/12 lg:w-4/12 md:border-r border-[#e5e9e2] dark:border-[#222a22] flex flex-col items-center justify-between p-5 md:p-6 shrink-0 overflow-y-auto bg-gradient-to-b from-[#f7f7f4] to-[#edf2eb] dark:from-[#0d100d] dark:to-[#131913]">
+<div class="mobile-voice-stage w-full md:w-5/12 lg:w-4/12 md:border-r border-[#e5e9e2] dark:border-[#222a22] flex flex-col items-center justify-between p-5 md:p-6 shrink-0 overflow-y-auto bg-gradient-to-b from-[#f7f7f4] to-[#edf2eb] dark:from-[#0d100d] dark:to-[#131913]">
 <!-- Top Stage Indicator -->
-<div class="w-full flex items-center justify-between">
+<div class="voice-stage-meta w-full flex items-center justify-between">
 <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 dark:bg-black/40 border border-[#dde3da] dark:border-[#253025] text-[11px] font-mono text-neutral-600 dark:text-neutral-300">
 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="voiceDot"></span>
 <span class="font-semibold uppercase tracking-wider text-[10px]" id="voiceStateBadge">Ready</span>
@@ -203,7 +203,9 @@
 </div>
 </div>
 <!-- Center Voice Orb with Resonant Waves -->
-<div class="relative my-6 md:my-auto flex flex-col items-center justify-center">
+<div class="voice-stage-center relative my-6 md:my-auto flex flex-col items-center justify-center">
+<div class="voice-stage-intro"><span>YOUR VOICE SPACE</span><h1>Speak with MAXIMUS.</h1><p>A little room for big ideas.</p></div>
+<div class="voice-orb">
 <!-- Circular Pulse Emitters -->
 <div class="pulse-layer-1 absolute w-48 h-48 md:w-56 md:h-56 rounded-full bg-emerald-500/15 pointer-events-none"></div>
 <div class="pulse-layer-2 absolute w-40 h-40 md:w-48 md:h-48 rounded-full bg-[#384c37]/15 dark:bg-emerald-400/10 pointer-events-none"></div>
@@ -212,6 +214,7 @@
 <span class="material-symbols-outlined text-4xl md:text-5xl group-hover:scale-110 transition-transform" id="micIcon">mic</span>
 <span class="text-[10px] font-mono uppercase tracking-widest mt-1 opacity-80" id="micSubLabel">Tap to talk</span>
 </button>
+</div>
 <!-- Dynamic Equalizer Visualizer -->
 <div class="flex items-center justify-center gap-1.5 h-8 mt-5" id="equalizerContainer">
 <span class="wave-bar w-1 bg-neutral-800 dark:bg-neutral-200 h-2"></span>
@@ -235,7 +238,7 @@
 </div>
 </div>
 <!-- Quick Session Hardware Controls (Mute, Interrupt, Conclude) -->
-<div class="w-full flex items-center justify-center gap-3 pt-2">
+<div class="voice-session-controls w-full flex items-center justify-center gap-3 pt-2">
 <button class="flex-1 h-11 rounded-xl bg-white dark:bg-[#171e17] border border-[#dde3da] dark:border-[#253025] hover:bg-neutral-50 dark:hover:bg-[#1f271f] text-neutral-700 dark:text-neutral-200 text-xs font-semibold flex items-center justify-center gap-2 active:scale-95 shadow-sm transition-all" id="toggleMuteBtn" type="button">
 <span class="material-symbols-outlined text-[18px]" id="muteIcon">mic_off</span>
 <span id="muteLabel" class="">Mute</span>
@@ -259,7 +262,7 @@
 </div>
 </div>
 <!-- RIGHT COLUMN / LOWER STAGE: Synchronized Transcript & Direct Command Bar -->
-<div class="flex-1 min-w-0 flex flex-col bg-white dark:bg-[#101410] overflow-hidden">
+<div class="mobile-transcript-card flex-1 min-w-0 flex flex-col bg-white dark:bg-[#101410] overflow-hidden">
 <!-- Transcript Header Bar -->
 <div class="px-4 md:px-6 py-3 border-b border-[#ecefe9] dark:border-[#222a22] flex items-center justify-between bg-neutral-50/70 dark:bg-[#141814]/70">
 <div class="flex items-center gap-2 min-w-0">
